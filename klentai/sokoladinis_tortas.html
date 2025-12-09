@@ -1,20 +1,106 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - [Šokoladinis tortas]</title>
+    <title>AR Peržiūra - Šokoladinis tortas (Su Hotspotais)</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
+        /* Pagrindinis stilius */
         body { margin: 0; padding: 0; height: 100vh; }
         model-viewer { width: 100%; height: 100%; }
+        
+        /* 1. Hotspot mygtuko stilius */
+        .Hotspot {
+            background: #FF4444; /* Ryškiai raudona alergijos indikacijai */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #FFFFFF; /* Baltas apvadas */
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+            transition: transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            padding: 0;
+        }
+        .Hotspot:hover {
+            transform: scale(1.3);
+        }
+        
+        /* 2. Iššokančio langelio (Tooltip) stilius */
+        .Hotspot .tooltip {
+            visibility: hidden;
+            background-color: #000000;
+            color: #fff;
+            text-align: left;
+            border-radius: 4px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10; /* Užtikrina, kad matytųsi virš 3D */
+            bottom: 120%; /* Rodyti virš mygtuko */
+            left: 50%;
+            transform: translateX(-50%); /* Centruoti langelį */
+            width: max-content;
+            max-width: 200px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none; /* Neleisti blokuoti mygtuko paspaudimo */
+            line-height: 1.4;
+        }
+        
+        .Hotspot:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
     <model-viewer 
-        src="../modeliai/maistas/sokoladinis_tortas.glb"      alt="Šokoladinis tortas"                         ar                                           ar-modes="webxr scene-viewer quick-look"     camera-controls                           shadow-intensity="1"                         exposure="1.0"                               auto-rotate>                                 </model-viewer>
+        src="../modeliai/maistas/sokoladinis_tortas.glb" 
+        alt="Šokoladinis tortas" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        shadow-intensity="1" 
+        exposure="1.0" 
+        auto-rotate
+        
+        >
+        
+        <button class="Hotspot" 
+                slot="hotspot-alergenai" 
+                data-position="0 0.5 0" 
+                data-normal="0 1 0">
+            !
+            <div class="tooltip">
+                <p style="margin:0; font-weight: bold;">⚠️ Svarbūs Alergenai:</p>
+                <ul style="list-style: none; padding-left: 0; margin: 5px 0 0 0;">
+                    <li>• Pienas</li>
+                    <li>• Kviečiai (Glutenas)</li>
+                    <li>• Kiaušiniai</li>
+                </ul>
+            </div>
+        </button>
+        
+        <button class="Hotspot" 
+                slot="hotspot-sudedamosios" 
+                data-position="0.4 0.1 0.1" 
+                data-normal="1 0 0"
+                style="background: #2AA1FF;"> i
+            <div class="tooltip">
+                <p style="margin:0; font-weight: bold;">Papildoma Informacija:</p>
+                <p style="margin: 5px 0 0 0;">Naudotas 70% kakavos šokoladas.</p>
+                <p style="margin: 0;">Tinka vegetarams.</p>
+            </div>
+        </button>
+        
+    </model-viewer>
 </body>
 </html>
