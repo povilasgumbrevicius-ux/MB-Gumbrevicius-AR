@@ -8,92 +8,55 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
-        /* 0. Tėvinis konteineris */
-        .container {
-            position: relative; 
-            width: 100%; 
-            height: 100vh; 
-        }
-
-        /* Pagrindinis stilius */
+        /* CSS Stiliai (nukopijuoti iš ankstesnio pavyzdžio) */
+        .container { position: relative; width: 100%; height: 100vh; }
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         
-        /* Model-viewer stiliai */
         model-viewer { 
             width: 100%; 
             height: 100%; 
-            z-index: 100; /* Pagerina atvaizdavimo sluoksnio tvarkymą */
-            transform: translateZ(0); /* Priverčia naršyklę atvaizduoti teisingame sluoksnyje */
+            z-index: 100; 
+            transform: translateZ(0); 
         }
         
-        /* 1. Bendras Hotspot'o stilius */
-        .StaticHotspot {
+        .StaticHotspot { 
             position: absolute; 
-            z-index: 2000; /* Labai didelis z-index, kad būtų virš modelio */
-            will-change: transform, opacity; /* Priverčia greičiau atvaizduoti */
-            border-radius: 50%;
-            width: 35px; height: 35px;
-            border: 2px solid #FFFFFF;
-            cursor: pointer;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-            transition: transform 0.1s ease;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: bold; color: white;
-            line-height: 1; 
+            z-index: 2000; 
+            will-change: transform, opacity; 
+            border-radius: 50%; 
+            width: 35px; height: 35px; 
+            border: 2px solid #FFFFFF; 
+            cursor: pointer; 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); 
+            transition: transform 0.1s ease; 
+            display: flex; align-items: center; 
+            justify-content: center; 
+            font-size: 18px; font-weight: bold; 
+            color: white; line-height: 1; 
         }
-        .StaticHotspot:hover {
-            transform: scale(1.2); 
-        }
-        
-        /* 2. Konkretus Hotspotų Pozicionavimas ir spalvos */
+        .StaticHotspot:hover { transform: scale(1.2); }
+
         .Alergenai { background: #FF4444; top: 20px; right: 20px; }
         .Sudetis { background: #2AA1FF; top: 80px; right: 20px; }
         .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; } 
 
-        /* 3. Iššokančio langelio (Tooltip) stilius: */
-        .StaticHotspot .tooltip {
-            visibility: hidden;
-            background-color: #000000;
-            color: #fff;
-            text-align: left;
-            border-radius: 4px;
-            padding: 8px 12px;
-            position: absolute;
-            z-index: 10;
-            width: max-content;
-            max-width: 350px; 
-            opacity: 0;
-            transition: opacity 0.3s, visibility 0.3s;
-            pointer-events: none;
-            line-height: 1.4;
-            font-size: 0.95em; 
+        .StaticHotspot .tooltip { 
+            visibility: hidden; background-color: #000000; 
+            color: #fff; text-align: left; border-radius: 4px; 
+            padding: 8px 12px; position: absolute; z-index: 10; 
+            width: max-content; max-width: 350px; opacity: 0; 
+            transition: opacity 0.3s, visibility 0.3s; 
+            pointer-events: none; line-height: 1.4; font-size: 0.95em; 
         }
-        
-        /* Tooltip'o pozicijos */
         .Alergenai .tooltip, .Sudetis .tooltip { right: 120%; top: 50%; transform: translateY(-50%); }
         .InstrukcijosBtn .tooltip { left: 120%; top: 50%; transform: translateY(-50%); }
+        .StaticHotspot:hover .tooltip { visibility: visible; opacity: 1; }
 
-        /* Rodo Tooltip'ą */
-        .StaticHotspot:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-        
-        /* Klaidos pranešimo stilius */
-        #ar-error-message {
-            position: fixed; /* Lieka matomas ekrane, virš visko */
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffc107; /* Geltona spalva pavojaus pranešimui */
-            color: #333;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 9999; 
-            font-weight: bold;
-            display: none; /* Pradžioje paslėptas */
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        #ar-error-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
     </style>
 </head>
@@ -101,15 +64,14 @@
     <div class="container">
         
         <model-viewer 
-            src="../modeliai/maistas/cheeseburger.glb" 
+            /* NAUJAS ADRESAS ĮTERPTAS ČIA */
+            src="https://ar.gumbrevicius.lt/modeliai/maistas/cheeseburger.glb" 
             alt="Sūrainis" 
             
-            /* 💥 ATNAUJINTAS AR PALAUKYMAS 💥 */
             ar 
-            ar-button /* PRIDĖTAS: Priverstinai rodo AR mygtuką */
-            ar-modes="webxr scene-viewer quick-look magic-leap" 
+            ar-button 
+            ar-modes="scene-viewer quick-look" 
             
-            crossorigin 
             camera-controls 
             shadow-intensity="1" 
             exposure="1.0" 
@@ -164,22 +126,18 @@
         const modelViewer = document.querySelector('model-viewer');
         const errorMessage = document.getElementById('ar-error-message');
 
-        // Paleidžiama, kai model-viewer baigia bandyti nustatyti AR statusą
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             
-            // Jei statusas rodo, kad AR funkcija neprieinama ar nepavyko
             if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos arba tam reikia atnaujinti **Google Play Services for AR** programėlę.';
-                errorMessage.style.display = 'block'; // Rodo pranešimą
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos arba tam reikia atnaujinti **Google Play Services for AR** programėlę. Patikrinkite, ar naršote per **HTTPS** ir ar adresas įvestas tiesiogiai į naršyklę.';
+                errorMessage.style.display = 'block';
                 
-                // Galite paslėpti AR mygtuką, jei jis vis tiek rodomas, bet neveikia:
                 const arButton = modelViewer.shadowRoot.querySelector('.webxr-tag');
                 if (arButton) {
                     arButton.style.display = 'none';
                 }
             } else if (status === 'success') {
-                // Jei AR palaikoma, paslepiame klaidą (jei ji buvo rodoma)
                 errorMessage.style.display = 'none';
             }
         });
