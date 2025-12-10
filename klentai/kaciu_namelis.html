@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Sūrainis (Ištaisyta Pozicija)</title>
+    <title>AR Peržiūra - Sūrainis (Statiniai Hotspotai)</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
@@ -24,8 +24,8 @@
         
         /* 1. Bendras STATINIO Hotspot'o stilius */
         .StaticHotspot {
-            position: absolute;
-            z-index: 100;
+            position: absolute; /* Pririšimas prie ekrano kampų! */
+            z-index: 100; /* Užtikrina, kad matytųsi virš model-viewer */
             
             /* Vizualinis stilius */
             border-radius: 50%;
@@ -47,7 +47,7 @@
             transform: scale(1.2); 
         }
         
-        /* 2. Konkretus Hotspotų Pozicionavimas */
+        /* 2. Konkretus Hotspotų Pozicionavimas (Dešinėje pusėje) */
         .Alergenai {
             background: #FF4444; /* Raudonas (Alergenai) */
             top: 20px;
@@ -60,13 +60,6 @@
             right: 20px;
         }
 
-        /* NAUJA POZICIJA: AR Instrukcijų Mygtukas (Kairė viršuje) */
-        .InstrukcijosBtn {
-            background: #6c757d; /* Pilka/Informacinė spalva */
-            top: 20px;
-            left: 20px; /* Perkelta į kairę */
-        }
-        
         /* 3. Iššokančio langelio (Tooltip) stilius */
         .StaticHotspot .tooltip {
             visibility: hidden;
@@ -77,42 +70,39 @@
             padding: 8px 12px;
             position: absolute;
             z-index: 10;
-        }
-
-        /* Tooltip'o pozicija Dešinėje: Rodoma Kairėje */
-        .Alergenai .tooltip, .Sudetis .tooltip {
             right: 120%; /* Rodo kairėje nuo mygtuko */
             top: 50%;
             transform: translateY(-50%); 
             width: max-content;
             max-width: 250px;
-        }
-
-        /* Tooltip'o pozicija Kairėje: Rodoma Dešinėje */
-        .InstrukcijosBtn .tooltip {
-            left: 120%; /* Rodo dešinėje nuo mygtuko */
-            top: 50%;
-            transform: translateY(-50%); 
-            width: 300px; /* Platesnis tekstui */
-        }
-        
-        /* Bendri Tooltip stiliai */
-        .StaticHotspot .tooltip {
             opacity: 0;
             transition: opacity 0.3s, visibility 0.3s;
             pointer-events: none;
             line-height: 1.4;
         }
-
-        /* Rodo Tooltip'ą, kai pelė užvedama */
         .StaticHotspot:hover .tooltip {
             visibility: visible;
             opacity: 1;
         }
 
-        /* Papildomas stilius sąrašui instrukcijose */
-        .InstrukcijosBtn .tooltip ul, .InstrukcijosBtn .tooltip ol {
-            margin: 5px 0 0 0;
+        /* 4. AR Instrukcijų stilius */
+        .ar-instrukcijos {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            max-height: 30vh;
+            overflow-y: auto;
+            border-top: 1px solid #ccc;
+        }
+        .ar-instrukcijos h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .ar-instrukcijos ul {
             padding-left: 20px;
         }
     </style>
@@ -153,20 +143,22 @@
                 <p style="margin: 0;">Švieži pomidorai ir salotos.</p>
             </div>
         </div>
-
-        <div class="StaticHotspot InstrukcijosBtn">
-            ?
-            <div class="tooltip">
-                <p style="margin:0; font-weight: bold;">📱 AR Valdymo Instrukcijos:</p>
-                
-                <p style="font-weight: bold; margin-top: 5px;">Valdymas AR režime:</p>
-                <ul>
-                    <li>**Vienas pirštas:** Judina modelį paviršiumi.</li>
-                    <li>**Du pirštai (gnybimas):** Didina/mažina modelio dydį.</li>
-                    <li>**Du pirštai (sukimas):** Sukioja modelį horizontaliai.</li>
-                </ul>
-                <p style="font-size: 0.8em; color: #ccc;">(Pastaba: Informacijos mygtukai AR režime nėra rodomi.)</p>
-            </div>
+        
+        <div class="ar-instrukcijos">
+            <h3>📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</h3>
+            <p>Paspaudus **AR mygtuką** viršutiniame dešiniajame kampe, Jums reikės atlikti šiuos veiksmus:</p>
+            <ol>
+                <li>**Skenavimas:** Lėtai judinkite telefoną virš plokščio paviršiaus (stalo, grindų), kol pamatysite modelio žymeklį.</li>
+                <li>**Patalpinimas:** Bakstelėkite ekraną, kad patalpintumėte sūrainio modelį.</li>
+            </ol>
+            
+            <h4>Valdymo gestai AR režime:</h4>
+            <ul>
+                <li>**Vienas pirštas (tempimas):** Judina modelį paviršiumi.</li>
+                <li>**Du pirštai (gnybimas/tempimas):** Didina arba mažina modelio dydį.</li>
+                <li>**Du pirštai (sukimas):** Sukioja modelį horizontaliai.</li>
+            </ul>
+            <p style="font-size: 0.8em; color: #555;">Pastaba: Informacijos mygtukai (alergenai ir sudėtis) AR režime nėra rodomi.</p>
         </div>
         
     </div>
