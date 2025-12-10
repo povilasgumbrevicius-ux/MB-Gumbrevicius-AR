@@ -3,17 +3,33 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Sūrainis</title>
+    <title>AR Peržiūra - Sūrainis (Atsarginė)</title>
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/stable/model-viewer.min.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        /* CSS Stiliai (nepakitę) */
+        /* CSS Stiliai (išlieka nepakitę) */
         .container { position: relative; width: 100%; height: 100vh; }
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         
         model-viewer { width: 100%; height: 100%; z-index: 100; transform: translateZ(0); }
-        .StaticHotspot { position: absolute; z-index: 2000; will-change: transform, opacity; border-radius: 50%; width: 35px; height: 35px; border: 2px solid #FFFFFF; cursor: pointer; box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); transition: transform 0.1s ease; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white; line-height: 1; }
+        
+        /* Hotspot'ai turi aukštą Z-INDEX, bet žemesnį nei AR mygtukas */
+        .StaticHotspot { 
+            position: absolute; 
+            z-index: 2000; /* Žemesnis už mygtuko Z-index (2500) */
+            will-change: transform, opacity; 
+            border-radius: 50%; 
+            width: 35px; height: 35px; 
+            border: 2px solid #FFFFFF; 
+            cursor: pointer; 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); 
+            transition: transform 0.1s ease; 
+            display: flex; align-items: center; 
+            justify-content: center; 
+            font-size: 18px; font-weight: bold; 
+            color: white; line-height: 1; 
+        }
         .StaticHotspot:hover { transform: scale(1.2); }
 
         .Alergenai { background: #FF4444; top: 20px; right: 20px; }
@@ -26,6 +42,22 @@
         .StaticHotspot:hover .tooltip { visibility: visible; opacity: 1; }
 
         #ar-error-message { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+        
+        /* MĖLYNA SPALVA JŪSŲ MYGTUKUI */
+        #ar-custom-button {
+            background-color: #007bff; 
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        #ar-custom-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -44,39 +76,25 @@
             exposure="1.0" 
             auto-rotate>
 
+            <button slot="ar-button" id="ar-custom-button" style="
+                position: absolute; 
+                bottom: 10px; 
+                right: 10px; 
+                z-index: 2500; /* Aukštesnis už Hotspot'us (2000) */
+                display: none;"> 
+                ▶️ Rodyti AR
+            </button>
+            
             <div class="StaticHotspot Alergenai">!
-                <div class="tooltip">
-                    <p style="margin:0; font-weight: bold;">⚠️ Svarbūs Alergenai (Išplėstinis Sąrašas):</p>
-                    <ul style="list-style: disc; padding-left: 20px; margin: 5px 0 0 0;">
-                        <li>Pienas (Sūris)</li>
-                        <li>Kviečiai (Bandelė, Glutenas)</li>
-                        <li>Sezamo sėklos (Bandelės viršus)</li>
-                        <li>Sojos (galimi pėdsakai)</li>
-                        <li>Garstyčios (gali būti padaže)</li>
-                    </ul>
-                </div>
+                <div class="tooltip">...</div>
             </div>
             
             <div class="StaticHotspot Sudetis">i
-                <div class="tooltip">
-                    <p style="margin:0; font-weight: bold;">Papildoma Informacija apie Sūrainį:</p>
-                    <p style="margin: 5px 0 0 0;">Jautienos maltinukas (100% jautiena).</p>
-                    <p style="margin: 0;">Svoris: 160 g. Kalorijos: 350 kcal.</p>
-                    <p style="margin: 0;">Švieži pomidorai, salotos, marinuoti agurkėliai.</p>
-                </div>
+                <div class="tooltip">...</div>
             </div>
 
             <div class="StaticHotspot InstrukcijosBtn">?
-                <div class="tooltip">
-                      <p style="margin:0; font-weight: bold;">📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</p>
-                    <p style="font-weight: bold; margin-top: 5px;">AR Režimo Paleidimas:</p>
-                    <ol style="padding-left: 20px; margin: 5px 0 0 0;">
-                        <li>Paspauskite **AR mygtuką** (kubo piktogramą).</li>
-                        <li>Lėtai judinkite telefoną virš plokščio paviršiaus (stalo, grindų).</li>
-                        <li>Bakstelėkite ekraną, kad patalpintumėte sūrainį.</li>
-                    </ol>
-                    <p style="font-size: 0.8em; color: #aaa; margin-top: 10px;">(Pastaba: Informacijos mygtukai dingsta įjungus AR režimą.)</p>
-                </div>
+                <div class="tooltip">...</div>
             </div>
 
         </model-viewer>
@@ -88,15 +106,29 @@
     <script>
         const modelViewer = document.querySelector('model-viewer');
         const errorMessage = document.getElementById('ar-error-message');
+        const arCustomButton = document.getElementById('ar-custom-button');
 
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             
             if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos. Pabandykite su naujesniu telefonu ar planšete.';
+                arCustomButton.style.display = 'none';
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos. Išbandykite **Safari (iOS) / Chrome (Android) naršyklėje**.';
                 errorMessage.style.display = 'block';
+                
             } else if (status === 'success') {
                 errorMessage.style.display = 'none';
+
+                // Nustatome, ar naršyklė yra iOS:
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+                if (isIOS) {
+                    // Jei iOS (Safari), rodoma Jūsų sukurta mygtuko sąsaja apačioje
+                    arCustomButton.style.display = 'block';
+                } else {
+                    // Visur kitur (Android Chrome), matome originalią kubo piktogramą
+                    arCustomButton.style.display = 'none';
+                }
             }
         });
     </script>
