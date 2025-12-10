@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Sūrainis (Optimali Viršaus Pozicija)</title>
+    <title>AR Peržiūra - Sūrainis (Optimali Hotspot'ų Pozicija)</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
@@ -14,14 +14,28 @@
         
         model-viewer { width: 100%; height: 100%; z-index: 100; transform: translateZ(0); }
         
-        /* Hotspot'ai TURI AUKŠTĄ Z-index (2000), kad niekas neužstotų */
-        .StaticHotspot { position: absolute; z-index: 2000; will-change: transform, opacity; border-radius: 50%; width: 35px; height: 35px; border: 2px solid #FFFFFF; cursor: pointer; box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); transition: transform 0.1s ease; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white; line-height: 1; }
+        /* Hotspot'ai TURI AUKŠTĄ Z-index (2000) */
+        .StaticHotspot { 
+            position: absolute; 
+            z-index: 2000; 
+            will-change: transform, opacity; 
+            border-radius: 50%; 
+            width: 35px; height: 35px; 
+            border: 2px solid #FFFFFF; 
+            cursor: pointer; 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6); 
+            transition: transform 0.1s ease; 
+            display: flex; align-items: center; 
+            justify-content: center; 
+            font-size: 18px; font-weight: bold; 
+            color: white; line-height: 1; 
+        }
         .StaticHotspot:hover { transform: scale(1.2); }
 
-        /* Hotspot'ai lieka Viršuje Kairėje ir Viršuje Dešinėje */
-        .Alergenai { background: #FF4444; top: 20px; right: 20px; } /* Vieta išsaugota */
-        .Sudetis { background: #2AA1FF; top: 80px; right: 20px; }
-        .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; } 
+        /* HOTSPOT'AI: NULEISTI ŽEMIAU, kad išvengtų AR mygtuko */
+        .Alergenai { background: #FF4444; top: 60px; right: 20px; } /* Pakeista iš 20px į 60px */
+        .Sudetis { background: #2AA1FF; top: 120px; right: 20px; } /* Pakeista iš 80px į 120px */
+        .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; } /* Lieka Viršuje Kairėje */ 
 
         .StaticHotspot .tooltip { visibility: hidden; background-color: #000000; color: #fff; text-align: left; border-radius: 4px; padding: 8px 12px; position: absolute; z-index: 10; width: max-content; max-width: 350px; opacity: 0; transition: opacity 0.3s, visibility 0.3s; pointer-events: none; line-height: 1.4; font-size: 0.95em; }
         .Alergenai .tooltip, .Sudetis .tooltip { right: 120%; top: 50%; transform: translateY(-50%); }
@@ -30,7 +44,7 @@
 
         #ar-error-message { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
 
-        /* Stilius Pasirinktiniam AR Mygtukui */
+        /* Stilius Pasirinktiniam AR Mygtukui (Viršuje Dešinėje) */
         #ar-custom-button {
             background-color: #4CAF50; /* Žalia spalva */
             color: white;
@@ -41,7 +55,7 @@
             font-weight: bold;
             font-size: 16px;
             transition: background-color 0.3s;
-            z-index: 2500;
+            z-index: 2500; /* Kad būtų virš Hotspot'ų (nors jie nuleisti) */
         }
         #ar-custom-button:hover {
             background-color: #45a049;
@@ -63,14 +77,7 @@
             exposure="1.0" 
             auto-rotate>
 
-            <button slot="ar-button" id="ar-custom-button" style="
-                position: absolute; 
-                top: 10px; 
-                left: 50%; 
-                transform: translateX(-50%); 
-                display: none; 
-                padding: 10px 20px; /* Padidiname, kad būtų matomas */
-                font-size: 18px;"> 
+            <button slot="ar-button" id="ar-custom-button" style="position: absolute; top: 10px; right: 10px; z-index: 2500; display: none;"> 
                 ▶️ Rodyti AR
             </button>
             
@@ -101,7 +108,7 @@
                     <p style="margin:0; font-weight: bold;">📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</p>
                     <p style="font-weight: bold; margin-top: 5px;">AR Režimo Paleidimas:</p>
                     <ol style="padding-left: 20px; margin: 5px 0 0 0;">
-                        <li>Paspauskite **AR mygtuką** (viršuje centre).</li>
+                        <li>Paspauskite **AR mygtuką** (Viršuje Dešinėje).</li>
                         <li>Lėtai judinkite telefoną virš plokščio paviršiaus.</li>
                         <li>Bakstelėkite ekraną, kad patalpintumėte sūrainį.</li>
                     </ol>
