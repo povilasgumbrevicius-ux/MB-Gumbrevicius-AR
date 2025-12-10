@@ -3,29 +3,185 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Kačių namelis kavos staliukas</title>
+    <title>AR Peržiūra - Sūrainis (Visi Modalai, Sumažintas Šriftas)</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
-        body { margin: 0; padding: 0; height: 100vh; }
+        /* 0. Tėvinis konteineris */
+        .container { position: relative; width: 100%; height: 100vh; }
+        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; color: #333; }
         model-viewer { width: 100%; height: 100%; }
+        
+        /* 1. Hotspot mygtukų stiliai (pozicijos lieka dešinėje/kairėje viršuje) */
+        .StaticHotspot {
+            position: absolute;
+            z-index: 100;
+            border-radius: 50%;
+            width: 35px; height: 35px;
+            border: 2px solid #FFFFFF;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: bold; color: white;
+        }
+        .Alergenai { background: #FF4444; top: 20px; right: 20px; }
+        .Sudetis { background: #2AA1FF; top: 80px; right: 20px; }
+        .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; }
+
+
+        /* 2. MODALINIO LANGO (Pop-up) Stiliai */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            /* Pusiau permatomas juodas fonas per visą ekraną */
+            background-color: rgba(0,0,0,0.75); 
+        }
+
+        .modal-content {
+            /* JUODAS DALINAI PERMATOMAS LANGAS su BALTU TEKSTU */
+            background-color: rgba(0, 0, 0, 0.95); /* Tamsesnis fonas */
+            color: #FFFFFF; /* Baltas tekstas */
+            
+            margin: 10% auto;
+            padding: 25px;
+            border: none;
+            width: 85%; 
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.6); 
+            
+            /* Svarbu: Sumažinamas pagrindinis šrifto dydis */
+            font-size: 1em; 
+        }
+
+        /* Uždarymo mygtukas */
+        .close {
+            color: #ccc;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* 3. Modalų antraštės ir sąrašai */
+        .modal-content h2 {
+             font-size: 1.4em; /* Antraštė lieka aiški, bet ne per didelė */
+             margin-top: 0;
+        }
+        .modal-content ul, .modal-content ol {
+             padding-left: 25px;
+        }
+        
     </style>
 </head>
 <body>
-    <model-viewer 
-        src="../modeliai/dekoras/insky.glb" 
-        alt="Kačių namelis kavos staliukas" 
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
+    <div class="container">
         
-        crossorigin 
+        <model-viewer 
+            src="../modeliai/maistas/cheeseburger.glb" 
+            alt="Sūrainis" 
+            ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            crossorigin 
+            camera-controls 
+            shadow-intensity="1" 
+            exposure="1.0" 
+            auto-rotate>
+        </model-viewer>
         
-        camera-controls 
-        camera-orbit="0 75deg 0,5m" 
-        shadow-intensity="1" 
-        exposure="1.0" 
-        auto-rotate>
-    </model-viewer>
+        <div class="StaticHotspot Alergenai" onclick="openModal('alergenaiModal')">
+            !
+        </div>
+        
+        <div class="StaticHotspot Sudetis" onclick="openModal('sudetisModal')">
+            i
+        </div>
+
+        <div class="StaticHotspot InstrukcijosBtn" onclick="openModal('instrukcijosModal')">
+            ?
+        </div>
+        
+    </div>
+
+    <div id="alergenaiModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('alergenaiModal')">&times;</span>
+            <h2 style="color: #FF4444;">⚠️ Svarbūs Alergenai</h2>
+            <ul style="list-style: disc;">
+                <li>**Pienas** (Sūris, pieno milteliai)</li>
+                <li>**Kviečiai** (Bandelė, glitimas)</li>
+                <li>**Kiaušiniai** (Gali būti majoneze ar bandelės glajuje)</li>
+                <li>**Sezamo sėklos** (Ant bandelės)</li>
+            </ul>
+            <p style="margin-top: 20px; color: #aaa;">*Galimi riešutų pėdsakai dėl bendros gamybos aplinkos.</p>
+        </div>
+    </div>
+
+    <div id="sudetisModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('sudetisModal')">&times;</span>
+            <h2 style="color: #2AA1FF;">ℹ️ Produkto Sudėtis ir Informacija</h2>
+            <ul style="list-style: none; padding-left: 0;">
+                <li><span style="font-weight: bold;">Mėsos dalis:</span> Jautienos maltinukas (100% jautiena).</li>
+                <li><span style="font-weight: bold;">Svoris:</span> 160 g.</li>
+                <li><span style="font-weight: bold;">Apytikslis Kalorijų Kiekis:</span> 350 kcal.</li>
+                <li><span style="font-weight: bold;">Daržovės:</span> Švieži pomidorai, salotos, marinuoti agurkėliai.</li>
+                <li><span style="font-weight: bold;">Padažai:</span> Specialus majonezo padažas, kečupas.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="instrukcijosModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('instrukcijosModal')">&times;</span>
+            <h2 style="color: #6c757d;">📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</h2>
+            <p style="font-weight: bold;">AR Režimo Paleidimas:</p>
+            <ol>
+                <li>Paspauskite **AR mygtuką** apatiniame kampe.</li>
+                <li>Leiskite naudotis kamera.</li>
+                <li>Lėtai judinkite telefoną virš plokščio paviršiaus (stalo, grindų), kol pamatysite modelio žymeklį.</li>
+                <li>Bakstelėkite ekraną, kad patalpintumėte sūrainį.</li>
+            </ol>
+            
+            <p style="font-weight: bold; margin-top: 15px;">Valdymo gestai AR režime:</p>
+            <ul>
+                <li>**Vienas pirštas:** Judina modelį paviršiumi.</li>
+                <li>**Du pirštai (gnybimas/tempimas):** Didina arba mažina modelio dydį.</li>
+                <li>**Du pirštai (sukimas):** Sukioja modelį horizontaliai.</li>
+            </ul>
+            <p style="font-size: 0.8em; color: #aaa; margin-top: 15px;">(Pastaba: Informacijos mygtukai dingsta įjungus AR režimą.)</p>
+        </div>
+    </div>
+
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Uždaro modalinį langą, paspaudus bet kur už lango ribų
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
