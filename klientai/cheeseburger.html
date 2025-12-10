@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Sūrainis </title>
+    <title>AR Peržiūra - Sūrainis</title>
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/stable/model-viewer.min.js"></script>
     
     <style>
-        /* CSS Stiliai (išlieka nepakitę) */
+        /* CSS Stiliai (nepakitę) */
         .container { position: relative; width: 100%; height: 100vh; }
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         
@@ -36,7 +36,8 @@
             alt="Sūrainis" 
             ios-src="https://ar.gumbrevicius.lt/modeliai/maistas/cheeseburger.glb"
             ar 
-            ar-button  ar-modes="scene-viewer quick-look" 
+            ar-button 
+            ar-modes="scene-viewer quick-look" 
             
             camera-controls 
             shadow-intensity="1" 
@@ -88,7 +89,6 @@
         const modelViewer = document.querySelector('model-viewer');
         const errorMessage = document.getElementById('ar-error-message');
 
-        // Ši dalis nebevaldo jokio custom mygtuko rodymo, o tik klaidų pranešimus.
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             
