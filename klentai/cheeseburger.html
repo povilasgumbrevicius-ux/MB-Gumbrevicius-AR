@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AR Peržiūra - Sūrainis (Cheeseburger) su 3D Hotspotais</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <style>
+        /* Pagrindinis stilius */
+        body { margin: 0; padding: 0; height: 100vh; }
+        model-viewer { width: 100%; height: 100%; }
+        
+        /* 1. Hotspot mygtuko stilius (veikia tiek naršyklėje, tiek AR) */
+        .Hotspot {
+            /* Vizualinis stilius */
+            border-radius: 50%;
+            width: 35px; 
+            height: 35px;
+            border: 2px solid #FFFFFF;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+            transition: transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            line-height: 1; 
+        }
+        .Hotspot:hover {
+            transform: scale(1.2); 
+        }
+
+        /* 2. Konkretus Hotspotų spalvos */
+        .Alergenai {
+            background: #FF4444; /* Raudonas (Alergenai) */
+        }
+        
+        .Sudetis {
+            background: #2AA1FF; /* Mėlynas (Sudėtis/Info) */
+        }
+
+        /* 3. Iššokančio langelio (Tooltip) stilius */
+        .Hotspot .tooltip {
+            visibility: hidden;
+            background-color: #000000;
+            color: #fff;
+            text-align: left;
+            border-radius: 4px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 120%; /* Rodo virš Hotspot mygtuko */
+            left: 50%;
+            transform: translateX(-50%); 
+            width: max-content;
+            max-width: 250px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+        
+        /* Rodo Tooltip'ą, kai pelė užvedama */
+        .Hotspot:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    
+    <model-viewer 
+        src="../modeliai/maistas/cheeseburger.glb" 
+        alt="Sūrainis" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        
+        crossorigin camera-controls 
+        shadow-intensity="1" 
+        exposure="1.0" 
+        auto-rotate>
+        
+        <button class="Hotspot Alergenai" 
+                slot="hotspot-alergenai" 
+                data-position="-0.15 0.15 0"  
+                data-normal="0 0 1">
+            !
+            <div class="tooltip">
+                <p style="margin:0; font-weight: bold;">⚠️ Svarbūs Alergenai:</p>
+                <ul style="list-style: disc; padding-left: 20px; margin: 5px 0 0 0;">
+                    <li>Pienas (Sūris)</li>
+                    <li>Kviečiai (Bandelė, Glutenas)</li>
+                    <li>Sezamo sėklos</li>
+                </ul>
+            </div>
+        </button>
+        
+        <button class="Hotspot Sudetis" 
+                slot="hotspot-sudedamosios" 
+                data-position="0.15 0.15 0"  
+                data-normal="0 0 1">
+            i
+            <div class="tooltip">
+                <p style="margin:0; font-weight: bold;">Papildoma Informacija:</p>
+                <p style="margin: 5px 0 0 0;">Jautienos maltinukas (100% jautiena).</p>
+                <p style="margin: 0;">Svoris: 160 g. Kalorijos: 350 kcal.</p>
+                <p style="margin: 0;">Švieži pomidorai ir salotos.</p>
+            </div>
+        </button>
+        
+    </model-viewer>
+</body>
+</html>
