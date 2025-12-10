@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Sūrainis (Optimali Hotspot'ų Pozicija)</title>
+    <title>AR Peržiūra - Sūrainis </title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
@@ -14,7 +14,7 @@
         
         model-viewer { width: 100%; height: 100%; z-index: 100; transform: translateZ(0); }
         
-        /* Hotspot'ai TURI AUKŠTĄ Z-index (2000) */
+        /* StaticHotspot stiliai (jūsų informacijos mygtukai) */
         .StaticHotspot { 
             position: absolute; 
             z-index: 2000; 
@@ -32,10 +32,9 @@
         }
         .StaticHotspot:hover { transform: scale(1.2); }
 
-        /* HOTSPOT'AI: NULEISTI ŽEMIAU, kad išvengtų AR mygtuko */
-        .Alergenai { background: #FF4444; top: 60px; right: 20px; } /* Pakeista iš 20px į 60px */
-        .Sudetis { background: #2AA1FF; top: 120px; right: 20px; } /* Pakeista iš 80px į 120px */
-        .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; } /* Lieka Viršuje Kairėje */ 
+        .Alergenai { background: #FF4444; top: 20px; right: 20px; }
+        .Sudetis { background: #2AA1FF; top: 80px; right: 20px; }
+        .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; } 
 
         .StaticHotspot .tooltip { visibility: hidden; background-color: #000000; color: #fff; text-align: left; border-radius: 4px; padding: 8px 12px; position: absolute; z-index: 10; width: max-content; max-width: 350px; opacity: 0; transition: opacity 0.3s, visibility 0.3s; pointer-events: none; line-height: 1.4; font-size: 0.95em; }
         .Alergenai .tooltip, .Sudetis .tooltip { right: 120%; top: 50%; transform: translateY(-50%); }
@@ -44,7 +43,7 @@
 
         #ar-error-message { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
 
-        /* Stilius Pasirinktiniam AR Mygtukui (Viršuje Dešinėje) */
+        /* Stilius Pasirinktiniam AR Mygtukui */
         #ar-custom-button {
             background-color: #4CAF50; /* Žalia spalva */
             color: white;
@@ -55,7 +54,6 @@
             font-weight: bold;
             font-size: 16px;
             transition: background-color 0.3s;
-            z-index: 2500; /* Kad būtų virš Hotspot'ų (nors jie nuleisti) */
         }
         #ar-custom-button:hover {
             background-color: #45a049;
@@ -68,7 +66,7 @@
         <model-viewer 
             src="https://ar.gumbrevicius.lt/modeliai/maistas/cheeseburger.glb" 
             alt="Sūrainis" 
-            ios-src="https://ar.gumbrevicius.lt/modeliai/maistas/cheeseburger.glb"
+            
             ar 
             ar-modes="scene-viewer quick-look" 
             
@@ -77,11 +75,12 @@
             exposure="1.0" 
             auto-rotate>
 
-            <button slot="ar-button" id="ar-custom-button" style="position: absolute; top: 10px; right: 10px; z-index: 2500; display: none;"> 
+            <button slot="ar-button" id="ar-custom-button" style="position: absolute; top: 120px; right: 10px; z-index: 2500;">
                 ▶️ Rodyti AR
             </button>
             
-            <div class="StaticHotspot Alergenai">!
+            <div class="StaticHotspot Alergenai">
+                !
                 <div class="tooltip">
                     <p style="margin:0; font-weight: bold;">⚠️ Svarbūs Alergenai (Išplėstinis Sąrašas):</p>
                     <ul style="list-style: disc; padding-left: 20px; margin: 5px 0 0 0;">
@@ -94,7 +93,8 @@
                 </div>
             </div>
             
-            <div class="StaticHotspot Sudetis">i
+            <div class="StaticHotspot Sudetis">
+                i
                 <div class="tooltip">
                     <p style="margin:0; font-weight: bold;">Papildoma Informacija apie Sūrainį:</p>
                     <p style="margin: 5px 0 0 0;">Jautienos maltinukas (100% jautiena).</p>
@@ -103,13 +103,15 @@
                 </div>
             </div>
 
-            <div class="StaticHotspot InstrukcijosBtn">?
+            <div class="StaticHotspot InstrukcijosBtn">
+                ?
                 <div class="tooltip">
-                    <p style="margin:0; font-weight: bold;">📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</p>
+                      <p style="margin:0; font-weight: bold;">📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</p>
+                    
                     <p style="font-weight: bold; margin-top: 5px;">AR Režimo Paleidimas:</p>
                     <ol style="padding-left: 20px; margin: 5px 0 0 0;">
-                        <li>Paspauskite **AR mygtuką** (Viršuje Dešinėje).</li>
-                        <li>Lėtai judinkite telefoną virš plokščio paviršiaus.</li>
+                        <li>Paspauskite **AR mygtuką** (šiuo atveju mygtuką "Rodyti AR").</li>
+                        <li>Lėtai judinkite telefoną virš plokščio paviršiaus (stalo, grindų).</li>
                         <li>Bakstelėkite ekraną, kad patalpintumėte sūrainį.</li>
                     </ol>
                     <p style="font-size: 0.8em; color: #aaa; margin-top: 10px;">(Pastaba: Informacijos mygtukai dingsta įjungus AR režimą.)</p>
@@ -133,7 +135,7 @@
             if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
                 // Jei AR nepalaikoma, paslepiame mygtuką ir rodome pranešimą
                 arCustomButton.style.display = 'none';
-                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos. Patikrinkite, ar naršote per **HTTPS** ir ar adresas įvestas tiesiogiai į naršyklę.';
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos arba tam reikia atnaujinti **Google Play Services for AR** programėlę. Patikrinkite, ar naršote per **HTTPS** ir ar adresas įvestas tiesiogiai į naršyklę.';
                 errorMessage.style.display = 'block';
                 
             } else if (status === 'success') {
