@@ -3,15 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Sūrainis (Cheeseburger)</title>
+    <title>AR Peržiūra - Sūrainis </title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
         /* 0. Tėvinis konteineris */
-        .container { position: relative; width: 100%; height: 100vh; }
+        .container { 
+            position: relative; 
+            width: 100%; 
+            height: 100vh; 
+        }
+
+        /* Pagrindinis stilius */
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
-        model-viewer { width: 100%; height: 100%; }
+        model-viewer { 
+            width: 100%; 
+            height: 100%; 
+        }
         
         /* 1. Hotspot mygtukų stiliai */
         .StaticHotspot {
@@ -35,7 +44,7 @@
         .InstrukcijosBtn { background: #6c757d; top: 20px; left: 20px; }
 
 
-        /* 3. Tooltip stiliai: DIDELI LANGAI */
+        /* 3. Tooltip stiliai: Svarbu: DIDELI LANGAI */
         .tooltip {
             background-color: #000000;
             color: #fff;
@@ -46,7 +55,7 @@
             z-index: 10;
             width: max-content;
             
-            /* Svarbu: PADIDINTAS PLOTIS DIDELIAM TEKSTUI */
+            /* PADIDINTAS PLOTIS DIDELIAM TEKSTUI */
             max-width: 350px; 
             
             line-height: 1.4;
@@ -88,7 +97,7 @@
             margin: 5px 0 0 0;
         }
         
-        /* Išjungiame senąją hover logiką */
+        /* Išjungiame CSS :hover logiką, nes ją pakeis JS paspaudimas */
         .StaticHotspot:hover .tooltip {
              visibility: hidden; 
              opacity: 0;
@@ -132,3 +141,58 @@
                 <p style="margin: 5px 0 0 0;">**Jautienos maltinukas:** 100% lietuviška jautiena, druska, pipirai.</p>
                 <p style="margin: 0;">**Svoris:** 160 g. **Kalorijos:** 350 kcal.</p>
                 <p style="margin: 5px 0 0 0;">**Kiti ingredientai:** Cheddar sūris, švieži pomidorai, salotos, marinuoti agurkėliai. Specialus padažas pagamintas majonezo ir kečupo pagrindu.</p>
+            </div>
+        </div>
+
+        <div class="StaticHotspot InstrukcijosBtn" onclick="toggleTooltip(this)">
+            ?
+            <div class="tooltip">
+                <p style="margin:0; font-weight: bold;">📱 Kaip naudotis Papildytosios Realybės (AR) funkcija:</p>
+                
+                <p style="font-weight: bold; margin-top: 5px;">AR Režimo Paleidimas:</p>
+                <ol>
+                    <li>Paspauskite **AR mygtuką** (paprastai dešinėje apačioje).</li>
+                    <li>Lėtai judinkite telefoną virš plokščio paviršiaus (stalo, grindų).</li>
+                    <li>Bakstelėkite ekraną, kad patalpintumėte sūrainį.</li>
+                </ol>
+                
+                <p style="font-weight: bold; margin-top: 10px;">Valdymo gestai AR režime:</p>
+                <ul>
+                    <li>**Vienas pirštas:** Judina modelį paviršiumi.</li>
+                    <li>**Du pirštai (gnybimas):** Didina arba mažina dydį.</li>
+                    <li>**Du pirštai (sukimas):** Sukioja modelį horizontaliai.</li>
+                </ul>
+                <p style="font-size: 0.8em; color: #aaa; margin-top: 10px;">(Pastaba: Informacijos mygtukai dingsta įjungus AR režimą.)</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function toggleTooltip(hotspot) {
+            const tooltip = hotspot.querySelector('.tooltip');
+            const isAlreadyOpen = tooltip.classList.contains('open');
+
+            // Uždaro visus kitus atidarytus tooltip'us
+            document.querySelectorAll('.tooltip').forEach(tip => {
+                tip.classList.remove('open');
+            });
+
+            // Jei mygtukas nebuvo atidarytas, atidarome jį
+            if (!isAlreadyOpen) {
+                 tooltip.classList.add('open');
+            }
+        }
+        
+        // Uždaro tooltip'ą, paspaudus bet kur kitur
+        document.addEventListener('click', (event) => {
+            // Jei paspaudimo taikinys nėra StaticHotspot elementas
+            if (!event.target.closest('.StaticHotspot')) {
+                document.querySelectorAll('.tooltip').forEach(tip => {
+                    tip.classList.remove('open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
