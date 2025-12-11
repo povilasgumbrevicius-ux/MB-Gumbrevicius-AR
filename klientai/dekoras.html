@@ -35,9 +35,9 @@
             shadow-intensity="1" 
             exposure="1.0" 
             
-            camera-orbit="180deg 75deg 105%" 
+            camera-orbit="0 75deg 105%" 
             
-            data-ar-rotation="0 0 180deg" 
+            data-ar-rotation="0 0 180" 
             
             auto-rotate
             disable-tap
@@ -54,12 +54,10 @@
         const modelViewer = document.querySelector('#ar-rotatable-model');
         const errorMessage = document.getElementById('ar-error-message');
         
-        // Ši dalis palikta tik tam, kad galėtumėte ateityje pritaikyti JavaScript AR rotacijai WebXR režime.
         modelViewer.addEventListener('ar-session-start', () => {
              const rotationString = modelViewer.getAttribute('data-ar-rotation');
              if (rotationString && rotationString !== '0 0 0') {
-                 // Čia galite įterpti JavaScript kodą, kuris pasuks modelį
-                 // (reikalingos papildomos bibliotekos, pvz., Three.js)
+                 
              }
         });
 
