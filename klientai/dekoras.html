@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AR Peržiūra - Dekoras</title>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
@@ -19,7 +20,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
-        /* Stilius Pasirinktiniam AR Mygtukui (Atkurtas) */
+        /* Stilius Pasirinktiniam AR Mygtukui (Jūsų Stiliai) */
         #ar-custom-button {
             background-color: #4CAF50; 
             color: white;
@@ -52,12 +53,11 @@
             ar-modes="scene-viewer quick-look webxr" 
             
             camera-controls 
-            camera-orbit="180deg 75deg 0,5m" 
-            data-ar-rotation="180deg 0 0" 
             shadow-intensity="1" 
             exposure="1.0" 
             
-            camera-orbit="0 75deg 105%" 
+            camera-orbit="0deg 75deg 105%" 
+            
             data-ar-rotation="0 0 0" 
             
             auto-rotate
@@ -78,24 +78,74 @@
         const modelViewer = document.querySelector('#ar-rotatable-model');
         const errorMessage = document.getElementById('ar-error-message');
         const arCustomButton = document.getElementById('ar-custom-button'); 
+        
+        // =================================================================
+        // ✅ TRŪKSTAMA LOGIKA: AKTYVUOJA X, Y, Z POSŪKĮ
+        // =================================================================
+        
+        // 1. Scene Viewer (Android) URL korekcija (Taikoma Y ašies posūkiui)
+        function updateSceneViewerSource(rotationString) {
+            const originalSrc = modelViewer.getAttribute('src');
+            
+            // Paimame tik Y ašies posūkį (antrasis skaičius) ir konvertuojame į laipsnius
+            const yRotationDeg = rotationString ? parseFloat(rotationString.split(' ')[1]) : 0;
+            const arOrientationCorrection = yRotationDeg !== 0 ? `${yRotationDeg}deg` : '0deg';
 
+            if (arOrientationCorrection !== '0deg') {
+                const absoluteModelUrl = new URL(originalSrc, window.location.href).href;
+                
+                // Nustatomas intent:// URL su orientation parametru
+                modelViewer.setAttribute('src', 
+                    `intent://${absoluteModelUrl.replace('https://', '').replace('http://', '')}#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=;end;?orientation=${arOrientationCorrection}`
+                );
+            }
+        }
+        
+        // Paleidžiama pradžioje (kad Android gautų posūkio nurodymą prieš sesiją)
+        const initialRotation = modelViewer.getAttribute('data-ar-rotation');
+        if (initialRotation) updateSceneViewerSource(initialRotation);
+
+
+        // 2. WebXR / Quick Look (iOS) X, Y, Z korekcija
         modelViewer.addEventListener('ar-session-start', () => {
-             const rotationString = modelViewer.getAttribute('data-ar-rotation');
-             if (rotationString && rotationString !== '0 0 0') {
-                 
-             }
-        });
+            // Tikriname, ar galima manipuliuoti modeliu per Three.js
+            if (typeof THREE === 'undefined' || !modelViewer.model) return;
+            
+            const rotationString = modelViewer.getAttribute('data-ar-rotation');
+            
+            if (rotationString && rotationString !== '0 0 0') {
+                 const [x, y, z] = rotationString.split(' ').map(Number);
+                
+                // Konvertuojame laipsnius į radianus
+                const radX = x * Math.PI / 180;
+                const radY = y * Math.PI / 180;
+                const radZ = z * Math.PI / 180;
 
+                // Pritaikome X, Y, Z posūkį modeliui
+                modelViewer.model.setRotation(radX, radY, radZ);
+            }
+        });
+        
+        // Funkcija, kuri atstato posūkį, kai AR sesija baigiasi
+        modelViewer.addEventListener('ar-session-end', () => {
+            if (modelViewer.model && modelViewer.model.setRotation) {
+                modelViewer.model.setRotation(0, 0, 0); 
+            }
+        });
+        // =================================================================
+
+
+        // Klaidos/būsenos valdymas (Jūsų kodas)
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             
             if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
                 errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
                 errorMessage.style.display = 'block';
-                arCustomButton.style.display = 'none'; // Paslėpti mygtuką, jei AR nepalaikoma
+                arCustomButton.style.display = 'none';
             } else {
                 errorMessage.style.display = 'none';
-                arCustomButton.style.display = 'block'; // Rodyti mygtuką, jei AR palaikoma
+                arCustomButton.style.display = 'block';
             }
         });
     </script>
