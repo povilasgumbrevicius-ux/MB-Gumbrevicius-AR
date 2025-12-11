@@ -3,9 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Paveikslas Vaidilute (Keičiamas dydis)</title>
+    <title>AR Peržiūra - Paveikslas Vaidilute</title>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
@@ -13,42 +12,6 @@
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         model-viewer { width: 100%; height: 100%; z-index: 100; }
         
-        #size-controls {
-            position: absolute; 
-            bottom: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 2500;
-            display: none; /* Pradžioje paslėpti, rodyti tik kai AR palaikoma */
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .size-button {
-            background-color: #f8f9fa;
-            color: #343a40;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        .size-button:hover {
-            background-color: #e2e6ea;
-            transform: scale(1.05);
-        }
-        
-        .size-button.active {
-            background-color: #007bff;
-            color: white;
-            box-shadow: 0 0 5px #007bff;
-        }
-
         #ar-error-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
@@ -56,6 +19,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
+        /* AR Mygtukas */
         #ar-custom-button {
             background-color: #4CAF50; 
             color: white;
@@ -80,27 +44,29 @@
     <div class="container">
         
         <model-viewer 
-            id="ar-resizable-model"
+            id="ar-model"
             
             src="../modeliai/dekoras/vaidilute.glb"
             alt="Paveikslas Vaidilute" 
             
             ar 
-            ar-modes="webxr scene-viewer quick-look" 
+            ar-modes="scene-viewer quick-look webxr" 
             
             camera-controls 
-            camera-orbit="0 75deg 1.5m" 
-            shadow-intensity="1" 
-            exposure="1.0" 
+            shadow-intensity="2"  
+            exposure="1.5"        
             
-            data-current-scale="1.0" 
+            camera-orbit="auto auto auto"  
+            camera-target="auto"           
             
+            auto-rotate
             disable-tap
+            min-field-of-view="10deg"
+            max-field-of-view="45deg"
         >
             <button slot="ar-button" id="ar-custom-button">
                 ▶️ Rodyti AR
             </button>
-            
             
         </model-viewer>
         
@@ -108,5 +74,24 @@
 
     <div id="ar-error-message"></div>
 
+    <script>
+        const modelViewer = document.querySelector('#ar-model');
+        const errorMessage = document.getElementById('ar-error-message');
+        
+        // Klaidos/būsenos valdymas
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            const arCustomButton = document.getElementById('ar-custom-button');
+            
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
+                errorMessage.style.display = 'block';
+                arCustomButton.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'none';
+                arCustomButton.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
