@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Paveikslas Vaidilutė</title>
+    <title>AR Peržiūra - Paveikslas Vaidilute</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
@@ -47,18 +47,17 @@
             id="ar-model"
             
             src="modeliai/dekoras/vaidilute.glb"
-            alt="Paveikslas Vaidilutė" 
+            alt="Paveikslas Vaidilute" 
             
             ar 
             ar-modes="scene-viewer quick-look webxr" 
             
             camera-controls 
-            shadow-intensity="1" 
-            exposure="1.0" 
             
-            camera-orbit="0 75deg 105%" 
+            shadow-intensity="2"  
+            exposure="1.5"        
             
-            auto-rotate
+            camera-orbit="auto auto auto"  camera-target="auto"           auto-rotate
             disable-tap
             min-field-of-view="10deg"
             max-field-of-view="45deg"
@@ -77,9 +76,7 @@
         const modelViewer = document.querySelector('#ar-model');
         const errorMessage = document.getElementById('ar-error-message');
         
-        // JOKIOS MASTELIO AR POSŪKIO LOGIKOS ČIA NĖRA
-        
-        // Klaidos/būsenos valdymas (Jūsų kodas)
+        // Klaidos/būsenos valdymas
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             const arCustomButton = document.getElementById('ar-custom-button');
