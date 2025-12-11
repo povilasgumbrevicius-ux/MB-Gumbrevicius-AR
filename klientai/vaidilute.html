@@ -101,12 +101,6 @@
                 ▶️ Rodyti AR
             </button>
             
-            <div id="size-controls">
-                <button class="size-button active" data-scale="1.0">100% (1x)</button>
-                <button class="size-button" data-scale="0.8">80% (0.8x)</button>
-                <button class="size-button" data-scale="0.6">60% (0.6x)</button>
-                <button class="size-button" data-scale="0.4">40% (0.4x)</button>
-            </div>
             
         </model-viewer>
         
@@ -114,59 +108,5 @@
 
     <div id="ar-error-message"></div>
 
-    <script>
-        const modelViewer = document.querySelector('#ar-resizable-model');
-        const errorMessage = document.getElementById('ar-error-message');
-        const sizeButtons = document.querySelectorAll('.size-button');
-
-        let currentScale = parseFloat(modelViewer.getAttribute('data-current-scale')) || 1.0;
-        
-        function updateModelScale(scale) {
-            if (modelViewer.model && modelViewer.model.scale) {
-                modelViewer.model.scale.set(scale, scale, scale);
-                currentScale = scale;
-            }
-        }
-
-        sizeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const newScale = parseFloat(button.getAttribute('data-scale'));
-                
-                updateModelScale(newScale);
-
-                sizeButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-
-        modelViewer.addEventListener('ar-session-start', () => {
-            setTimeout(() => {
-                updateModelScale(currentScale);
-            }, 500);
-        });
-
-        modelViewer.addEventListener('ar-session-end', () => {
-             if (modelViewer.model && modelViewer.model.scale) {
-                modelViewer.model.scale.set(1, 1, 1);
-            }
-        });
-        
-        modelViewer.addEventListener('ar-status', (event) => {
-            const status = event.detail.status;
-            const arCustomButton = document.getElementById('ar-custom-button');
-            const sizeControls = document.getElementById('size-controls');
-            
-            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
-                errorMessage.style.display = 'block';
-                arCustomButton.style.display = 'none';
-                if (sizeControls) sizeControls.style.display = 'none'; 
-            } else {
-                errorMessage.style.display = 'none';
-                arCustomButton.style.display = 'block';
-                if (sizeControls) sizeControls.style.display = 'flex'; 
-            }
-        });
-    </script>
 </body>
 </html>
