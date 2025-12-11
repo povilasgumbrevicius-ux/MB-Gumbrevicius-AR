@@ -1,23 +1,78 @@
-<model-viewer 
-    src="https://ar.gumbrevicius.lt/modeliai/dekoras/dekoras.glb"
-    alt="Dekoro modelis" 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AR Peržiūra - Dekoras</title>
     
-    ar 
-    ar-modes="scene-viewer quick-look webxr" 
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
-    camera-controls 
-    shadow-intensity="1" 
-    exposure="1.0" 
-    
-    // PRIDĖTA: Nustatome pradinę kameros poziciją, kuri apsuka modelį peržiūroje 180 laipsnių.
-    camera-orbit="180deg 75deg 105%" 
-    
-    // Auto-sukimasis dabar veiks nuo 180 laipsnių pozicijos
-    auto-rotate
-    
-    disable-tap
-    // scale="0.769"
-    min-field-of-view="10deg"
-    max-field-of-view="45deg"
->
-</model-viewer>
+    <style>
+        .container { position: relative; width: 100%; height: 100vh; }
+        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
+        model-viewer { width: 100%; height: 100%; z-index: 100; }
+        
+        #ar-error-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <model-viewer 
+            id="ar-rotatable-model"
+            src="https://ar.gumbrevicius.lt/modeliai/dekoras/dekoras.glb"
+            alt="Dekoro modelis" 
+            
+            ar 
+            ar-modes="scene-viewer quick-look webxr" 
+            
+            camera-controls 
+            shadow-intensity="1" 
+            exposure="1.0" 
+            
+            camera-orbit="180deg 75deg 105%" 
+            
+            data-ar-rotation="0 0 0" 
+            
+            auto-rotate
+            disable-tap
+            min-field-of-view="10deg"
+            max-field-of-view="45deg"
+        >
+        </model-viewer>
+        
+    </div>
+
+    <div id="ar-error-message"></div>
+
+    <script>
+        const modelViewer = document.querySelector('#ar-rotatable-model');
+        const errorMessage = document.getElementById('ar-error-message');
+        
+        // Ši dalis palikta tik tam, kad galėtumėte ateityje pritaikyti JavaScript AR rotacijai WebXR režime.
+        modelViewer.addEventListener('ar-session-start', () => {
+             const rotationString = modelViewer.getAttribute('data-ar-rotation');
+             if (rotationString && rotationString !== '0 0 0') {
+                 // Čia galite įterpti JavaScript kodą, kuris pasuks modelį
+                 // (reikalingos papildomos bibliotekos, pvz., Three.js)
+             }
+        });
+
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
