@@ -78,63 +78,8 @@
         const modelViewer = document.querySelector('#ar-rotatable-model');
         const errorMessage = document.getElementById('ar-error-message');
         const arCustomButton = document.getElementById('ar-custom-button'); 
+
         
-        // =================================================================
-        // ✅ TRŪKSTAMA LOGIKA: AKTYVUOJA X, Y, Z POSŪKĮ
-        // =================================================================
-        
-        // 1. Scene Viewer (Android) URL korekcija (Taikoma Y ašies posūkiui)
-        function updateSceneViewerSource(rotationString) {
-            const originalSrc = modelViewer.getAttribute('src');
-            
-            // Paimame tik Y ašies posūkį (antrasis skaičius) ir konvertuojame į laipsnius
-            const yRotationDeg = rotationString ? parseFloat(rotationString.split(' ')[1]) : 0;
-            const arOrientationCorrection = yRotationDeg !== 0 ? `${yRotationDeg}deg` : '0deg';
-
-            if (arOrientationCorrection !== '0deg') {
-                const absoluteModelUrl = new URL(originalSrc, window.location.href).href;
-                
-                // Nustatomas intent:// URL su orientation parametru
-                modelViewer.setAttribute('src', 
-                    `intent://${absoluteModelUrl.replace('https://', '').replace('http://', '')}#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=;end;?orientation=${arOrientationCorrection}`
-                );
-            }
-        }
-        
-        // Paleidžiama pradžioje (kad Android gautų posūkio nurodymą prieš sesiją)
-        const initialRotation = modelViewer.getAttribute('data-ar-rotation');
-        if (initialRotation) updateSceneViewerSource(initialRotation);
-
-
-        // 2. WebXR / Quick Look (iOS) X, Y, Z korekcija
-        modelViewer.addEventListener('ar-session-start', () => {
-            // Tikriname, ar galima manipuliuoti modeliu per Three.js
-            if (typeof THREE === 'undefined' || !modelViewer.model) return;
-            
-            const rotationString = modelViewer.getAttribute('data-ar-rotation');
-            
-            if (rotationString && rotationString !== '0 0 0') {
-                 const [x, y, z] = rotationString.split(' ').map(Number);
-                
-                // Konvertuojame laipsnius į radianus
-                const radX = x * Math.PI / 180;
-                const radY = y * Math.PI / 180;
-                const radZ = z * Math.PI / 180;
-
-                // Pritaikome X, Y, Z posūkį modeliui
-                modelViewer.model.setRotation(radX, radY, radZ);
-            }
-        });
-        
-        // Funkcija, kuri atstato posūkį, kai AR sesija baigiasi
-        modelViewer.addEventListener('ar-session-end', () => {
-            if (modelViewer.model && modelViewer.model.setRotation) {
-                modelViewer.model.setRotation(0, 0, 0); 
-            }
-        });
-        // =================================================================
-
-
         // Klaidos/būsenos valdymas (Jūsų kodas)
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
