@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - FINALINĖ SHAPE KEY DIAGNOSTIKA</title>
+    <title>3D Spintelė - Visi 6 Stalčiai (Su pataisytu AR mygtuku)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -18,8 +18,60 @@
             --camera-controls-touch-radius: 10px; 
             --camera-controls-move-speed: 2;
         }
+
+        #controls-overlay {
+            position: absolute; 
+            top: 40px; 
+            left: 10px; 
+            transform: translateX(-50%); 
+            z-index: 2500;
+            display: flex;
+            gap: 5px; 
+        }
+
+        .drawer-button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .drawer-button.open {
+            background-color: #28a745; 
+        }
+        .drawer-button:hover {
+            background-color: #0056b3;
+        }
         
-        #ar-error-message { 
+        /* 1. AR MYGTUKO STILIAUS PATAISYMAS */
+        #ar-custom-button {
+            /* PRIVALO BŪTI AUKŠTAS Z-INDEX, KAD BŪTŲ VIRŠ MODELIO */
+            z-index: 3000; 
+            position: absolute; 
+            top: 20px; /* Išsaugokime atstumą nuo viršaus */
+            right: 20px; 
+            
+            /* Vizualiniai stiliai */
+            background-color: #4CAF50; 
+            color: white;
+            padding: 10px 20px; /* Padidiname, kad būtų didesnis */
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        #ar-custom-button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Klaidos pranešimas CSS */
+        #status-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
             z-index: 9999; font-weight: bold; display: none; text-align: center; 
@@ -30,9 +82,18 @@
 <body>
     <div class="container">
         
+        <div id="controls-overlay">
+            <button class="drawer-button" data-key="stalcius1" data-open="false">Stalčius 1</button>
+            <button class="drawer-button" data-key="stalcius2" data-open="false">Stalčius 2</button>
+            <button class="drawer-button" data-key="stalcius3" data-open="false">Stalčius 3</button>
+            <button class="drawer-button" data-key="stalcius4" data-open="false">Stalčius 4</button>
+            <button class="drawer-button" data-key="stalcius5" data-open="false">Stalčius 5</button>
+            <button class="drawer-button" data-key="stalcius6" data-open="false">Stalčius 6</button>
+        </div>
+
         <model-viewer 
             id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
+            src="../modeliai/baldai/spintele_v2.glb" 
             alt="Spintelės modelis" 
             camera-controls 
             interaction-prompt="none"
@@ -47,65 +108,80 @@
             </button>
         </model-viewer>
         
-        <div id="ar-error-message"></div>
+        <div id="status-message"></div>
     </div>
 
     <script>
         const modelViewer = document.getElementById('spintele-model');
-        const errorMessage = document.getElementById('ar-error-message');
-        
-        // **KRITINIS ĮVYKIS:** Tikriname, kai "plakatas" (poster) yra pašalintas
-        modelViewer.addEventListener('poster-dismissed', () => {
+        const statusMessage = document.getElementById('status-message');
+        const drawerButtons = document.querySelectorAll('.drawer-button');
+
+        // Universali funkcija, valdanti bet kurį stalčių
+        function toggleDrawer(event) {
+            const button = event.currentTarget; 
+            
+            const shapeKeyName = button.getAttribute('data-key'); 
+            let isCurrentlyOpen = button.getAttribute('data-open') === 'true';
+
+            const targetValue = isCurrentlyOpen ? 0.0 : 1.0;
+
+            // Taikome Shape Key pakeitimą
+            try {
+                 modelViewer.setAttribute(`morph-target-${shapeKeyName}`, targetValue);
+                 
+                 // Atnaujiname mygtuko būseną ir stilių
+                 button.setAttribute('data-open', (!isCurrentlyOpen).toString());
+                 button.textContent = isCurrentlyOpen ? `Stalčius ${shapeKeyName.slice(-1)}` : `Uždaryti ${shapeKeyName.slice(-1)}`;
+                 button.classList.toggle('open', !isCurrentlyOpen);
+
+            } catch (e) {
+                 statusMessage.innerHTML = `❌ KRITINĖ KLAIDA: Shape Key '${shapeKeyName}' neapdorotas. Patikrinkite F12 konsolę.`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
+                 console.error(`Klaida nustatant Shape Key '${shapeKeyName}':`, e);
+                 checkShapeKeyAvailability(); 
+            }
+        }
+
+        // Tikrinimo funkcija, kuri parodo, ar Shape Keys yra rasti
+        function checkShapeKeyAvailability() {
              try {
-                 // **KRITINIS TESTAS:** Bandome gauti Shape Key sąrašą
                  const morphTargets = modelViewer.model.morphTargetNames;
-                 const expectedKey = 'stalcius1'; // Tikriname, ar mūsų raktas yra sąraše
-
                  if (morphTargets && morphTargets.length > 0) {
-                     console.log('✅ SHAPE KEYS (Morfinių Tikslų) RASTI:');
-                     console.log(morphTargets);
-
-                     if (morphTargets.includes(expectedKey)) {
-                         errorMessage.innerHTML = `✅ FANTASTIKA! Shape Key '${expectedKey}' RASTAS. Dabar galime valdyti stalčius.`;
-                         errorMessage.style.backgroundColor = '#4CAF50';
-                         errorMessage.style.color = 'white';
-                         
-                         // AUTOMATINIS STALČIAUS ATIDARYMAS TESTUI
-                         // Kad įsitikintume, kad valdymas veikia
-                         setTimeout(() => {
-                            modelViewer.setAttribute(`morph-target-${expectedKey}`, 1.0);
-                            console.log(`Stalčius '${expectedKey}' bando atsidaryti.`);
-                         }, 1000);
-
-                     } else {
-                         errorMessage.innerHTML = `⚠️ Shape Keys rasti, bet trūksta '${expectedKey}'. Tikrinkite pavadinimą! Konsolėje rodomi rasti pavadinimai.`;
-                         errorMessage.style.backgroundColor = '#ffc107';
-                     }
-                     
+                     statusMessage.innerHTML = `✅ Rastos Shape Keys: ${morphTargets.join(', ')}`;
+                     statusMessage.style.backgroundColor = '#4CAF50';
+                     statusMessage.style.display = 'block';
                  } else {
-                     console.error('❌ GLB faile nerasta jokių Shape Keys (Morfinių Tikslų)!');
-                     errorMessage.innerHTML = '❌ Klaida: Nėra Shape Keys. Patikrinkite GLB eksportą, net jei rodė gerai model-viewer.dev.';
-                     errorMessage.style.backgroundColor = '#f44336';
+                     statusMessage.innerHTML = `❌ Nėra Shape Keys duomenų. Patikrinkite GLB ir talpyklą.`;
+                     statusMessage.style.backgroundColor = '#f44336';
+                     statusMessage.style.display = 'block';
                  }
              } catch (e) {
-                 console.error('❌ Kritinė klaida Shape Key gavime:', e);
-                 errorMessage.innerHTML = '❌ Modelis dingo arba įvyko klaida gaunant Shape Keys. Žr. F12 konsolę.';
-                 errorMessage.style.backgroundColor = '#f44336';
+                 // modelViewer.model dar neįkeltas
              }
+        }
+        
+        // Prikabiname valdymą prie kiekvieno mygtuko
+        drawerButtons.forEach(button => {
+            button.addEventListener('click', toggleDrawer);
+        });
+
+        // Nustatome pradinę būseną įkrovus modelį
+        modelViewer.addEventListener('model-visibility', () => {
+             // Įsitikiname, kad visi stalčiai yra uždaryti pradiniu metu
+             drawerButtons.forEach(button => {
+                 const shapeKeyName = button.getAttribute('data-key');
+                 try {
+                     modelViewer.setAttribute(`morph-target-${shapeKeyName}`, 0.0);
+                 } catch(e) { /* Ignoruojame klaidą */ }
+             });
+             checkShapeKeyAvailability();
         });
 
         // AR Statusas paliktas dėl pilnumo
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
-            const arCustomButton = document.getElementById('ar-custom-button');
-            
-            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                errorMessage.style.display = 'block';
-                if (arCustomButton) arCustomButton.style.display = 'none';
-            } else {
-                errorMessage.style.display = 'none';
-                if (arCustomButton) arCustomButton.style.display = 'block';
-            }
+            // ... (AR statuso valdymas)
         });
         
     </script>
