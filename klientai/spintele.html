@@ -73,16 +73,17 @@
         </model-viewer>
         
         <div id="status-message"></div>
-        <div id="shape-keys-list"></div> </div>
+        <div id="shape-keys-list"></div>
+    </div>
 
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
-        const shapeKeysListDiv = document.getElementById('shape-keys-list'); // NAUJAS
+        const shapeKeysListDiv = document.getElementById('shape-keys-list');
         
-        // KRITINĖ KONSTANTA: Jūsų Shape Key pavadinimo formatas (stalcius1, stalcius2...)
-        const SHAPE_KEY_PREFIX = "stalcius"; 
+        // PATAISYTA KRITINĖ KONSTANTA: Įtrauktas tarpas po 'stalcius'
+        const SHAPE_KEY_PREFIX = "stalcius "; // Pakeista iš "stalcius" į "stalcius "
         const SHAPE_KEY_SUFFIX = ""; 
 
         // PAGRINDINĖ FUNKCIJA: Valdymas per Shape Keys
@@ -91,22 +92,90 @@
             const drawerIndex = button.getAttribute('data-drawer-index');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            // Sukuriamas tikslus Shape Key pavadinimas (pvz., "stalcius3")
+            // Sukuriamas tikslus Shape Key pavadinimas (pvz., "stalcius " + 3 = "stalcius 3")
             const targetShapeKey = SHAPE_KEY_PREFIX + drawerIndex + SHAPE_KEY_SUFFIX;
             
             let targetValue;
             let targetState;
 
             if (!isOpen) {
-                targetValue = 1.0; // Shape Key svoris 1.0 = pilnai atidaryta
+                targetValue = 1.0; 
                 targetState = 'true';
             } else {
-                targetValue = 0.0; // Shape Key svoris 0.0 = uždaryta (Base Shape)
+                targetValue = 0.0; 
                 targetState = 'false';
             }
             
-            // Turi būti naudojama setMorphTargetWeight
+            // Naudojama teisinga funkcija setMorphTargetWeight
             try {
                  modelViewer.setMorphTargetWeight(targetShapeKey, targetValue);
             } catch (error) {
-                 console.error(`Klaida nustatant Shape Key ${targetShapeKey}. Patikrinkite pavadinimo tiksl
+                 console.error(`Klaida nustatant Shape Key ${targetShapeKey}.`, error);
+            }
+           
+            button.setAttribute('data-is-open', targetState);
+        }
+        
+        // Funkcija rastų Shape Keys atvaizdavimui
+        function displayShapeKeys() {
+            if (modelViewer.model && modelViewer.model.materials) {
+                const foundKeys = modelViewer.model.targetNames; 
+                
+                let html = '<strong>Rasti Shape Keys (Morf. Tikslai):</strong>';
+                
+                if (foundKeys && foundKeys.length > 0) {
+                    foundKeys.forEach(key => {
+                        html += `<span>- ${key}</span>`;
+                    });
+                    
+                    // Patvirtinimas, ar Shape Keys pavadinimai atitinka koduotą logiką
+                    const expectedKeys = Array.from({length: 6}, (_, i) => SHAPE_KEY_PREFIX + (i + 1));
+                    const mismatch = expectedKeys.some(key => !foundKeys.includes(key));
+
+                    if (mismatch) {
+                        html += '<span style="color: red; font-weight: bold;">⚠️ Įspėjimas: Trūksta Shape Keys (turėtų būti "stalcius 1"-"stalcius 6")!</span>';
+                        statusMessage.style.backgroundColor = '#dc3545';
+                    } else {
+                        html += '<span style="color: green; font-weight: bold;">✅ Shape Keys Pavadinimai TIKSLŪS.</span>';
+                    }
+
+                } else {
+                    html += '<span style="color: red;">Nė vienas Shape Key nerastas GLB faile!</span>';
+                }
+                
+                shapeKeysListDiv.innerHTML = html;
+                shapeKeysListDiv.style.display = 'block';
+            }
+        }
+        
+        // PRADINĖ BŪSENA: Užtikriname, kad visi stalčiai būtų uždaryti ir priskiriame mygtukų funkcijas
+        modelViewer.addEventListener('model-visibility', () => {
+             // 1. Atvaizduojame rastus Shape Keys
+             displayShapeKeys();
+             
+             // 2. Priskiriame Hotspot'ų klausytojus
+             hotspotButtons.forEach(button => {
+                 if(button) button.addEventListener('click', toggleShapeKey);
+             });
+             
+             // 3. Vizualinis patvirtinimas
+             statusMessage.innerHTML = `✅ Modelis paruoštas. Shape Key valdymas aktyvuotas.`;
+             statusMessage.style.backgroundColor = '#4CAF50'; 
+             statusMessage.style.display = 'block';
+             
+             // 4. Užtikriname, kad pradinė būsena būtų UŽDARYTA
+             for (let i = 1; i <= 6; i++) {
+                 const initialKey = SHAPE_KEY_PREFIX + i + SHAPE_KEY_SUFFIX;
+                 modelViewer.setMorphTargetWeight(initialKey, 0.0);
+             }
+        });
+        
+        // Klaidos stebėjimas
+        modelViewer.addEventListener('error', (event) => {
+            statusMessage.innerHTML = `❌ Klaida įkeliant modelį: ${event.detail}`;
+            statusMessage.style.backgroundColor = '#dc3545'; 
+            console.error('Model Viewer Error:', event.detail);
+        });
+    </script>
+</body>
+</html>
