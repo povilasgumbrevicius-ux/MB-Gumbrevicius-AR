@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="module" src="https://unpkg.com/@google/model-viewer@2.1.1/dist/model-viewer.min.js"></script>
+    <script type="module" src="unpkg.com"></script>
     
     <style>
-        /* CSS Stiliai */
+        /* CSS Stiliai (išlieka tie patys) */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         
@@ -39,12 +39,12 @@
             z-index: 9999; font-weight: bold; text-align: center; display: none;
         }
         
-        /* Shape Keys sąrašo vieta - Dabar bus rodomi rasti pavadinimai */
+        /* Shape Keys sąrašo vieta */
         #data-list {
             position: fixed; top: 10px; left: 10px; 
             background: #f8f9fa; border: 1px solid #ccc; 
             padding: 10px; border-radius: 5px; z-index: 9998;
-            max-width: 300px; font-size: 14px; 
+            max-width: 300px; font-size: 14px; display: none;
         }
         #data-list span {
             display: block; margin-top: 5px; font-weight: normal;
@@ -81,7 +81,8 @@
         const statusMessage = document.getElementById('status-message');
         const dataListDiv = document.getElementById('data-list');
         
-        // Shape Key formatas, kurį bandysime atpažinti paspaudus mygtuką
+        // >> VAZINGIAI PAKEISTI SI PREFIKSA, KAD ATITIKTU TIKRUS PAVADINIMUS <<
+        // Pavyzdys: jei Blender pavadino "Stalcius_1", pakeiskite i "Stalcius_"
         let SHAPE_KEY_PREFIX = "stalcius "; 
         const SHAPE_KEY_SUFFIX = ""; 
 
@@ -103,69 +104,68 @@
                  button.setAttribute('data-is-open', targetState);
                  statusMessage.innerHTML = `✅ ${targetShapeKey} judėjimas sėkmingas.`;
                  statusMessage.style.backgroundColor = '#4CAF50'; 
+                 statusMessage.style.display = 'block';
             } catch (error) {
-                 // Konsolė parodys Shape Key, kurį bandė rasti.
-                 console.error(`Klaida nustatant Shape Key "${targetShapeKey}": Pavadinimas neteisingas. Ar jis TIKSLIAI atitinka rastą pavadinimą?`, error);
+                 // Suteikiame daugiau informacijos konsolėje, kad padėtų derinti
+                 console.error(`Klaida nustatant Shape Key "${targetShapeKey}": Patikrinkite pavadinimą ir didžiąsias/mažąsias raides.`, error);
                  statusMessage.innerHTML = `❌ Klaida: Nepavyko rasti Shape Key: "${targetShapeKey}"`;
                  statusMessage.style.backgroundColor = '#dc3545';
+                 statusMessage.style.display = 'block';
             }
         }
         
-        // Funkcija rastų Shape Keys pavadinimų atvaizdavimui (KRITINĖ vieta)
+        // Funkcija rastų Shape Keys pavadinimų atvaizdavimui
         function displayModelData() {
             let html = '<strong>Rasti Shape Keys Pavadinimai:</strong>';
             
-            if (modelViewer.model && modelViewer.model.targetNames) {
+            // Pridedame patikrinimą, ar modelis ir targetNames egzistuoja
+            if (modelViewer.model && modelViewer.model.targetNames && modelViewer.model.targetNames.length > 0) {
                 const foundKeys = modelViewer.model.targetNames; 
                 
-                if (foundKeys.length > 0) {
-                    foundKeys.forEach(key => { 
-                        html += `<span>- ${key}</span>`;
-                        // Pirmą kartą, kai randame Shape Keys, bandom nustatyti teisingą prefix'ą
-                        if (foundKeys.length === 6 && SHAPE_KEY_PREFIX === "stalcius ") {
-                            // Jei rasti pavadinimai yra kitokio formato, atspausdiname konsolėje.
-                            // Pvz., jei rasta "Stalcius_1", SHAPE_KEY_PREFIX pakeičiame į "Stalcius_"
-                            console.log(`Rasti Shape Keys. Pavadinimas pavyzdys: ${key}. Patikrinkite didžiąsias/mažąsias raides ir pabraukimus.`);
-                        }
-                    });
-                    html += `<span style="color: green; font-weight: bold;">✅ Rasti ${foundKeys.length} Shape Keys.</span>`;
-                } else {
-                    html += `<span style="color: red; font-weight: bold;">❌ Nė vienas Shape Key nerastas!</span>`;
-                }
+                foundKeys.forEach(key => { 
+                    html += `<span>- ${key}</span>`;
+                });
+                html += `<span style="color: green; font-weight: bold; margin-top: 10px;">✅ Rasti ${foundKeys.length} Shape Keys.</span>`;
                 
-                dataListDiv.innerHTML = html;
-                dataListDiv.style.display = 'block';
+                // PRANEŠIMAS JUMS: Patikrinkite konsolę dėl tikslaus pavadinimo formato
+                console.log("Rasti Shape Keys:", foundKeys);
+
+            } else {
+                html += `<span style="color: red; font-weight: bold;">❌ Nė vienas Shape Key nerastas!</span>`;
+                console.warn("Nepavyko rasti Shape Keys. Įsitikinkite, kad jie buvo eksportuoti iš Blenderio su įjungtu 'Shape Keys' nustatymu.");
             }
+            
+            dataListDiv.innerHTML = html;
+            dataListDiv.style.display = 'block';
         }
         
         // Naudojame 'load' įvykį
         modelViewer.addEventListener('load', () => {
-             // 1. ATIDŽIAI TIKRINAME PAVADINIMUS
-             displayModelData();
-             
-             // 2. Priskiriame Hotspot'ų klausytojus
-             hotspotButtons.forEach(button => {
-                 if(button) button.addEventListener('click', toggleShapeKey);
-             });
-             
-             // 3. Vizualinis patvirtinimas
-             statusMessage.innerHTML = `✅ Modelis pilnai užkrautas. Valdymas aktyvuotas.`;
-             statusMessage.style.backgroundColor = '#4CAF50'; 
-             statusMessage.style.display = 'block';
-             
-             // 4. Užtikriname pradinę būseną
-             for (let i = 1; i <= 6; i++) {
-                 const initialKey = SHAPE_KEY_PREFIX + i + SHAPE_KEY_SUFFIX;
-                 try {
-                     modelViewer.setMorphTargetWeight(initialKey, 0.0);
-                 } catch (e) {
-                     // Ignoruojame pradinę klaidą, kad neperkrautume statuso pranešimo
-                 }
-             }
+             // Pridedame nedidelį laiko tarpą, kad visi GLTF elementai būtų pilnai inicijuoti
+             setTimeout(() => {
+                 displayModelData();
+                 
+                 // Priskiriame Hotspot'ų klausytojus po to, kai duomenys yra patikrinti
+                 hotspotButtons.forEach(button => {
+                     if(button) button.addEventListener('click', toggleShapeKey);
+                 });
+                 
+                 // Vizualinis patvirtinimas
+                 statusMessage.innerHTML = `✅ Modelis pilnai užkrautas. Patikrinkite kairėje esančius pavadinimus.`;
+                 statusMessage.style.backgroundColor = '#4CAF50'; 
+                 statusMessage.style.display = 'block';
+                 
+             }, 100); // Trumpas 100ms laukimas
         });
         
         // Klaidos stebėjimas
         modelViewer.addEventListener('error', (event) => {
             statusMessage.innerHTML = `❌ Klaida įkeliant modelį: ${event.detail}`;
             statusMessage.style.backgroundColor = '#dc3545'; 
-            console.error('Model Viewer Error:', event.detail
+            statusMessage.style.display = 'block';
+            console.error('Model Viewer Error:', event.detail);
+        });
+    </script>
+</body>
+</html>
+
