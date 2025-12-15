@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Tik Stalčius 1 Hotspot Testas</title>
+    <title>3D Spintelė - Stalčius 1 Hotspot + AR Valdymas</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -16,7 +16,7 @@
             --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
         }
         
-        /* Hotspot stilius */
+        /* Hotspot stilius (naudojamas tik 3D peržiūroje) */
         .hotspot-button {
             display: block;
             width: 30px; 
@@ -33,7 +33,24 @@
             background-color: rgba(40, 167, 69, 0.9); 
         }
         
-        /* AR Mygtuko ir Statuso stiliai lieka tie patys */
+        /* AR mygtukas stalčiui atidaryti (matomas tik AR režime) */
+        #ar-drawer-button {
+            background-color: #FF5722; 
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s;
+        }
+        #ar-drawer-button:hover {
+            background-color: #e64a19;
+        }
+        
+        /* Bendras AR Mygtuko ir Statuso stiliai */
         #ar-custom-button {
             z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
@@ -51,156 +68,4 @@
             alt="Spintelės modelis" 
             camera-controls 
             interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-            ar ar-modes="webxr scene-viewer quick-look"
-        >
-            <button class="hotspot-button" 
-                    slot="hotspot-stalcius-1" 
-                    data-position="0 0.45 0.5" 
-                    data-normal="0 0 1" 
-                    data-animation-name="stalcius1Action" 
-                    data-is-open="false">
-            </button>
-            
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
-        </model-viewer>
-        
-        <div id="status-message"></div>
-    </div>
-
-    <script>
-        const modelViewer = document.getElementById('spintele-model');
-        const statusMessage = document.getElementById('status-message');
-        // Naudojame document.querySelector, nes Hotspot'as yra TIK vienas
-        const hotspotButton = document.querySelector('.hotspot-button'); 
-        
-        // Animacijos nustatymai (turi atitikti Jūsų 100 kadrų GLB failą):
-        const FPS = 24.0; 
-        const OPEN_FRAMES = 50.0; 
-        const CLOSE_FRAMES = 50.0; 
-        
-        const OPEN_DURATION = OPEN_FRAMES / FPS; 
-        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; 
-        
-        const TARGET_DURATION = 0.5; 
-        const TIME_EPSILON = 0.01; 
-        
-        let isAnimating = false;
-        let animationMonitorId = null;
-        let targetTime = 0; 
-        let isOpening = false; 
-
-        // Funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
-        function checkAnimation() {
-            if (!isAnimating) {
-                cancelAnimationFrame(animationMonitorId);
-                return;
-            }
-
-            const currentTime = modelViewer.currentTime; 
-            
-            if (isOpening) {
-                // ATIDARYMAS (Tikslas: OPEN_DURATION)
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = targetTime; 
-                    isAnimating = false; 
-                    cancelAnimationFrame(animationMonitorId);
-                    // Atnaujiname mygtuko būseną po sustabdymo
-                    hotspotButton.setAttribute('data-is-open', 'true');
-                    return;
-                }
-            } else {
-                // UŽDARYMAS (Tikslas: TOTAL_DURATION)
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = 0; 
-                    isAnimating = false; 
-                    cancelAnimationFrame(animationMonitorId);
-                    // Atnaujiname mygtuko būseną po sustabdymo
-                    hotspotButton.setAttribute('data-is-open', 'false');
-                    return;
-                }
-            }
-            animationMonitorId = requestAnimationFrame(checkAnimation);
-        }
-
-
-        function toggleAnimation(event) {
-            if (isAnimating) return; 
-            
-            const button = event.currentTarget; 
-            const animationName = button.getAttribute('data-animation-name');
-            let isOpen = button.getAttribute('data-is-open') === 'true';
-
-            if (!animationName) return;
-            
-            let timeRange;
-
-            if (!isOpen) {
-                // ATIDARYMAS
-                timeRange = [0, OPEN_DURATION]; 
-                modelViewer.currentTime = 0; 
-                targetTime = OPEN_DURATION; 
-                isOpening = true;
-                
-            } else {
-                // UŽDARYMAS
-                timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
-                modelViewer.currentTime = OPEN_DURATION; 
-                targetTime = TOTAL_DURATION; 
-                isOpening = false;
-            }
-            
-            try {
-                isAnimating = true; 
-                
-                modelViewer.play({ 
-                    animationName: animationName, 
-                    timeRange: timeRange,
-                    duration: TARGET_DURATION, 
-                    repetitions: 1,
-                    direction: 'forwards' 
-                });
-                
-                animationMonitorId = requestAnimationFrame(checkAnimation);
-                
-                // Būsenos atnaujinimas perkeltas į checkAnimation
-
-            } catch (e) {
-                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 isAnimating = false; 
-            }
-        }
-        
-        if (hotspotButton) {
-            hotspotButton.addEventListener('click', toggleAnimation);
-        }
-
-        // Pradinis modelio nustatymas
-        modelViewer.addEventListener('model-visibility', () => {
-             const availableAnimations = modelViewer.availableAnimations || [];
-             const animationName = hotspotButton.getAttribute('data-animation-name');
-
-             if (availableAnimations.includes(animationName)) {
-                 modelViewer.animationName = animationName;
-                 modelViewer.currentTime = 0; 
-                 modelViewer.pause();
-                 
-                 statusMessage.innerHTML = `✅ Hotspot paruoštas. Patikrinkite padėtį (0 0.45 0.5).`;
-                 statusMessage.style.backgroundColor = '#4CAF50';
-                 statusMessage.style.display = 'block';
-             } else {
-                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 statusMessage.style.display = 'block';
-             }
-        });
-        
-    </script>
-</body>
-</html>
+            shadow-
