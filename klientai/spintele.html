@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Hotspot (Aukštai/Kairė, Be Statuso)</title>
+    <title>3D Spintelė - Stalčius 1, 2, 3 ir 4 Hotspot'ai</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -32,8 +32,6 @@
             transform: scale(1.2);
             background-color: rgba(40, 167, 69, 0.9); 
         }
-        
-        /* NĖRA STATUSO STILIŲ */
     </style>
 </head>
 <body>
@@ -55,15 +53,38 @@
                     data-animation-name="stalcius1Action" 
                     data-is-open="false">
             </button>
+
+            <button class="hotspot-button" 
+                    slot="hotspot-stalcius-2" 
+                    data-position="0.15 0.7 0.5" 
+                    data-normal="0 0 1" 
+                    data-animation-name="stalcius2Action" 
+                    data-is-open="false">
+            </button>
+
+            <button class="hotspot-button" 
+                    slot="hotspot-stalcius-3" 
+                    data-position="-0.15 0 0.5" 
+                    data-normal="0 0 1" 
+                    data-animation-name="stalcius3Action" 
+                    data-is-open="false">
+            </button>
+
+            <button class="hotspot-button" 
+                    slot="hotspot-stalcius-4" 
+                    data-position="0.15 0 0.5" 
+                    data-normal="0 0 1" 
+                    data-animation-name="stalcius4Action" 
+                    data-is-open="false">
+            </button>
         </model-viewer>
-        
-        </div>
+    </div>
 
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         
-        // Animacijos nustatymai (turi atitikti Jūsų 100 kadrų GLB failą):
+        // Animacijos nustatymai (bendri visoms 100 kadrų animacijoms):
         const FPS = 24.0; 
         const OPEN_FRAMES = 50.0; 
         const CLOSE_FRAMES = 50.0; 
@@ -152,6 +173,7 @@
                 activeControlButton.isOpening = isOpening; 
                 activeControlButton.targetTime = targetTime;
 
+                // Nustatome aktyvią animaciją (svarbu, kad stalčiai veiktų nepriklausomai)
                 modelViewer.animationName = animationName;
 
                 modelViewer.play({ 
@@ -164,27 +186,30 @@
                 animationMonitorId = requestAnimationFrame(checkAnimation);
                 
             } catch (e) {
-                // Tiesiog ignoruojame klaidą be statuso pranešimo
                 isAnimating = false; 
                 activeControlButton = null;
             }
         }
         
-        // Prikabiname valdymą prie Hotspot'o
+        // Prikabiname valdymą prie visų Hotspot'ų
         hotspotButtons.forEach(button => {
             if(button) button.addEventListener('click', toggleAnimation);
         });
 
-        // Nustatome Stalčiaus 1 animaciją į 0 poziciją įkrovimo metu
+        // Pradinis nustatymas: Nustatome visas animacijas į 0 poziciją (uždaryta)
         modelViewer.addEventListener('model-visibility', () => {
-             const animationName = hotspotButtons[0]?.getAttribute('data-animation-name');
+             const availableAnimations = modelViewer.availableAnimations || [];
+             
+             // Inicializuojame Stalčius 1, 2, 3 ir 4
+             const requiredAnimations = ["stalcius1Action", "stalcius2Action", "stalcius3Action", "stalcius4Action"];
 
-             // Tikriname, ar animacija egzistuoja, ir nustatome pradinę poziciją
-             if (modelViewer.availableAnimations.includes(animationName)) {
-                 modelViewer.animationName = animationName;
-                 modelViewer.currentTime = 0; 
-                 modelViewer.pause();
-             }
+             requiredAnimations.forEach(animationName => {
+                 if (availableAnimations.includes(animationName)) {
+                     modelViewer.animationName = animationName;
+                     modelViewer.currentTime = 0; 
+                     modelViewer.pause();
+                 }
+             });
         });
         
     </script>
