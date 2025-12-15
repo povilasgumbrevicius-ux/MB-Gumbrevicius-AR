@@ -1,71 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>3D Spintelė</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
-    <style>
-        /* CSS Stiliai lieka nepakeisti */
-        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { 
-            width: 100%; height: 100%; background-color: #ffffff;
-            --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
-        }
-        
-        .hotspot-button {
-            display: block; width: 30px; height: 30px; border: 4px solid white;
-            border-radius: 50%; background-color: rgba(0, 123, 255, 0.8); 
-            cursor: pointer; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-        .hotspot-button:hover {
-            transform: scale(1.2); background-color: rgba(40, 167, 69, 0.9); 
-        }
-
-        #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; display: none; text-align: center; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 80%;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        
-        <model-viewer 
-            id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
-            alt="Spintelės modelis" 
-            camera-controls 
-            interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-        >
-            <button class="hotspot-button" slot="hotspot-stalcius-1" data-position="-0.2 0.7 0.5" data-normal="0 0 1" data-animation-name="stalcius1Action" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-2" data-position="0.2 0.7 0.5" data-normal="0 0 1" data-animation-name="stalcius2Action" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-3" data-position="-0.2 0.5 0.5" data-normal="0 0 1" data-animation-name="stalcius3Action" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-4" data-position="0.2 0.5 0.5" data-normal="0 0 1" data-animation-name="stalcius4Action" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-5" data-position="-0.2 0.3 0.5" data-normal="0 0 1" data-animation-name="stalcius5Action" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-6" data-position="0.2 0.3 0.5" data-normal="0 0 1" data-animation-name="stalcius6Action" data-is-open="false"></button>
-        </model-viewer>
-        
-        <div id="status-message"></div>
-    </div>
-
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
         
+        // Constants (Keep these as they are)
         const FPS = 24.0; 
         const OPEN_FRAMES = 50.0; 
         const CLOSE_FRAMES = 50.0; 
-        
         const OPEN_DURATION = OPEN_FRAMES / FPS; 
         const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; 
         const TARGET_DURATION = 0.5; 
@@ -75,12 +16,7 @@
         let animationMonitorId = null;
         let activeControlButton = null; 
         
-        const REQUIRED_ANIMATIONS = [
-            "stalcius1Action", "stalcius2Action", "stalcius3Action", 
-            "stalcius4Action", "stalcius5Action", "stalcius6Action"
-        ];
-
-        // ... (checkAnimation funkcija lieka nepakeista) ...
+        // ... (checkAnimation function remains the same as your code) ...
         function checkAnimation() {
             if (!isAnimating || !activeControlButton) {
                 cancelAnimationFrame(animationMonitorId);
@@ -126,8 +62,8 @@
             animationMonitorId = requestAnimationFrame(checkAnimation);
         }
 
-        // FUNKCIJA SU KRITINIU ANIMACIJOS NUSTATYMO RESETU
-        function toggleAnimation(event) {
+        // UPDATED toggleAnimation FUNKCIJA
+        async function toggleAnimation(event) {
             if (isAnimating) return; 
             
             const button = event.currentTarget; 
@@ -141,11 +77,12 @@
             let isOpening;
 
             if (!isOpen) {
+                // Opening animation
                 timeRange = [0, OPEN_DURATION]; 
                 targetTime = OPEN_DURATION; 
                 isOpening = true;
-                
             } else {
+                // Closing animation
                 timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
                 targetTime = TOTAL_DURATION; 
                 isOpening = false;
@@ -157,15 +94,19 @@
                 activeControlButton.isOpening = isOpening; 
                 activeControlButton.targetTime = targetTime;
 
-                // 1. Priverstinis ANIMACIJOS RESETAS
-                modelViewer.pause();
-                modelViewer.animationName = ""; // Nustatome į tuščią (resetas)
-                
-                // 2. Nustatome naują animaciją ir pradinį laiką
-                modelViewer.animationName = animationName; 
+                // --- CRITICAL FIX START ---
+                // We must use a slight delay or force a re-render cycle so model-viewer 
+                // registers the new animationName before the play() call executes.
+                modelViewer.animationName = animationName;
+
+                // Add a very short pause to ensure the change is processed by the component
+                await new Promise(resolve => setTimeout(resolve, 10)); 
+                // --- CRITICAL FIX END ---
+
+                // Set the current time right before playing
                 modelViewer.currentTime = isOpening ? 0 : OPEN_DURATION;
 
-                // 3. Paleidžiame animaciją
+                // Play the animation
                 modelViewer.play({ 
                     timeRange: timeRange,
                     duration: TARGET_DURATION, 
@@ -176,6 +117,7 @@
                 animationMonitorId = requestAnimationFrame(checkAnimation);
                 
             } catch (e) {
+                console.error("Animation error:", e);
                 isAnimating = false; 
                 activeControlButton = null;
             }
@@ -185,36 +127,10 @@
             if(button) button.addEventListener('click', toggleAnimation);
         });
 
-        // PRADINĖ PATIKRA (lieka debug'ui)
+        // PRADINĖ PATIKRA
         modelViewer.addEventListener('model-visibility', () => {
              const availableAnimations = modelViewer.availableAnimations || [];
-             let missingAnimations = [];
-             
-             REQUIRED_ANIMATIONS.forEach(animationName => {
-                 if (!availableAnimations.includes(animationName)) {
-                     missingAnimations.push(animationName);
-                 }
-             });
-
-             if (missingAnimations.length > 0) {
-                 statusMessage.innerHTML = `❌ TRŪKSTA ANIMACIJŲ! Trūksta: ${missingAnimations.join(', ')}. Rastos: ${availableAnimations.join(', ')}`;
-                 statusMessage.style.backgroundColor = '#f44336'; 
-                 statusMessage.style.color = 'white';
-             } else {
-                 statusMessage.innerHTML = `✅ Visi 6 stalčiai paruošti! (${availableAnimations.length} animacijos rastos).`;
-                 statusMessage.style.backgroundColor = '#4CAF50'; 
-                 statusMessage.style.color = 'white';
-                 // Svarbu: Nustatome modelio būseną į UŽDARYTA, naudodami PIRMĄJĄ rastą animaciją.
-                 if (availableAnimations.length > 0) {
-                     modelViewer.animationName = availableAnimations[0]; 
-                     modelViewer.currentTime = 0; 
-                     modelViewer.pause();
-                 }
-             }
-
-             statusMessage.style.display = 'block';
+             // You can add debug code here to confirm your animation names match
+             // console.log("Available animations:", availableAnimations); 
         });
-        
     </script>
-</body>
-</html>
