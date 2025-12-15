@@ -1,91 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė</title>
+    <title>3D Spintelė - Stalčius 1 Animacijos Testas</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        
-        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { 
-            width: 100%; 
-            height: 100%; 
-            background-color: #ffffff;
-            --camera-controls-touch-radius: 10px; 
-            --camera-controls-move-speed: 2;
-        }
-
-        #ar-custom-button {
-            z-index: 3000; 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            background-color: #4CAF50; /* Žalia spalva */
-            color: white;
-            padding: 10px 20px; 
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        #ar-custom-button:hover {
-            background-color: #45a049;
-        }
-        
-        /* Statuso pranešimas AR palaikymo klaidoms */
-        #ar-status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; display: none; text-align: center; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        
-        <model-viewer 
-            id="spintele-model" 
-            src="../modeliai/baldai/spintele_v2.glb" 
-            alt="Spintelės modelis" 
-            camera-controls 
-            interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-            
-            ar
-            ar-modes="webxr scene-viewer quick-look"
-        >
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
-        </model-viewer>
-        
-        <div id="ar-status-message"></div>
-    </div>
-
-    <script>
-        const modelViewer = document.getElementById('spintele-model');
-        const arStatusMessage = document.getElementById('ar-status-message');
-
-        // Funkcija, tikrinanti AR palaikymą (naudojama AR mygtukui paslėpti/rodyti)
-        modelViewer.addEventListener<!DOCTYPE html>
-<html>
-<head>
-    <title>3D Spintelė - Visi 6 Stalčiai (Su pataisytu AR mygtuku)</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
-    <style>
-        
+        /* ... (CSS stiliai lieka tie patys) ... */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
@@ -98,22 +21,20 @@
 
         #controls-overlay {
             position: absolute; 
-            top: 40px; 
-            left: 10px; 
+            top: 20px; 
+            left: 50%; 
             transform: translateX(-50%); 
             z-index: 2500;
-            display: flex;
-            gap: 5px; 
         }
 
         .drawer-button {
-            padding: 8px 12px;
+            padding: 10px 20px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             transition: background-color 0.2s;
         }
@@ -124,18 +45,14 @@
             background-color: #0056b3;
         }
         
-        /* 1. AR MYGTUKO STILIAUS PATAISYMAS */
         #ar-custom-button {
-            /* PRIVALO BŪTI AUKŠTAS Z-INDEX, KAD BŪTŲ VIRŠ MODELIO */
             z-index: 3000; 
             position: absolute; 
-            top: 20px; /* Išsaugokime atstumą nuo viršaus */
+            top: 20px; 
             right: 20px; 
-            
-            /* Vizualiniai stiliai */
             background-color: #4CAF50; 
             color: white;
-            padding: 10px 20px; /* Padidiname, kad būtų didesnis */
+            padding: 10px 20px; 
             border-radius: 5px;
             border: none;
             cursor: pointer;
@@ -143,11 +60,7 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        #ar-custom-button:hover {
-            background-color: #45a049;
-        }
         
-        /* Klaidos pranešimas CSS */
         #status-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
@@ -160,12 +73,9 @@
     <div class="container">
         
         <div id="controls-overlay">
-            <button class="drawer-button" data-key="stalcius1" data-open="false">Stalčius 1</button>
-            <button class="drawer-button" data-key="stalcius2" data-open="false">Stalčius 2</button>
-            <button class="drawer-button" data-key="stalcius3" data-open="false">Stalčius 3</button>
-            <button class="drawer-button" data-key="stalcius4" data-open="false">Stalčius 4</button>
-            <button class="drawer-button" data-key="stalcius5" data-open="false">Stalčius 5</button>
-            <button class="drawer-button" data-key="stalcius6" data-open="false">Stalčius 6</button>
+            <button id="toggle-stalcius-1" class="drawer-button" data-animation-name="stalcius1Action" data-is-open="false">
+                Atidaryti Stalčių 1
+            </button>
         </div>
 
         <model-viewer 
@@ -191,74 +101,65 @@
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const statusMessage = document.getElementById('status-message');
-        const drawerButtons = document.querySelectorAll('.drawer-button');
+        const toggleButton = document.getElementById('toggle-stalcius-1');
+        const animationDuration = 0.5; 
 
-        // Universali funkcija, valdanti bet kurį stalčių
-        function toggleDrawer(event) {
+        // Funkcija, kuri paleidžia (forwards) arba atsuką (reverse) animaciją
+        function toggleAnimation(event) {
             const button = event.currentTarget; 
+            const animationName = button.getAttribute('data-animation-name');
+            let isOpen = button.getAttribute('data-is-open') === 'true';
+
+            if (!animationName) return;
+
+            // Nustatome kryptį: jei atidaryta -> reverse (uždaryti), jei uždaryta -> forwards (atidaryti)
+            const direction = isOpen ? 'reverse' : 'forwards';
+            const newText = isOpen ? `Atidaryti Stalčių 1` : `Uždaryti Stalčių 1`;
             
-            const shapeKeyName = button.getAttribute('data-key'); 
-            let isCurrentlyOpen = button.getAttribute('data-open') === 'true';
-
-            const targetValue = isCurrentlyOpen ? 0.0 : 1.0;
-
-            // Taikome Shape Key pakeitimą
             try {
-                 modelViewer.setAttribute(`morph-target-${shapeKeyName}`, targetValue);
-                 
-                 // Atnaujiname mygtuko būseną ir stilių
-                 button.setAttribute('data-open', (!isCurrentlyOpen).toString());
-                 button.textContent = isCurrentlyOpen ? `Stalčius ${shapeKeyName.slice(-1)}` : `Uždaryti ${shapeKeyName.slice(-1)}`;
-                 button.classList.toggle('open', !isCurrentlyOpen);
+                modelViewer.play({ 
+                    animationName: animationName, 
+                    duration: animationDuration,
+                    direction: direction, 
+                    repetitions: 1 
+                });
+                
+                // Atnaujiname mygtuko būseną ir stilių
+                button.setAttribute('data-is-open', (!isOpen).toString());
+                button.textContent = newText;
+                button.classList.toggle('open', !isOpen);
 
             } catch (e) {
-                 statusMessage.innerHTML = `❌ KRITINĖ KLAIDA: Shape Key '${shapeKeyName}' neapdorotas. Patikrinkite F12 konsolę.`;
+                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos '${animationName}'.`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
-                 console.error(`Klaida nustatant Shape Key '${shapeKeyName}':`, e);
-                 checkShapeKeyAvailability(); 
             }
         }
-
-        // Tikrinimo funkcija, kuri parodo, ar Shape Keys yra rasti
-        function checkShapeKeyAvailability() {
-             try {
-                 const morphTargets = modelViewer.model.morphTargetNames;
-                 if (morphTargets && morphTargets.length > 0) {
-                     statusMessage.innerHTML = `✅ Rastos Shape Keys: ${morphTargets.join(', ')}`;
-                     statusMessage.style.backgroundColor = '#4CAF50';
-                     statusMessage.style.display = 'block';
-                 } else {
-                     statusMessage.innerHTML = `❌ Nėra Shape Keys duomenų. Patikrinkite GLB ir talpyklą.`;
-                     statusMessage.style.backgroundColor = '#f44336';
-                     statusMessage.style.display = 'block';
-                 }
-             } catch (e) {
-                 // modelViewer.model dar neįkeltas
-             }
-        }
         
-        // Prikabiname valdymą prie kiekvieno mygtuko
-        drawerButtons.forEach(button => {
-            button.addEventListener('click', toggleDrawer);
-        });
+        // Prikabiname valdymą prie mygtuko
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleAnimation);
+        }
 
-        // Nustatome pradinę būseną įkrovus modelį
+        // Tikriname, ar animacija rasta įkėlus modelį
         modelViewer.addEventListener('model-visibility', () => {
-             // Įsitikiname, kad visi stalčiai yra uždaryti pradiniu metu
-             drawerButtons.forEach(button => {
-                 const shapeKeyName = button.getAttribute('data-key');
-                 try {
-                     modelViewer.setAttribute(`morph-target-${shapeKeyName}`, 0.0);
-                 } catch(e) { /* Ignoruojame klaidą */ }
-             });
-             checkShapeKeyAvailability();
-        });
+             const availableAnimations = modelViewer.availableAnimations || [];
+             const animationName = toggleButton.getAttribute('data-animation-name');
 
-        // AR Statusas paliktas dėl pilnumo
-        modelViewer.addEventListener('ar-status', (event) => {
-            const status = event.detail.status;
-            // ... (AR statuso valdymas)
+             if (availableAnimations.includes(animationName)) {
+                 // Animacija rasta, nustatome į 0 poziciją (uždaryta)
+                 modelViewer.animationName = animationName;
+                 modelViewer.currentTime = 0; 
+                 modelViewer.pause();
+                 
+                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta.`;
+                 statusMessage.style.backgroundColor = '#4CAF50';
+                 statusMessage.style.display = 'block';
+             } else {
+                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Patikrinkite pavadinimą/eksportą! Rastos: ${availableAnimations.join(', ')}`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
+             }
         });
         
     </script>
