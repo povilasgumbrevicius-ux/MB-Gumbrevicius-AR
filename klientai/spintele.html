@@ -1,22 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Spintelė - Visi 6 Stalčiai (GALUTINIS SPRENDIMAS)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
+        .container { position: relative; width: 100%; height: 100vh; }
+        model-viewer { 
+            width: 100%; height: 100%; background-color: #ffffff;
+            --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
+        }
+        
+        /* Hotspot stilius */
+        .hotspot-button {
+            display: block; width: 30px; height: 30px; border: 4px solid white;
+            border-radius: 50%; background-color: rgba(0, 123, 255, 0.8); 
+            cursor: pointer; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .hotspot-button:hover {
+            transform: scale(1.2); background-color: rgba(40, 167, 69, 0.9); 
+        }
+
+        /* Statuso pranešimas (paliktas debug'ui, galima pašalinti) */
+        #status-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <model-viewer 
+            id="spintele-model" 
+            src="../modeliai/baldai/spintele.glb" 
+            alt="Spintelės modelis" 
+            camera-controls 
+            interaction-prompt="none"
+            shadow-intensity="1.0"
+            exposure="1.0"
+            animation-name="stalcius1Action" 
+        >
+            <button class="hotspot-button" slot="hotspot-stalcius-1" data-position="-0.2 0.7 0.5" data-drawer-index="1" data-is-open="false"></button>
+            <button class="hotspot-button" slot="hotspot-stalcius-2" data-position="0.2 0.7 0.5" data-drawer-index="2" data-is-open="false"></button>
+            <button class="hotspot-button" slot="hotspot-stalcius-3" data-position="-0.2 0.5 0.5" data-drawer-index="3" data-is-open="false"></button>
+            <button class="hotspot-button" slot="hotspot-stalcius-4" data-position="0.2 0.5 0.5" data-drawer-index="4" data-is-open="false"></button>
+            <button class="hotspot-button" slot="hotspot-stalcius-5" data-position="-0.2 0.3 0.5" data-drawer-index="5" data-is-open="false"></button>
+            <button class="hotspot-button" slot="hotspot-stalcius-6" data-position="0.2 0.3 0.5" data-drawer-index="6" data-is-open="false"></button>
+        </model-viewer>
+        
+        <div id="status-message"></div>
+    </div>
+
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
         
-        // Constants (Keep these as they are)
+        // KRITINIAI PARAMETRAI
+        const ANIMATION_NAME = "stalcius1Action"; // VIENINTELĖ JŪSŲ SUDĖTINĖ ANIMACIJA
         const FPS = 24.0; 
-        const OPEN_FRAMES = 50.0; 
-        const CLOSE_FRAMES = 50.0; 
-        const OPEN_DURATION = OPEN_FRAMES / FPS; 
-        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; 
-        const TARGET_DURATION = 0.5; 
+        const FRAMES_PER_STAGE = 50.0; // Kiek kadrų skirti TIK atidarymui (Uždaryta -> Atidaryta)
+        const FRAMES_PER_DRAWER = FRAMES_PER_STAGE * 2; // 100 kadrų vieno stalčiaus pilnam ciklui
+
+        const STAGE_DURATION = FRAMES_PER_STAGE / FPS; // ~2.083s (Atidarymo/Uždarymo laikas)
+        const TARGET_DURATION = 0.5; // Animacijos greitis (realus perėjimo laikas sekundėmis)
         const TIME_EPSILON = 0.01; 
         
         let isAnimating = false;
         let animationMonitorId = null;
         let activeControlButton = null; 
-        
-        // ... (checkAnimation function remains the same as your code) ...
+
+        // Funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
         function checkAnimation() {
             if (!isAnimating || !activeControlButton) {
                 cancelAnimationFrame(animationMonitorId);
@@ -26,17 +88,18 @@
             const currentTime = modelViewer.currentTime; 
             const isOpening = activeControlButton.isOpening;
             const targetTime = activeControlButton.targetTime;
-            const animationName = activeControlButton.getAttribute('data-animation-name');
+            const drawerIndex = activeControlButton.getAttribute('data-drawer-index');
             
             if (isOpening) {
+                // ATIDARYMAS
                 if (currentTime >= targetTime - TIME_EPSILON) {
                     modelViewer.pause();
-                    modelViewer.currentTime = targetTime; 
+                    modelViewer.currentTime = targetTime; // Užtikriname tikslią atidarytą poziciją
                     isAnimating = false; 
                     cancelAnimationFrame(animationMonitorId);
                     
                     hotspotButtons.forEach(btn => {
-                        if (btn.getAttribute('data-animation-name') === animationName) {
+                        if (btn.getAttribute('data-drawer-index') === drawerIndex) {
                             btn.setAttribute('data-is-open', 'true');
                         }
                     });
@@ -44,14 +107,19 @@
                     return;
                 }
             } else {
+                // UŽDARYMAS
                 if (currentTime >= targetTime - TIME_EPSILON) {
                     modelViewer.pause();
-                    modelViewer.currentTime = 0; 
+                    
+                    // Nustatome laiką į UŽDARYTĄ BŪSENĄ (stalčiaus pradžios poziciją)
+                    const frameOffset = (parseInt(drawerIndex) - 1) * FRAMES_PER_DRAWER;
+                    modelViewer.currentTime = frameOffset / FPS; 
+                    
                     isAnimating = false; 
                     cancelAnimationFrame(animationMonitorId);
                     
                     hotspotButtons.forEach(btn => {
-                        if (btn.getAttribute('data-animation-name') === animationName) {
+                        if (btn.getAttribute('data-drawer-index') === drawerIndex) {
                             btn.setAttribute('data-is-open', 'false');
                         }
                     });
@@ -62,29 +130,36 @@
             animationMonitorId = requestAnimationFrame(checkAnimation);
         }
 
-        // UPDATED toggleAnimation FUNKCIJA
-        async function toggleAnimation(event) {
+        // PAGRINDINĖ FUNKCIJA: Paleidžia animaciją nurodytu kadrų diapazonu
+        function toggleAnimation(event) {
             if (isAnimating) return; 
             
             const button = event.currentTarget; 
-            const animationName = button.getAttribute('data-animation-name');
+            const drawerIndex = parseInt(button.getAttribute('data-drawer-index'));
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            if (!animationName) return;
-            
+            // Skaičiuojame kadrų/laiko poslinkius pagal stalčiaus eilės numerį (index)
+            const frameOffset = (drawerIndex - 1) * FRAMES_PER_DRAWER; // 0, 100, 200, 300 kadrų poslinkis
+
             let timeRange;
             let targetTime;
             let isOpening;
+            
+            // Konvertuojame kadrus į sekundes
+            const START_TIME = frameOffset / FPS;         // Uždaryta pozicija
+            const MID_TIME = START_TIME + STAGE_DURATION;  // Atidaryta pozicija
+            const END_TIME = START_TIME + (STAGE_DURATION * 2); // Ciklo pabaiga (grįžimas į kitą stalčiaus pradžią)
 
             if (!isOpen) {
-                // Opening animation
-                timeRange = [0, OPEN_DURATION]; 
-                targetTime = OPEN_DURATION; 
+                // ATIDARYMAS (Judame nuo START_TIME iki MID_TIME)
+                timeRange = [START_TIME, MID_TIME]; 
+                targetTime = MID_TIME; 
                 isOpening = true;
+                
             } else {
-                // Closing animation
-                timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
-                targetTime = TOTAL_DURATION; 
+                // UŽDARYMAS (Judame nuo MID_TIME iki END_TIME)
+                timeRange = [MID_TIME, END_TIME]; 
+                targetTime = END_TIME; 
                 isOpening = false;
             }
             
@@ -94,22 +169,17 @@
                 activeControlButton.isOpening = isOpening; 
                 activeControlButton.targetTime = targetTime;
 
-                // --- CRITICAL FIX START ---
-                // We must use a slight delay or force a re-render cycle so model-viewer 
-                // registers the new animationName before the play() call executes.
-                modelViewer.animationName = animationName;
+                // 1. Nustatome vienintelę animaciją
+                modelViewer.animationName = ANIMATION_NAME; 
+                
+                // 2. Nustatome pradinį laiką
+                modelViewer.currentTime = isOpening ? START_TIME : MID_TIME;
 
-                // Add a very short pause to ensure the change is processed by the component
-                await new Promise(resolve => setTimeout(resolve, 10)); 
-                // --- CRITICAL FIX END ---
 
-                // Set the current time right before playing
-                modelViewer.currentTime = isOpening ? 0 : OPEN_DURATION;
-
-                // Play the animation
+                // 3. Paleidžiame animacijos diapazoną
                 modelViewer.play({ 
                     timeRange: timeRange,
-                    duration: TARGET_DURATION, 
+                    duration: TARGET_DURATION, // Greitis
                     repetitions: 1,
                     direction: 'forwards' 
                 });
@@ -117,9 +187,9 @@
                 animationMonitorId = requestAnimationFrame(checkAnimation);
                 
             } catch (e) {
-                console.error("Animation error:", e);
                 isAnimating = false; 
                 activeControlButton = null;
+                console.error("Klaida paleidžiant animaciją:", e);
             }
         }
         
@@ -127,10 +197,27 @@
             if(button) button.addEventListener('click', toggleAnimation);
         });
 
-        // PRADINĖ PATIKRA
+        // PRADINĖ BŪSENA: Nustatome modelio būseną į uždaryta
         modelViewer.addEventListener('model-visibility', () => {
              const availableAnimations = modelViewer.availableAnimations || [];
-             // You can add debug code here to confirm your animation names match
-             // console.log("Available animations:", availableAnimations); 
+             
+             if (availableAnimations.includes(ANIMATION_NAME)) {
+                 statusMessage.innerHTML = `✅ Sudėtinė animacija "${ANIMATION_NAME}" rasta. Visi 6 stalčiai paruošti.`;
+                 statusMessage.style.backgroundColor = '#4CAF50'; 
+                 
+                 // Nustatome modelį į UŽDARYTĄ būseną (Stalčius 1 pradžia = 0.0s)
+                 modelViewer.animationName = ANIMATION_NAME; 
+                 modelViewer.currentTime = 0.0;
+                 modelViewer.pause();
+                 
+             } else {
+                 statusMessage.innerHTML = `❌ TRŪKSTA SUDĖTINĖS ANIMACIJOS! Ieškojome: "${ANIMATION_NAME}".`;
+                 statusMessage.style.backgroundColor = '#f44336'; 
+             }
+
+             statusMessage.style.display = 'block';
         });
+        
     </script>
+</body>
+</html>
