@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - TIESIOGINĖ MAZGO (NODE) TRANSFORMACIJA</title>
+    <title>3D Spintelė - STALČIŲ VALDYMAS</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     
     <style>
         /* Bendrai nustatymai */
@@ -38,17 +38,6 @@
             background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
             z-index: 9999; font-weight: bold; text-align: center; display: none;
         }
-        
-        /* Mazgų sąrašas diagnozei */
-        #data-list {
-            position: fixed; top: 10px; left: 10px; 
-            background: #f8f9fa; border: 1px solid #ccc; 
-            padding: 10px; border-radius: 5px; z-index: 9998;
-            max-width: 300px; font-size: 14px; 
-        }
-        #data-list span {
-            display: block; margin-top: 5px; font-weight: normal;
-        }
     </style>
 </head>
 <body>
@@ -73,17 +62,73 @@
         </model-viewer>
         
         <div id="status-message"></div>
-        <div id="data-list"></div>
-    </div>
+        </div>
 
     <script type="module">
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
-        const dataListDiv = document.getElementById('data-list');
         
         // KRITINIAI NUSTATYMAI
-        // PAKEISKITE: Turi atitikti stalčiaus OBJEKTO pavadinimo pradžią Blender'yje
-        const NODE_NAME_PREFIX = "Stalcius"; 
+        const NODE_NAME_PREFIX = "stalcius"; // Turi būti su mažosiomis raidėmis
+        const OPEN_DISTANCE = 0.3; // 0.3 metro
+        const AXIS_INDEX = 2; // Z ašis (0=X, 1=Y, 2=Z)
         
-        //
+        // Tiesioginė mazgo pozicijos valdymo funkcija
+        function toggleDrawerTransform(event) {
+            const button = event.currentTarget;
+            const index = button.getAttribute('data-drawer-index');
+            let isOpen = button.getAttribute('data-is-open') === 'true';
+
+            // Tikslus objekto (Node) pavadinimas (pvz., "stalcius3")
+            const targetNodeName = NODE_NAME_PREFIX + index;
+            
+            // Nustatome naują poslinkio vertę (0.3m arba 0m)
+            const targetPos = isOpen ? 0.0 : OPEN_DISTANCE; 
+            
+            // Sukuriame [X, Y, Z] masyvą ir nustatome reikšmę į nustatytą ašį
+            const translationVector = [0, 0, 0];
+            translationVector[AXIS_INDEX] = targetPos;
+
+            try {
+                 modelViewer.mutateNodeTransform({ 
+                     name: targetNodeName, 
+                     translation: translationVector, 
+                 });
+                 
+                 button.setAttribute('data-is-open', !isOpen ? 'true' : 'false');
+                 
+                 statusMessage.innerHTML = `✅ ${targetNodeName} atidaryta/uždaryta (${targetPos}m).`;
+                 statusMessage.style.backgroundColor = '#4CAF50'; 
+                 statusMessage.style.display = 'block';
+
+            } catch (error) {
+                 statusMessage.innerHTML = `❌ Klaida: Patikrinkite "${targetNodeName}" pavadinimą ir ašį (AXIS_INDEX).`;
+                 statusMessage.style.backgroundColor = '#dc3545';
+                 statusMessage.style.display = 'block';
+                 console.error('Node Transform Error:', error);
+            }
+        }
+        
+        // Įvykių klausytojas modeliui užsikrovus
+        modelViewer.addEventListener('load', () => {
+             // Priskiriame Hotspot'ų klausytojus
+             hotspotButtons.forEach(button => {
+                 button.addEventListener('click', toggleDrawerTransform);
+             });
+             
+             statusMessage.innerHTML = `✅ Modelis paruoštas. Spauskite stalčius.`;
+             statusMessage.style.backgroundColor = '#333';
+             statusMessage.style.display = 'block';
+        });
+        
+        // Klaidos stebėjimas
+        modelViewer.addEventListener('error', (event) => {
+            statusMessage.innerHTML = `❌ Klaida įkeliant modelį: ${event.detail}`;
+            statusMessage.style.backgroundColor = '#dc3545'; 
+            statusMessage.style.display = 'block';
+            console.error('Model Viewer Error:', event.detail);
+        });
+    </script>
+</body>
+</html>
