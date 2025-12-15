@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Peržiūra - Tesori D`oriente Byzantium</title>
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-    
-    <style>
-        body { margin: 0; padding: 0; height: 100vh; }
-        model-viewer { width: 100%; height: 100%; }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AR Peržiūra - Tesori D`oriente Byzantium</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; height: 100vh; }
+        model-viewer { width: 100%; height: 100%; }
+    </style>
 </head>
 <body>
-    <model-viewer 
-        src="../modeliai/kosmetika/tesori_doriente_bizantium.glb" 
-        alt="Tesori d'Oriente Bizantium modelis" 
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
-        
-        camera-controls 
-        camera-orbit="0 75deg 0,5m" 
-        shadow-intensity="1" 
-        exposure="1.0" 
-        auto-rotate>
-    </model-viewer>
+    <model-viewer 
+        id="model-viewer-element" src="../modeliai/kosmetika/tesori_doriente_bizantium.glb" 
+        alt="Tesori d'Oriente Bizantium modelis" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        
+        camera-controls 
+        camera-orbit="0 75deg 0,5m" 
+        shadow-intensity="1" 
+        exposure="1.0" 
+        auto-rotate
+    >
+    </model-viewer>
 </body>
 </html>
