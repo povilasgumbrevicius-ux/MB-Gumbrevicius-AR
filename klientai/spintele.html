@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Animacijos SĖKMĖS Testas</title>
+    <title>3D Spintelė - Stalčius 1 Animacijos Pataisa</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        
+        /* ... (CSS stiliai lieka tie patys) ... */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
@@ -19,57 +19,21 @@
             --camera-controls-move-speed: 2;
         }
 
-        /* Valdymo mygtuko konteineris */
         #controls-overlay {
-            position: absolute; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 2500;
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2500;
         }
-
-        /* Stalčiaus mygtukų stiliai */
         .drawer-button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.2s;
+            padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s;
         }
-        .drawer-button.open {
-            background-color: #28a745; /* Žalia, kai atidarytas */
-        }
-        .drawer-button:hover {
-            background-color: #0056b3;
-        }
+        .drawer-button.open { background-color: #28a745; }
+        .drawer-button:hover { background-color: #0056b3; }
         
-        /* AR Mygtuko stiliai */
         #ar-custom-button {
-            z-index: 3000; 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            background-color: #4CAF50; 
-            color: white;
-            padding: 10px 20px; 
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
         
-        /* Statuso pranešimas */
         #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; display: none; text-align: center; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
     </style>
 </head>
@@ -84,9 +48,7 @@
 
         <model-viewer 
             id="spintele-model" 
-            
             src="../modeliai/baldai/spintele.glb" 
-            
             alt="Spintelės modelis" 
             camera-controls 
             interaction-prompt="none"
@@ -108,15 +70,26 @@
         const toggleButton = document.getElementById('toggle-stalcius-1');
         const animationDuration = 0.5;
 
+        // Išsaugosime animacijos trukmę, kad žinotume maksimalų laiką
+        let maxAnimationTime = 0; 
+
         function toggleAnimation(event) {
             const button = event.currentTarget; 
             const animationName = button.getAttribute('data-animation-name');
             let isOpen = button.getAttribute('data-is-open') === 'true';
-
+            
+            if (!animationName) return;
+            
             const direction = isOpen ? 'reverse' : 'forwards';
             const newText = isOpen ? `Atidaryti Stalčių 1` : `Uždaryti Stalčių 1`;
-            
+
             try {
+                // Svarbi PATAISA: Jei uždarome (reverse), nustatome laiką į pabaigą, 
+                // kad animacija tikrai turėtų iš kur atsukinėti
+                if (isOpen && maxAnimationTime > 0) {
+                     modelViewer.currentTime = maxAnimationTime; 
+                }
+                
                 modelViewer.play({ 
                     animationName: animationName, 
                     duration: animationDuration,
@@ -129,7 +102,7 @@
                 button.classList.toggle('open', !isOpen);
 
             } catch (e) {
-                 statusMessage.innerHTML = `❌ KRITINĖ KLAIDA! Paleidimo klaida. Patikrinkite F12.`;
+                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
             }
@@ -144,21 +117,25 @@
              const animationName = toggleButton.getAttribute('data-animation-name');
 
              if (availableAnimations.includes(animationName)) {
-                 // Animacija rasta, nustatome į 0 poziciją (uždaryta)
+                 
+                 // Svarbu: Gauname maksimalų animacijos laiką iš modelio
+                 const animation = modelViewer.model.animations.find(a => a.name === animationName);
+                 if (animation) {
+                     maxAnimationTime = animation.duration;
+                 }
+                 
+                 // Nustatome į 0 poziciją (uždaryta)
                  modelViewer.animationName = animationName;
                  modelViewer.currentTime = 0; 
                  modelViewer.pause();
                  
-                 // PRANEŠIMAS DĖL STALČIAUS 1
-                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta.`;
+                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta. Trukmė: ${maxAnimationTime.toFixed(2)}s.`;
                  statusMessage.style.backgroundColor = '#4CAF50';
                  statusMessage.style.display = 'block';
              } else {
-                 // Šis pranešimas neturėtų pasirodyti!
-                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Patikrinkite eksportą. Rastos: ${availableAnimations.join(', ')}`;
+                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Rastos: ${availableAnimations.join(', ')}`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
-                 console.error(`Rastos animacijos: ${availableAnimations.join(', ')}`);
              }
         });
         
