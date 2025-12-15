@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="ajax.googleapis.com"></script>
     
     <style>
-        /* CSS Stiliai (išlieka tie patys) */
+        /* CSS Stiliai */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         
@@ -63,6 +63,7 @@
             shadow-intensity="1.0"
             exposure="1.0"
         >
+            <!-- Hotspots remain linked to drawer index 1-6 -->
             <button class="hotspot-button" slot="hotspot-stalcius-1" data-position="-0.2 0.7 0.5" data-drawer-index="1" data-is-open="false"></button>
             <button class="hotspot-button" slot="hotspot-stalcius-2" data-position="0.2 0.7 0.5" data-drawer-index="2" data-is-open="false"></button>
             <button class="hotspot-button" slot="hotspot-stalcius-3" data-position="-0.2 0.5 0.5" data-drawer-index="3" data-is-open="false"></button>
@@ -81,86 +82,64 @@
         const statusMessage = document.getElementById('status-message');
         const dataListDiv = document.getElementById('data-list');
         
-        // >> VAZINGIAI PAKEISTI SI PREFIKSA, KAD ATITIKTU TIKRUS PAVADINIMUS <<
-        // Pavyzdys: jei Blender pavadino "Stalcius_1", pakeiskite i "Stalcius_"
-        let SHAPE_KEY_PREFIX = "stalcius "; 
+        // >> CHANGED: Expecting names like Key1, Key2, Key3 <<
+        let SHAPE_KEY_PREFIX = "Key"; 
         const SHAPE_KEY_SUFFIX = ""; 
 
-        // PAGRINDINĖ FUNKCIJA: Shape Keys Valdymas
         function toggleShapeKey(event) {
             const button = event.currentTarget; 
             const drawerIndex = button.getAttribute('data-drawer-index');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
+            // Target name will now be Key1, Key2 etc.
             const targetShapeKey = SHAPE_KEY_PREFIX + drawerIndex + SHAPE_KEY_SUFFIX;
             
             let targetValue = isOpen ? 0.0 : 1.0; 
             let targetState = isOpen ? 'false' : 'true';
             
-            // NAUDOJAME setMorphTargetWeight
             try {
                  modelViewer.setMorphTargetWeight(targetShapeKey, targetValue);
-                 
                  button.setAttribute('data-is-open', targetState);
                  statusMessage.innerHTML = `✅ ${targetShapeKey} judėjimas sėkmingas.`;
                  statusMessage.style.backgroundColor = '#4CAF50'; 
                  statusMessage.style.display = 'block';
             } catch (error) {
-                 // Suteikiame daugiau informacijos konsolėje, kad padėtų derinti
-                 console.error(`Klaida nustatant Shape Key "${targetShapeKey}": Patikrinkite pavadinimą ir didžiąsias/mažąsias raides.`, error);
+                 console.error(`Klaida nustatant Shape Key "${targetShapeKey}": Pavadinimas neteisingas. Ar jis TIKSLIAI atitinka rasta pavadinima?`, error);
                  statusMessage.innerHTML = `❌ Klaida: Nepavyko rasti Shape Key: "${targetShapeKey}"`;
                  statusMessage.style.backgroundColor = '#dc3545';
                  statusMessage.style.display = 'block';
             }
         }
         
-        // Funkcija rastų Shape Keys pavadinimų atvaizdavimui
         function displayModelData() {
             let html = '<strong>Rasti Shape Keys Pavadinimai:</strong>';
-            
-            // Pridedame patikrinimą, ar modelis ir targetNames egzistuoja
             if (modelViewer.model && modelViewer.model.targetNames && modelViewer.model.targetNames.length > 0) {
                 const foundKeys = modelViewer.model.targetNames; 
-                
-                foundKeys.forEach(key => { 
-                    html += `<span>- ${key}</span>`;
-                });
+                foundKeys.forEach(key => { html += `<span>- ${key}</span>`; });
                 html += `<span style="color: green; font-weight: bold; margin-top: 10px;">✅ Rasti ${foundKeys.length} Shape Keys.</span>`;
-                
-                // PRANEŠIMAS JUMS: Patikrinkite konsolę dėl tikslaus pavadinimo formato
                 console.log("Rasti Shape Keys:", foundKeys);
-
             } else {
                 html += `<span style="color: red; font-weight: bold;">❌ Nė vienas Shape Key nerastas!</span>`;
-                console.warn("Nepavyko rasti Shape Keys. Įsitikinkite, kad jie buvo eksportuoti iš Blenderio su įjungtu 'Shape Keys' nustatymu.");
+                console.warn("Nepavyko rasti Shape Keys.");
             }
-            
             dataListDiv.innerHTML = html;
             dataListDiv.style.display = 'block';
         }
         
-        // Naudojame 'load' įvykį
         modelViewer.addEventListener('load', () => {
-             // Pridedame nedidelį laiko tarpą, kad visi GLTF elementai būtų pilnai inicijuoti
              setTimeout(() => {
                  displayModelData();
-                 
-                 // Priskiriame Hotspot'ų klausytojus po to, kai duomenys yra patikrinti
                  hotspotButtons.forEach(button => {
                      if(button) button.addEventListener('click', toggleShapeKey);
                  });
-                 
-                 // Vizualinis patvirtinimas
                  statusMessage.innerHTML = `✅ Modelis pilnai užkrautas. Patikrinkite kairėje esančius pavadinimus.`;
                  statusMessage.style.backgroundColor = '#4CAF50'; 
                  statusMessage.style.display = 'block';
-                 
-             }, 100); // Trumpas 100ms laukimas
+             }, 100);
         });
         
-        // Klaidos stebėjimas
         modelViewer.addEventListener('error', (event) => {
-            statusMessage.innerHTML = `❌ Klaida įkeliant modelį: ${event.detail}`;
+            statusMessage.innerHTML = `❌ Klaida įkeliantį modelį: ${event.detail}`;
             statusMessage.style.backgroundColor = '#dc3545'; 
             statusMessage.style.display = 'block';
             console.error('Model Viewer Error:', event.detail);
@@ -168,4 +147,3 @@
     </script>
 </body>
 </html>
-
