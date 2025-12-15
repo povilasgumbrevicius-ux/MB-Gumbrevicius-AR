@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Hotspot + AR Valdymas (Tikslinis)</title>
+    <title>3D Spintelė - Stalčius 1 Hotspot (Aukštai/Kairė, Be Statuso)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -16,7 +16,7 @@
             --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
         }
         
-        /* Hotspot stilius (naudojamas tik 3D peržiūroje) */
+        /* Hotspot stilius */
         .hotspot-button {
             display: block;
             width: 30px; 
@@ -33,30 +33,7 @@
             background-color: rgba(40, 167, 69, 0.9); 
         }
         
-        /* AR mygtukas stalčiui atidaryti (MATOMAS TIK AR REŽIME) */
-        #ar-control-button { /* Pakeistas ID */
-            background-color: #FF5722; 
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            transition: background-color 0.3s;
-        }
-        #ar-control-button:hover {
-            background-color: #e64a19;
-        }
-        
-        /* Bendras AR Mygtuko ir Statuso stiliai */
-        #ar-custom-button {
-            z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
-        }
-        #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-        }
+        /* NĖRA STATUSO STILIŲ */
     </style>
 </head>
 <body>
@@ -70,170 +47,21 @@
             interaction-prompt="none"
             shadow-intensity="1.0"
             exposure="1.0"
-            ar ar-modes="webxr scene-viewer quick-look"
         >
             <button class="hotspot-button" 
                     slot="hotspot-stalcius-1" 
-                    data-position="-0.15 0.45 0.5" 
+                    data-position="-0.15 0.7 0.5" 
                     data-normal="0 0 1" 
                     data-animation-name="stalcius1Action" 
                     data-is-open="false">
             </button>
-            
-            <button id="ar-control-button" 
-                    slot="ar" 
-                    data-animation-name="stalcius1Action" 
-                    data-is-open="false">
-                 Atidaryti Stalčių 1
-            </button>
-
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
         </model-viewer>
         
-        <div id="status-message"></div>
-    </div>
+        </div>
 
     <script>
         const modelViewer = document.getElementById('spintele-model');
-        const statusMessage = document.getElementById('status-message');
-        
-        // Renkame abu mygtukus (Hotspot'ą ir AR mygtuką)
-        const buttonsToControl = [
-            document.querySelector('.hotspot-button'),
-            document.getElementById('ar-control-button')
-        ].filter(b => b); 
-        
-        // Animacijos nustatymai (turi atitikti Jūsų 100 kadrų GLB failą):
-        const FPS = 24.0; 
-        const OPEN_FRAMES = 50.0; 
-        const CLOSE_FRAMES = 50.0; 
-        
-        const OPEN_DURATION = OPEN_FRAMES / FPS; 
-        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; 
-        
-        const TARGET_DURATION = 0.5; 
-        const TIME_EPSILON = 0.01; 
-        
-        let isAnimating = false;
-        let animationMonitorId = null;
-        let activeControlButton = null; 
-
-        // Funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
-        function checkAnimation() {
-            if (!isAnimating || !activeControlButton) {
-                cancelAnimationFrame(animationMonitorId);
-                return;
-            }
-
-            const currentTime = modelViewer.currentTime; 
-            const isOpening = activeControlButton.isOpening;<!DOCTYPE html>
-<html>
-<head>
-    <title>3D Spintelė - Stalčius 1 Hotspot + AR Valdymas</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
-    <style>
-        
-        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { 
-            width: 100%; height: 100%; background-color: #ffffff;
-            --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
-        }
-        
-        /* Hotspot stilius (naudojamas tik 3D peržiūroje) */
-        .hotspot-button {
-            display: block;
-            width: 30px; 
-            height: 30px; 
-            border: 4px solid white;
-            border-radius: 50%; 
-            background-color: rgba(0, 123, 255, 0.8); 
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-        .hotspot-button:hover {
-            transform: scale(1.2);
-            background-color: rgba(40, 167, 69, 0.9); 
-        }
-        
-        /* AR mygtukas stalčiui atidaryti (matomas tik AR režime) */
-        #ar-drawer-button {
-            background-color: #FF5722; 
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            transition: background-color 0.3s;
-        }
-        #ar-drawer-button:hover {
-            background-color: #e64a19;
-        }
-        
-        /* Bendras AR Mygtuko ir Statuso stiliai */
-        #ar-custom-button {
-            z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
-        }
-        #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        
-        <model-viewer 
-            id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
-            alt="Spintelės modelis" 
-            camera-controls 
-            interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-            ar ar-modes="webxr scene-viewer quick-look"
-        >
-            <button class="hotspot-button" 
-                    slot="hotspot-stalcius-1" 
-                    data-position="0 0.45 0.5" 
-                    data-normal="0 0 1" 
-                    data-animation-name="stalcius1Action" 
-                    data-is-open="false">
-            </button>
-            
-            <button id="ar-drawer-button" 
-                    slot="ar" 
-                    data-animation-name="stalcius1Action" 
-                    data-is-open="false">
-                 Atidaryti Stalčių 1
-            </button>
-
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
-        </model-viewer>
-        
-        <div id="status-message"></div>
-    </div>
-
-    <script>
-        const modelViewer = document.getElementById('spintele-model');
-        const statusMessage = document.getElementById('status-message');
-        
-        // Renkame abu mygtukus (Hotspot'ą ir AR mygtuką)
-        const buttonsToControl = [
-            document.querySelector('.hotspot-button'),
-            document.getElementById('ar-drawer-button')
-        ].filter(b => b); 
+        const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         
         // Animacijos nustatymai (turi atitikti Jūsų 100 kadrų GLB failą):
         const FPS = 24.0; 
@@ -260,7 +88,6 @@
             const currentTime = modelViewer.currentTime; 
             const isOpening = activeControlButton.isOpening;
             const targetTime = activeControlButton.targetTime;
-            const buttonName = activeControlButton.getAttribute('data-animation-name');
             
             if (isOpening) {
                 // ATIDARYMAS
@@ -270,15 +97,7 @@
                     isAnimating = false; 
                     cancelAnimationFrame(animationMonitorId);
                     
-                    // Atnaujiname būseną abiem mygtukams
-                    buttonsToControl.forEach(btn => {
-                        if (btn.getAttribute('data-animation-name') === buttonName) {
-                            btn.setAttribute('data-is-open', 'true');
-                            if (btn.id === 'ar-drawer-button') {
-                                btn.textContent = 'Uždaryti Stalčių 1'; 
-                            }
-                        }
-                    });
+                    activeControlButton.setAttribute('data-is-open', 'true');
                     activeControlButton = null;
                     return;
                 }
@@ -290,15 +109,7 @@
                     isAnimating = false; 
                     cancelAnimationFrame(animationMonitorId);
                     
-                    // Atnaujiname būseną abiem mygtukams
-                    buttonsToControl.forEach(btn => {
-                         if (btn.getAttribute('data-animation-name') === buttonName) {
-                            btn.setAttribute('data-is-open', 'false');
-                            if (btn.id === 'ar-drawer-button') {
-                                btn.textContent = 'Atidaryti Stalčių 1'; 
-                            }
-                         }
-                    });
+                    activeControlButton.setAttribute('data-is-open', 'false');
                     activeControlButton = null;
                     return;
                 }
@@ -353,35 +164,26 @@
                 animationMonitorId = requestAnimationFrame(checkAnimation);
                 
             } catch (e) {
-                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 isAnimating = false; 
-                 activeControlButton = null;
+                // Tiesiog ignoruojame klaidą be statuso pranešimo
+                isAnimating = false; 
+                activeControlButton = null;
             }
         }
         
-        // Prikabiname valdymą prie abiejų mygtukų
-        buttonsToControl.forEach(button => {
+        // Prikabiname valdymą prie Hotspot'o
+        hotspotButtons.forEach(button => {
             if(button) button.addEventListener('click', toggleAnimation);
         });
 
-        // Pradinis modelio nustatymas
+        // Nustatome Stalčiaus 1 animaciją į 0 poziciją įkrovimo metu
         modelViewer.addEventListener('model-visibility', () => {
-             const availableAnimations = modelViewer.availableAnimations || [];
-             const animationName = buttonsToControl[0]?.getAttribute('data-animation-name');
+             const animationName = hotspotButtons[0]?.getAttribute('data-animation-name');
 
-             if (animationName && availableAnimations.includes(animationName)) {
+             // Tikriname, ar animacija egzistuoja, ir nustatome pradinę poziciją
+             if (modelViewer.availableAnimations.includes(animationName)) {
                  modelViewer.animationName = animationName;
                  modelViewer.currentTime = 0; 
                  modelViewer.pause();
-                 
-                 statusMessage.innerHTML = `✅ Stalčius 1 animacija ir AR valdymas paruošti.`;
-                 statusMessage.style.backgroundColor = '#4CAF50';
-                 statusMessage.style.display = 'block';
-             } else {
-                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Patikrinkite GLB failą.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 statusMessage.style.display = 'block';
              }
         });
         
