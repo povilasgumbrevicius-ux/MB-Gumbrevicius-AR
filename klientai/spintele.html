@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - FINALINIS VEIKIANTIS KODAS + DIAGNOSTIKA</title>
+    <title>3D Spintelė - PAVADINIMŲ DIAGNOZĖ</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -13,30 +13,8 @@
         
         model-viewer { 
             width: 100%; height: 100%; 
-            --node-operation-transition: 0.3s; 
         }
         
-        /* Hotspot stiliai */
-        .hotspot-button {
-            display: block; width: 30px; height: 30px; border: 4px solid white;
-            border-radius: 50%; background-color: rgba(0, 123, 255, 0.8);
-            cursor: pointer; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-        .hotspot-button[data-is-open="true"] {
-             background-color: rgba(40, 167, 69, 0.9);
-        }
-        .hotspot-button:hover {
-            transform: scale(1.2);
-        }
-
-        /* Statuso pranešimas */
-        #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; text-align: center; display: none;
-        }
-
         /* DIAGNOSTIKOS langelis viršuje kairėje */
         #node-list-display {
             position: fixed; 
@@ -56,7 +34,13 @@
         #node-list-display span {
             display: block;
             padding: 2px 0;
-            cursor: pointer; /* Leidžiame juos paspausti bandymui */
+        }
+
+        /* Statuso pranešimas */
+        #status-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; text-align: center; display: block;
         }
     </style>
 </head>
@@ -71,58 +55,62 @@
             interaction-prompt="none"
             shadow-intensity="1.0"
             exposure="1.0"
-            ar ar-modes="webxr scene-viewer quick-look"
         >
-            <button class="hotspot-button" slot="hotspot-stalcius-1" data-position="-0.2 0.7 0.5" data-drawer-index="1" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-2" data-position="0.2 0.7 0.5" data-drawer-index="2" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-3" data-position="-0.2 0.5 0.5" data-drawer-index="3" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-4" data-position="0.2 0.5 0.5" data-drawer-index="4" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-5" data-position="-0.2 0.3 0.5" data-drawer-index="5" data-is-open="false"></button>
-            <button class="hotspot-button" slot="hotspot-stalcius-6" data-position="0.2 0.3 0.5" data-drawer-index="6" data-is-open="false"></button>
         </model-viewer>
         
-        <div id="node-list-display">Laukiama, kol modelis užsikraus...</div>
+        <div id="node-list-display">Laukiama DOM inicializacijos...</div>
         <div id="status-message"></div>
     </div>
 
     <script type="module">
-        const modelViewer = document.getElementById('spintele-model');
-        const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
-        const statusMessage = document.getElementById('status-message');
-        const nodeListDisplay = document.getElementById('node-list-display');
         
-        // KRITINIAI NUSTATYMAI
-        // Šis bus pataisytas, kai gausite pavadinimus
-        let NODE_NAME_PREFIX = "stalcius"; 
-        const OPEN_DISTANCE = 0.3; 
-        const AXIS_INDEX = 2; // Z ašis
+        // Laukiame, kol bus įkelta visa HTML struktūra
+        document.addEventListener('DOMContentLoaded', () => {
+            const modelViewer = document.getElementById('spintele-model');
+            const nodeListDisplay = document.getElementById('node-list-display');
+            const statusMessage = document.getElementById('status-message');
 
-        // FUNKCIJA: Rasti VISUS modelio mazgus (Nodes) ir juos atvaizduoti
-        function displayAndSetNodes() {
-            if (!modelViewer.model) return;
-            
-            const root = modelViewer.model.target; 
-            let nodeNames = [];
-            let htmlContent = '<strong>RASTI PAVADINIMAI (Nodes):</strong><hr>';
+            statusMessage.innerHTML = 'DOM paruoštas. Laukiama modelio užkrovimo...';
 
-            function traverseNodes(node) {
-                if (node.name) {
-                    nodeNames.push(node.name);
-                    // Pavadinimas pridedamas kaip paspaudžiamas elementas diagnostikai
-                    htmlContent += `<span data-node-name="${node.name}">${node.name}</span>`;
+            // FUNKCIJA: Rasti VISUS modelio mazgus (Nodes) ir juos atvaizduoti
+            function displayAllNodeNames() {
+                if (!modelViewer.model) return;
+                
+                const root = modelViewer.model.target; 
+                let nodeNames = [];
+                let htmlContent = '<strong>RASTI PAVADINIMAI (Nodes):</strong><hr>';
+
+                function traverseNodes(node) {
+                    if (node.name) {
+                        nodeNames.push(node.name);
+                        htmlContent += `<span>${node.name}</span>`;
+                    }
+                    if (node.children) {
+                        node.children.forEach(traverseNodes);
+                    }
                 }
-                if (node.children) {
-                    node.children.forEach(traverseNodes);
+                
+                traverseNodes(root);
+
+                if (nodeNames.length > 0) {
+                     nodeListDisplay.innerHTML = htmlContent;
+                     statusMessage.innerHTML = '✅ MODELIS UŽKRAUTAS. Nukopijuokite ir atsiųskite man visą pavadinimų sąrašą iš langelio viršuje kairėje!';
+                     statusMessage.style.backgroundColor = '#4CAF50'; 
+                } else {
+                     nodeListDisplay.innerHTML = '❌ Klaida: Jokie mazgai nerasti modelyje.';
+                     statusMessage.innerHTML = '❌ Klaida: Jokių mazgų nerasta modelyje. Patikrinkite GLB eksportą.';
+                     statusMessage.style.backgroundColor = '#dc3545';
                 }
             }
             
-            traverseNodes(root);
+            modelViewer.addEventListener('load', displayAllNodeNames);
 
-            if (nodeNames.length > 0) {
-                 nodeListDisplay.innerHTML = htmlContent;
-                 statusMessage.innerHTML = '✅ Mazgų pavadinimai atvaizduoti viršuje kairėje. Dabar spauskite stalčius!';
-                 statusMessage.style.backgroundColor = '#4CAF50'; 
-            } else {
-                 nodeListDisplay.innerHTML = '❌ Klaida: Jokie mazgai nerasti. Patikrinkite GLB eksportą.';
-                 statusMessage.innerHTML = '❌ Klaida: Jokių mazgų nerasta.';
-                 statusMessage.style.backgroundColor =
+            modelViewer.addEventListener('error', (event) => {
+                statusMessage.innerHTML = `❌ KRITINĖ KLAIDA įkeliant modelį: ${event.detail}. Patikrinkite src kelią!`;
+                statusMessage.style.backgroundColor = '#dc3545'; 
+                console.error('Model Viewer Error:', event.detail);
+            });
+        });
+    </script>
+</body>
+</html>
