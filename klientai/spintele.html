@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Animacijos Pataisa</title>
+    <title>3D Spintelė - Stalčius 1 Valdymas Mygtuku (Segmentų Logika)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        /* ... (CSS stiliai lieka tie patys) ... */
+        
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
@@ -19,19 +19,38 @@
             --camera-controls-move-speed: 2;
         }
 
+        /* Valdymo mygtuko konteineris */
         #controls-overlay {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2500;
+            position: absolute; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 2500;
         }
+
+        /* Stalčiaus mygtukų stiliai */
         .drawer-button {
-            padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.2s;
         }
-        .drawer-button.open { background-color: #28a745; }
-        .drawer-button:hover { background-color: #0056b3; }
+        .drawer-button.open {
+            background-color: #28a745; /* Žalia, kai atidarytas */
+        }
+        .drawer-button:hover {
+            background-color: #0056b3;
+        }
         
+        /* AR Mygtuko ir Statuso stiliai lieka tie patys */
         #ar-custom-button {
             z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
-        
         #status-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
@@ -68,37 +87,55 @@
         const modelViewer = document.getElementById('spintele-model');
         const statusMessage = document.getElementById('status-message');
         const toggleButton = document.getElementById('toggle-stalcius-1');
-        const animationDuration = 0.5;
-
-        // Išsaugosime animacijos trukmę, kad žinotume maksimalų laiką
-        let maxAnimationTime = 0; 
+        
+        // Animacijos nustatymai, pagrįsti Jūsų Blenderio darbų:
+        const FPS = 24.0; 
+        const OPEN_FRAMES = 50.0; // 0-50 kadrai
+        const CLOSE_FRAMES = 50.0; // 51-100 kadrai
+        
+        const OPEN_DURATION = OPEN_FRAMES / FPS; 
+        const CLOSE_DURATION = CLOSE_FRAMES / FPS; 
+        
+        const TARGET_DURATION = 0.5; // Tikslinis laikas, per kurį turi įvykti segmentas (0.5s)
+        let animationDurationTotal = 0; // Bus nustatyta įkrovus modelį
 
         function toggleAnimation(event) {
             const button = event.currentTarget; 
             const animationName = button.getAttribute('data-animation-name');
             let isOpen = button.getAttribute('data-is-open') === 'true';
-            
+
             if (!animationName) return;
             
-            const direction = isOpen ? 'reverse' : 'forwards';
-            const newText = isOpen ? `Atidaryti Stalčių 1` : `Uždaryti Stalčių 1`;
+            let timeRange;
+            let startDuration; // Animacijos pradžios momentas
 
-            try {
-                // Svarbi PATAISA: Jei uždarome (reverse), nustatome laiką į pabaigą, 
-                // kad animacija tikrai turėtų iš kur atsukinėti
-                if (isOpen && maxAnimationTime > 0) {
-                     modelViewer.currentTime = maxAnimationTime; 
-                }
+            if (!isOpen) {
+                // ATIDARYMAS (Naudojame Segmentą 0-50 kadrų, kuris trunka OPEN_DURATION sekundžių)
+                timeRange = [0, OPEN_DURATION]; 
+                startDuration = 0; 
                 
+            } else {
+                // UŽDARYMAS (Naudojame Segmentą 51-100 kadrų)
+                // Šis segmentas prasideda ties OPEN_DURATION sekundės žyma ir trunka CLOSE_DURATION sekundžių
+                timeRange = [OPEN_DURATION, OPEN_DURATION + CLOSE_DURATION]; 
+                startDuration = OPEN_DURATION;
+            }
+            
+            try {
+                // Nustatome pradinę poziciją, kad būtų užtikrintas sklandus startas
+                modelViewer.currentTime = startDuration; 
+
                 modelViewer.play({ 
                     animationName: animationName, 
-                    duration: animationDuration,
-                    direction: direction, 
-                    repetitions: 1 
+                    timeRange: timeRange,
+                    duration: TARGET_DURATION, // Visada paleidžiame per 0.5s
+                    repetitions: 1,
+                    direction: 'forwards' // Visi segmentai vykdomi tik pirmyn
                 });
                 
+                // Atnaujiname mygtuko būseną ir tekstą
                 button.setAttribute('data-is-open', (!isOpen).toString());
-                button.textContent = newText;
+                button.textContent = isOpen ? `Atidaryti Stalčių 1` : `Uždaryti Stalčių 1`;
                 button.classList.toggle('open', !isOpen);
 
             } catch (e) {
@@ -118,10 +155,10 @@
 
              if (availableAnimations.includes(animationName)) {
                  
-                 // Svarbu: Gauname maksimalų animacijos laiką iš modelio
+                 // Šis tikrinimas dabar yra tik informacinis, nes mes nustatome laikus per konstantas (FPS, FRAMES)
                  const animation = modelViewer.model.animations.find(a => a.name === animationName);
                  if (animation) {
-                     maxAnimationTime = animation.duration;
+                      animationDurationTotal = animation.duration;
                  }
                  
                  // Nustatome į 0 poziciją (uždaryta)
@@ -129,7 +166,7 @@
                  modelViewer.currentTime = 0; 
                  modelViewer.pause();
                  
-                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta. Trukmė: ${maxAnimationTime.toFixed(2)}s.`;
+                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta. Atidarymo segmentas: ${OPEN_DURATION.toFixed(2)}s. Uždarymo segmentas: ${(CLOSE_DURATION / TARGET_DURATION).toFixed(2)}x greičiu.`;
                  statusMessage.style.backgroundColor = '#4CAF50';
                  statusMessage.style.display = 'block';
              } else {
