@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1, 2, 3 ir 4 Hotspot'ai</title>
+    <title>3D Spintelė </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -48,7 +48,7 @@
         >
             <button class="hotspot-button" 
                     slot="hotspot-stalcius-1" 
-                    data-position="-0.15 0.7 0.5" 
+                    data-position="-0.2 0.9 0.5" 
                     data-normal="0 0 1" 
                     data-animation-name="stalcius1Action" 
                     data-is-open="false">
@@ -56,7 +56,7 @@
 
             <button class="hotspot-button" 
                     slot="hotspot-stalcius-2" 
-                    data-position="0.15 0.7 0.5" 
+                    data-position="0.2 0.9 0.5" 
                     data-normal="0 0 1" 
                     data-animation-name="stalcius2Action" 
                     data-is-open="false">
@@ -64,7 +64,7 @@
 
             <button class="hotspot-button" 
                     slot="hotspot-stalcius-3" 
-                    data-position="-0.15 0 0.5" 
+                    data-position="-0.2 0.6 0.5" 
                     data-normal="0 0 1" 
                     data-animation-name="stalcius3Action" 
                     data-is-open="false">
@@ -72,9 +72,25 @@
 
             <button class="hotspot-button" 
                     slot="hotspot-stalcius-4" 
-                    data-position="0.15 0 0.5" 
+                    data-position="0.2 0.6 0.5" 
                     data-normal="0 0 1" 
                     data-animation-name="stalcius4Action" 
+                    data-is-open="false">
+            </button>
+            
+            <button class="hotspot-button" 
+                    slot="hotspot-stalcius-5" 
+                    data-position="-0.2 0.3 0.5" 
+                    data-normal="0 0 1" 
+                    data-animation-name="stalcius5Action" 
+                    data-is-open="false">
+            </button>
+            
+            <button class="hotspot-button" 
+                    slot="hotspot-stalcius-6" 
+                    data-position="0.2 0.3 0.5" 
+                    data-normal="0 0 1" 
+                    data-animation-name="stalcius6Action" 
                     data-is-open="false">
             </button>
         </model-viewer>
@@ -147,71 +163,3 @@
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
             if (!animationName) return;
-            
-            let timeRange;
-            let targetTime;
-            let isOpening;
-
-            if (!isOpen) {
-                // ATIDARYMAS
-                timeRange = [0, OPEN_DURATION]; 
-                modelViewer.currentTime = 0; 
-                targetTime = OPEN_DURATION; 
-                isOpening = true;
-                
-            } else {
-                // UŽDARYMAS
-                timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
-                modelViewer.currentTime = OPEN_DURATION; 
-                targetTime = TOTAL_DURATION; 
-                isOpening = false;
-            }
-            
-            try {
-                isAnimating = true; 
-                activeControlButton = button; 
-                activeControlButton.isOpening = isOpening; 
-                activeControlButton.targetTime = targetTime;
-
-                // Nustatome aktyvią animaciją (svarbu, kad stalčiai veiktų nepriklausomai)
-                modelViewer.animationName = animationName;
-
-                modelViewer.play({ 
-                    timeRange: timeRange,
-                    duration: TARGET_DURATION, 
-                    repetitions: 1,
-                    direction: 'forwards' 
-                });
-                
-                animationMonitorId = requestAnimationFrame(checkAnimation);
-                
-            } catch (e) {
-                isAnimating = false; 
-                activeControlButton = null;
-            }
-        }
-        
-        // Prikabiname valdymą prie visų Hotspot'ų
-        hotspotButtons.forEach(button => {
-            if(button) button.addEventListener('click', toggleAnimation);
-        });
-
-        // Pradinis nustatymas: Nustatome visas animacijas į 0 poziciją (uždaryta)
-        modelViewer.addEventListener('model-visibility', () => {
-             const availableAnimations = modelViewer.availableAnimations || [];
-             
-             // Inicializuojame Stalčius 1, 2, 3 ir 4
-             const requiredAnimations = ["stalcius1Action", "stalcius2Action", "stalcius3Action", "stalcius4Action"];
-
-             requiredAnimations.forEach(animationName => {
-                 if (availableAnimations.includes(animationName)) {
-                     modelViewer.animationName = animationName;
-                     modelViewer.currentTime = 0; 
-                     modelViewer.pause();
-                 }
-             });
-        });
-        
-    </script>
-</body>
-</html>
