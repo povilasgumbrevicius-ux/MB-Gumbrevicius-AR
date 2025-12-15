@@ -1,116 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>3D Spintelė - PAVADINIMŲ DIAGNOZĖ</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
-    <style>
-        body { margin: 0; padding: 0; height: 100vh; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        
-        model-viewer { 
-            width: 100%; height: 100%; 
-        }
-        
-        /* DIAGNOSTIKOS langelis viršuje kairėje */
-        #node-list-display {
-            position: fixed; 
-            top: 10px; 
-            left: 10px; 
-            background: rgba(255, 255, 255, 0.9); 
-            border: 2px solid #000;
-            padding: 10px; 
-            max-width: 300px;
-            max-height: 80%;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 14px;
-            color: #333;
-            z-index: 10000;
-        }
-        #node-list-display span {
-            display: block;
-            padding: 2px 0;
-        }
-
-        /* Statuso pranešimas */
-        #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; text-align: center; display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        
-        <model-viewer 
-            id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
-            alt="Spintelės modelis" 
-            camera-controls 
-            interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-        >
-        </model-viewer>
-        
-        <div id="node-list-display">Laukiama DOM inicializacijos...</div>
-        <div id="status-message"></div>
-    </div>
-
-    <script type="module">
-        
-        // Laukiame, kol bus įkelta visa HTML struktūra
-        document.addEventListener('DOMContentLoaded', () => {
-            const modelViewer = document.getElementById('spintele-model');
-            const nodeListDisplay = document.getElementById('node-list-display');
-            const statusMessage = document.getElementById('status-message');
-
-            statusMessage.innerHTML = 'DOM paruoštas. Laukiama modelio užkrovimo...';
-
             // FUNKCIJA: Rasti VISUS modelio mazgus (Nodes) ir juos atvaizduoti
             function displayAllNodeNames() {
-                if (!modelViewer.model) return;
+                // Ensure modelViewer.model is defined before proceeding
+                if (!modelViewer.model) {
+                    statusMessage.innerHTML = '❌ Klaida: modelViewer.model objektas nerastas.';
+                    statusMessage.style.backgroundColor = '#dc3545';
+                    return;
+                }
                 
-                const root = modelViewer.model.target; 
+                // Use the model's internal scene object for robust traversal
+                const scene = modelViewer.model.target.scene; // Access the main scene object
                 let nodeNames = [];
                 let htmlContent = '<strong>RASTI PAVADINIMAI (Nodes):</strong><hr>';
 
-                function traverseNodes(node) {
-                    if (node.name) {
+                // Use the built-in Three.js traverse method which is safer than manual recursion
+                scene.traverse((node) => {
+                    // Check if the node is valid AND has a name property before accessing it
+                    if (node && node.name) { 
                         nodeNames.push(node.name);
                         htmlContent += `<span>${node.name}</span>`;
                     }
-                    if (node.children) {
-                        node.children.forEach(traverseNodes);
-                    }
-                }
-                
-                traverseNodes(root);
+                    // The built-in traverse method handles recursion automatically, 
+                    // so you don't need the manual node.children.forEach(traverseNodes); call.
+                });
 
                 if (nodeNames.length > 0) {
                      nodeListDisplay.innerHTML = htmlContent;
                      statusMessage.innerHTML = '✅ MODELIS UŽKRAUTAS. Nukopijuokite ir atsiųskite man visą pavadinimų sąrašą iš langelio viršuje kairėje!';
                      statusMessage.style.backgroundColor = '#4CAF50'; 
                 } else {
-                     nodeListDisplay.innerHTML = '❌ Klaida: Jokie mazgai nerasti modelyje.';
-                     statusMessage.innerHTML = '❌ Klaida: Jokių mazgų nerasta modelyje. Patikrinkite GLB eksportą.';
+                     nodeListDisplay.innerHTML = '❌ Klaida: Jokie pavadinti mazgai nerasti modelyje.';
+                     statusMessage.innerHTML = '❌ Klaida: Jokių pavadintų mazgų nerasta modelyje. Patikrinkite GLB eksportą.';
                      statusMessage.style.backgroundColor = '#dc3545';
                 }
             }
-            
-            modelViewer.addEventListener('load', displayAllNodeNames);
-
-            modelViewer.addEventListener('error', (event) => {
-                statusMessage.innerHTML = `❌ KRITINĖ KLAIDA įkeliant modelį: ${event.detail}. Patikrinkite src kelią!`;
-                statusMessage.style.backgroundColor = '#dc3545'; 
-                console.error('Model Viewer Error:', event.detail);
-            });
-        });
-    </script>
-</body>
-</html>
