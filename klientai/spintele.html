@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Shape Key Diagnostika II</title>
+    <title>3D Spintelė - FINALINĖ SHAPE KEY DIAGNOSTIKA</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        /* Stiliai tokie patys kaip anksčiau */
+        
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
@@ -17,21 +17,6 @@
             background-color: #ffffff;
             --camera-controls-touch-radius: 10px; 
             --camera-controls-move-speed: 2;
-        }
-
-        #ar-custom-button {
-            background-color: #4CAF50; 
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            position: absolute; 
-            top: 40px; 
-            right: 20px; 
-            z-index: 2500;
         }
         
         #ar-error-message { 
@@ -53,7 +38,6 @@
             interaction-prompt="none"
             shadow-intensity="1.0"
             exposure="1.0"
-            disable-tap
             
             ar
             ar-modes="webxr scene-viewer quick-look"
@@ -70,32 +54,47 @@
         const modelViewer = document.getElementById('spintele-model');
         const errorMessage = document.getElementById('ar-error-message');
         
-        // MODELIO ĮKĖLIMO NUSTATYMAI
-        modelViewer.addEventListener('load', () => {
+        // **KRITINIS ĮVYKIS:** Tikriname, kai "plakatas" (poster) yra pašalintas
+        modelViewer.addEventListener('poster-dismissed', () => {
              try {
                  // **KRITINIS TESTAS:** Bandome gauti Shape Key sąrašą
                  const morphTargets = modelViewer.model.morphTargetNames;
+                 const expectedKey = 'stalcius1'; // Tikriname, ar mūsų raktas yra sąraše
 
                  if (morphTargets && morphTargets.length > 0) {
-                     console.log('✅ Rastos Shape Keys (Morfinių Tikslų) savybės:');
+                     console.log('✅ SHAPE KEYS (Morfinių Tikslų) RASTI:');
                      console.log(morphTargets);
-                     
-                     errorMessage.innerHTML = '✅ Modelis matomas. Shape Keys rasti. Atidarykite F12 Konsolę, kad pamatytumėte pavadinimus.';
-                     errorMessage.style.display = 'block';
 
+                     if (morphTargets.includes(expectedKey)) {
+                         errorMessage.innerHTML = `✅ FANTASTIKA! Shape Key '${expectedKey}' RASTAS. Dabar galime valdyti stalčius.`;
+                         errorMessage.style.backgroundColor = '#4CAF50';
+                         errorMessage.style.color = 'white';
+                         
+                         // AUTOMATINIS STALČIAUS ATIDARYMAS TESTUI
+                         // Kad įsitikintume, kad valdymas veikia
+                         setTimeout(() => {
+                            modelViewer.setAttribute(`morph-target-${expectedKey}`, 1.0);
+                            console.log(`Stalčius '${expectedKey}' bando atsidaryti.`);
+                         }, 1000);
+
+                     } else {
+                         errorMessage.innerHTML = `⚠️ Shape Keys rasti, bet trūksta '${expectedKey}'. Tikrinkite pavadinimą! Konsolėje rodomi rasti pavadinimai.`;
+                         errorMessage.style.backgroundColor = '#ffc107';
+                     }
+                     
                  } else {
-                     console.warn('⚠️ Modelis matomas, bet Shape Keys nerasti.');
-                     errorMessage.innerHTML = '⚠️ Modelis matomas, bet Shape Keys nerasti. Patikrinkite GLB eksportą.';
-                     errorMessage.style.display = 'block';
+                     console.error('❌ GLB faile nerasta jokių Shape Keys (Morfinių Tikslų)!');
+                     errorMessage.innerHTML = '❌ Klaida: Nėra Shape Keys. Patikrinkite GLB eksportą, net jei rodė gerai model-viewer.dev.';
+                     errorMessage.style.backgroundColor = '#f44336';
                  }
              } catch (e) {
-                 console.error('❌ Kritinė klaida gaunant Shape Key pavadinimus:', e);
-                 errorMessage.innerHTML = '❌ Modelis dingo arba įvyko klaida bandant gauti Shape Keys.';
-                 errorMessage.style.display = 'block';
+                 console.error('❌ Kritinė klaida Shape Key gavime:', e);
+                 errorMessage.innerHTML = '❌ Modelis dingo arba įvyko klaida gaunant Shape Keys. Žr. F12 konsolę.';
+                 errorMessage.style.backgroundColor = '#f44336';
              }
         });
 
-        // Klaidos/būsenos valdymas
+        // AR Statusas paliktas dėl pilnumo
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             const arCustomButton = document.getElementById('ar-custom-button');
