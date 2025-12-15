@@ -37,7 +37,18 @@
         #status-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; text-align: center; display: none;
+            z-index: 9999; font-weight: bold; text-align: center; 
+        }
+        
+        /* Shape Keys sąrašo stilius */
+        #shape-keys-list {
+            position: fixed; top: 10px; left: 10px; 
+            background: #f8f9fa; border: 1px solid #ccc; 
+            padding: 10px; border-radius: 5px; z-index: 9998;
+            max-width: 300px; font-size: 14px;
+        }
+        #shape-keys-list span {
+            display: block; margin-top: 5px; font-weight: normal;
         }
     </style>
 </head>
@@ -62,12 +73,13 @@
         </model-viewer>
         
         <div id="status-message"></div>
-    </div>
+        <div id="shape-keys-list"></div> </div>
 
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
+        const shapeKeysListDiv = document.getElementById('shape-keys-list'); // NAUJAS
         
         // KRITINĖ KONSTANTA: Jūsų Shape Key pavadinimo formatas (stalcius1, stalcius2...)
         const SHAPE_KEY_PREFIX = "stalcius"; 
@@ -93,40 +105,8 @@
                 targetState = 'false';
             }
             
-            // PATAISYTA FUNKCIJA: setMorphTargetWeight yra teisingas Shape Keys valdiklis
+            // Turi būti naudojama setMorphTargetWeight
             try {
                  modelViewer.setMorphTargetWeight(targetShapeKey, targetValue);
             } catch (error) {
-                 // Konsolės pranešimas, jei Shape Key nepavyko pritaikyti
-                 console.error(`Klaida nustatant Shape Key ${targetShapeKey}. Patikrinkite pavadinimo tikslumą.`, error);
-            }
-           
-            // Atnaujiname Hotspot'o būseną
-            button.setAttribute('data-is-open', targetState);
-        }
-        
-        // PRADINĖ BŪSENA: Užtikriname, kad visi stalčiai būtų uždaryti ir priskiriame mygtukų funkcijas
-        modelViewer.addEventListener('model-visibility', () => {
-             // SPRENDIMAS: Priskiriame Hotspot'ų klausytojus TIK šiuo metu (išsprendžia nereagavimo problemą)
-             hotspotButtons.forEach(button => {
-                 if(button) button.addEventListener('click', toggleShapeKey);
-             });
-             
-             // Vizualinis patvirtinimas
-             statusMessage.innerHTML = `✅ Modelis paruoštas. Shape Key valdymas aktyvuotas.`;
-             statusMessage.style.backgroundColor = '#4CAF50'; 
-             statusMessage.style.display = 'block';
-             
-             // Užtikriname, kad pradinė būsena būtų UŽDARYTA
-             for (let i = 1; i <= 6; i++) {
-                 const initialKey = SHAPE_KEY_PREFIX + i + SHAPE_KEY_SUFFIX;
-                 // PATAISYTA FUNKCIJA: Shape Keys nustatymas į 0.0
-                 modelViewer.setMorphTargetWeight(initialKey, 0.0);
-             }
-        });
-        
-        // Klaidos stebėjimas
-        modelViewer.addEventListener('error', (event) => {
-            statusMessage.innerHTML = `❌ Klaida įkeliant modelį: ${event.detail}`;
-            statusMessage.style.backgroundColor = '#dc3545'; 
-            console.error('
+                 console.error(`Klaida nustatant Shape Key ${targetShapeKey}. Patikrinkite pavadinimo tiksl
