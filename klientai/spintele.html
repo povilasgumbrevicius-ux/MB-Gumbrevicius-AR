@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Begalinio Ciklo Pataisa</title>
+    <title>3D Spintelė - Tik Stalčius 1 Hotspot Testas</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        /* ... (Stiliai lieka tie patys) ... */
+        
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
-            width: 100%; height: 100%; background-color: #ffffff; --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
+            width: 100%; height: 100%; background-color: #ffffff;
+            --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
         }
-
-        #controls-overlay {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2500;
-        }
-        .drawer-button {
-            padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s;
-        }
-        .drawer-button.open { background-color: #28a745; }
-        .drawer-button:hover { background-color: #0056b3; }
         
+        /* Hotspot stilius */
+        .hotspot-button {
+            display: block;
+            width: 30px; 
+            height: 30px; 
+            border: 4px solid white;
+            border-radius: 50%; 
+            background-color: rgba(0, 123, 255, 0.8); 
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .hotspot-button:hover {
+            transform: scale(1.2);
+            background-color: rgba(40, 167, 69, 0.9); 
+        }
+        
+        /* AR Mygtuko ir Statuso stiliai lieka tie patys */
         #ar-custom-button {
             z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
@@ -35,12 +45,6 @@
 <body>
     <div class="container">
         
-        <div id="controls-overlay">
-            <button id="toggle-stalcius-1" class="drawer-button" data-animation-name="stalcius1Action" data-is-open="false">
-                Atidaryti Stalčių 1
-            </button>
-        </div>
-
         <model-viewer 
             id="spintele-model" 
             src="../modeliai/baldai/spintele.glb" 
@@ -48,152 +52,4 @@
             camera-controls 
             interaction-prompt="none"
             shadow-intensity="1.0"
-            exposure="1.0"
-            ar ar-modes="webxr scene-viewer quick-look"
-        >
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
-        </model-viewer>
-        
-        <div id="status-message"></div>
-    </div>
-
-    <script>
-        const modelViewer = document.getElementById('spintele-model');
-        const statusMessage = document.getElementById('status-message');
-        const toggleButton = document.getElementById('toggle-stalcius-1');
-        
-        // Animacijos nustatymai:
-        const FPS = 24.0; 
-        const OPEN_FRAMES = 50.0; 
-        const CLOSE_FRAMES = 50.0; 
-        
-        const OPEN_DURATION = OPEN_FRAMES / FPS; 
-        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; 
-        
-        const TARGET_DURATION = 0.5; 
-        const TIME_EPSILON = 0.01; // Tolerancija plaukiojančio kablelio klaidoms
-        
-        let isAnimating = false;
-        let animationMonitorId = null;
-        let targetTime = 0; 
-        let isOpening = false; 
-
-        // Svarbiausia funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
-        function checkAnimation() {
-            if (!isAnimating) {
-                cancelAnimationFrame(animationMonitorId);
-                return;
-            }
-
-            const currentTime = modelViewer.currentTime; 
-            
-            // Tikriname, ar pasiekėme tikslinį laiką (su tolerancija)
-            if (isOpening) {
-                // Atidarymas (Tikslas: OPEN_DURATION)
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = targetTime; // Užtikriname tikslią 50 kadro poziciją
-                    isAnimating = false; // Atlaisviname sistemą naujam paspaudimui
-                    cancelAnimationFrame(animationMonitorId);
-                    return;
-                }
-            } else {
-                // Uždarymas (Tikslas: TOTAL_DURATION - 100 kadras)
-                // Po uždarymo mes norime nustatyti būseną į 0.0s (uždaryta)
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = 0; // Nustatome į 0.0s (uždaryta)
-                    isAnimating = false; // Atlaisviname sistemą naujam paspaudimui
-                    cancelAnimationFrame(animationMonitorId);
-                    return;
-                }
-            }
-
-
-            animationMonitorId = requestAnimationFrame(checkAnimation);
-        }
-
-
-        function toggleAnimation(event) {
-            // Mygtukas veikia tik jei animacija nevyksta
-            if (isAnimating) return; 
-            
-            const button = event.currentTarget; 
-            const animationName = button.getAttribute('data-animation-name');
-            let isOpen = button.getAttribute('data-is-open') === 'true';
-
-            if (!animationName) return;
-            
-            let timeRange;
-
-            if (!isOpen) {
-                // ATIDARYMAS
-                timeRange = [0, OPEN_DURATION]; 
-                modelViewer.currentTime = 0; 
-                targetTime = OPEN_DURATION; // Tikslas: OPEN_DURATION
-                isOpening = true;
-                
-            } else {
-                // UŽDARYMAS
-                timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
-                modelViewer.currentTime = OPEN_DURATION; // Pradeda nuo atidarytos pozicijos
-                targetTime = TOTAL_DURATION; // Tikslas: TOTAL_DURATION
-                isOpening = false;
-            }
-            
-            try {
-                isAnimating = true; // Blokuojame kitus paspaudimus
-                
-                modelViewer.play({ 
-                    animationName: animationName, 
-                    timeRange: timeRange,
-                    duration: TARGET_DURATION, 
-                    repetitions: 1,
-                    direction: 'forwards' 
-                });
-                
-                // Paleidžiame nuolatinį tikrinimą
-                animationMonitorId = requestAnimationFrame(checkAnimation);
-                
-                // Atnaujiname mygtuko būseną ir tekstą
-                button.setAttribute('data-is-open', (!isOpen).toString());
-                button.textContent = isOpen ? `Atidaryti Stalčių 1` : `Uždaryti Stalčių 1`;
-                button.classList.toggle('open', !isOpen);
-
-            } catch (e) {
-                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 statusMessage.style.display = 'block';
-                 isAnimating = false; // Atlaisviname, jei įvyko klaida
-            }
-        }
-        
-        if (toggleButton) {
-            toggleButton.addEventListener('click', toggleAnimation);
-        }
-
-        // Pradinis modelio nustatymas: Uždaryta pozicija
-        modelViewer.addEventListener('model-visibility', () => {
-             const availableAnimations = modelViewer.availableAnimations || [];
-             const animationName = toggleButton.getAttribute('data-animation-name');
-
-             if (availableAnimations.includes(animationName)) {
-                 modelViewer.animationName = animationName;
-                 modelViewer.currentTime = 0; 
-                 modelViewer.pause();
-                 
-                 statusMessage.innerHTML = `✅ Modelis paruoštas! Sistema atblokuota.`;
-                 statusMessage.style.backgroundColor = '#4CAF50';
-                 statusMessage.style.display = 'block';
-             } else {
-                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 statusMessage.style.display = 'block';
-             }
-        });
-        
-    </script>
-</body>
-</html>
+            exposure="1.
