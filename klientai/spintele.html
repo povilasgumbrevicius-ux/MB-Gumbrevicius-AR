@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - GALUTINIS KODAS</title>
+    <title>3D Spintelė - SHAPE KEY VALDYMAS</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer@2.1.1/dist/model-viewer.min.js"></script>
     
     <style>
-        /* CSS Stiliai (išlieka tie patys) */
+        /* CSS Išlieka tas pats */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         
         model-viewer { 
             width: 100%; height: 100%; 
             background-color: #ffffff;
-            /* Užtikrina sklandų perėjimą tarp uždarytos ir atidarytos pozicijos */
-            --morph-target-transition-duration: 0.5s; 
+            --morph-target-transition-duration: 0.5s; /* Sklandžiam judėjimui */
         }
         
         /* Hotspot stilius */
@@ -33,21 +32,21 @@
             transform: scale(1.2);
         }
 
-        /* Statuso pranešimas (DEBUG) */
+        /* Statuso pranešimas */
         #status-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
             z-index: 9999; font-weight: bold; text-align: center; display: none;
         }
         
-        /* Shape Keys sąrašo stilius (išlieka patikrinimui) */
-        #shape-keys-list {
+        /* Shape Keys sąrašo vieta - KRITINĖ DIAGNOZEI */
+        #data-list {
             position: fixed; top: 10px; left: 10px; 
             background: #f8f9fa; border: 1px solid #ccc; 
             padding: 10px; border-radius: 5px; z-index: 9998;
-            max-width: 300px; font-size: 14px; display: none; /* Paslėpiam, jei nebereikia */
+            max-width: 300px; font-size: 14px; 
         }
-        #shape-keys-list span {
+        #data-list span {
             display: block; margin-top: 5px; font-weight: normal;
         }
     </style>
@@ -73,66 +72,69 @@
         </model-viewer>
         
         <div id="status-message"></div>
-        <div id="shape-keys-list"></div>
+        <div id="data-list"></div>
     </div>
 
     <script>
         const modelViewer = document.getElementById('spintele-model');
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
-        const shapeKeysListDiv = document.getElementById('shape-keys-list');
+        const dataListDiv = document.getElementById('data-list');
         
-        // KRITINĖ KONSTANTA: Jūsų Shape Key pavadinimo formatas (stalcius 1, stalcius 2...)
-        const SHAPE_KEY_PREFIX = "stalcius "; // NAUDOJAME TARPA
+        // Shape Key formatas (grįžtame prie to, kurį Jūs nurodėte per ankstesnį bandymą)
+        const SHAPE_KEY_PREFIX = "stalcius "; 
         const SHAPE_KEY_SUFFIX = ""; 
 
-        // PAGRINDINĖ FUNKCIJA: Valdymas per Shape Keys
+        // PAGRINDINĖ FUNKCIJA: Shape Keys Valdymas
         function toggleShapeKey(event) {
             const button = event.currentTarget; 
             const drawerIndex = button.getAttribute('data-drawer-index');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            // Sukuriamas tikslus Shape Key pavadinimas (pvz., "stalcius 3")
             const targetShapeKey = SHAPE_KEY_PREFIX + drawerIndex + SHAPE_KEY_SUFFIX;
             
-            let targetValue;
-            let targetState;
-
-            if (!isOpen) {
-                targetValue = 1.0; // Atidaryta
-                targetState = 'true';
-            } else {
-                targetValue = 0.0; // Uždaryta
-                targetState = 'false';
-            }
+            let targetValue = isOpen ? 0.0 : 1.0; 
+            let targetState = isOpen ? 'false' : 'true';
             
-            // NAUDOJAMA TIKSLI MORPH TARGET FUNKCIJA: setMorphTargetWeight
+            // NAUDOJAME setMorphTargetWeight - JIS TURI VEIKTI, jei GLB geras!
             try {
                  modelViewer.setMorphTargetWeight(targetShapeKey, targetValue);
+                 
+                 button.setAttribute('data-is-open', targetState);
+                 statusMessage.innerHTML = `✅ ${targetShapeKey} judėjimas sėkmingas.`;
+                 statusMessage.style.backgroundColor = '#4CAF50'; 
             } catch (error) {
-                 // Ši klaida rodo, kad shape key pavadinimas vis dar neteisingas, 
-                 // arba model-viewer jo neranda. Patikrinkite konsolę!
-                 console.error(`Klaida nustatant Shape Key ${targetShapeKey}: Ar pavadinimas teisingas?`, error);
-                 statusMessage.innerHTML = `❌ Klaida: Nustatant Shape Key nepavyko! Patikrinkite konsolę.`;
+                 console.error(`Klaida nustatant Shape Key "${targetShapeKey}": Pavadinimas neteisingas.`, error);
+                 statusMessage.innerHTML = `❌ Klaida: Nepavyko rasti Shape Key: "${targetShapeKey}"`;
                  statusMessage.style.backgroundColor = '#dc3545';
             }
-           
-            button.setAttribute('data-is-open', targetState);
         }
         
-        // PATAISYMAS: Naudojame 'load' įvykį, kad garantuotume visų duomenų prieinamumą
+        // Funkcija rastų Shape Keys pavadinimų atvaizdavimui (KRITINĖ vieta)
+        function displayModelData() {
+            let html = '<strong>Rasti Shape Keys Pavadinimai (GLB viduje):</strong>';
+            
+            if (modelViewer.model && modelViewer.model.targetNames) {
+                const foundKeys = modelViewer.model.targetNames; 
+                
+                if (foundKeys.length > 0) {
+                    foundKeys.forEach(key => { html += `<span>- ${key}</span>`; });
+                    html += `<span style="color: green; font-weight: bold;">✅ Rasti ${foundKeys.length} Shape Keys.</span>`;
+                } else {
+                    html += `<span style="color: red; font-weight: bold;">❌ Nė vienas Shape Key nerastas!</span>`;
+                }
+                
+                dataListDiv.innerHTML = html;
+                dataListDiv.style.display = 'block';
+            }
+        }
+        
+        // Naudojame 'load' įvykį
         modelViewer.addEventListener('load', () => {
-             // 1. Atvaizduojame rastus Shape Keys (DEBUG)
-             if (modelViewer.model && modelViewer.model.targetNames) {
-                 const foundKeys = modelViewer.model.targetNames; 
-                 let html = '<strong>Rasti Shape Keys (Morf. Tikslai):</strong>';
-                 foundKeys.forEach(key => { html += `<span>- ${key}</span>`; });
-                 html += foundKeys.length > 0 ? `<span style="color: green; font-weight: bold;">✅ Rasti ${foundKeys.length} Shape Keys.</span>` : `<span style="color: red; font-weight: bold;">❌ Nė vienas Shape Key nerastas!</span>`;
-                 shapeKeysListDiv.innerHTML = html;
-                 shapeKeysListDiv.style.display = 'block';
-             }
+             // 1. ATIDŽIAI TIKRINAME PAVADINIMUS
+             displayModelData();
              
-             // 2. Priskiriame Hotspot'ų klausytojus (IŠSPRENDŽIA NEREAGAVIMO PROBLEMĄ)
+             // 2. Priskiriame Hotspot'ų klausytojus
              hotspotButtons.forEach(button => {
                  if(button) button.addEventListener('click', toggleShapeKey);
              });
@@ -142,10 +144,14 @@
              statusMessage.style.backgroundColor = '#4CAF50'; 
              statusMessage.style.display = 'block';
              
-             // 4. Užtikriname, kad pradinė būsena būtų UŽDARYTA
+             // 4. Užtikriname pradinę būseną
              for (let i = 1; i <= 6; i++) {
                  const initialKey = SHAPE_KEY_PREFIX + i + SHAPE_KEY_SUFFIX;
-                 modelViewer.setMorphTargetWeight(initialKey, 0.0);
+                 try {
+                     modelViewer.setMorphTargetWeight(initialKey, 0.0);
+                 } catch (e) {
+                     // Saugiklis
+                 }
              }
         });
         
