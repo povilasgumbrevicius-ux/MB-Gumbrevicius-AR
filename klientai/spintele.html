@@ -68,4 +68,193 @@
             alt="Spintelės modelis" 
             camera-controls 
             interaction-prompt="none"
-            shadow-
+            shadow-intensity="1.0"
+            exposure="1.0"
+            ar ar-modes="webxr scene-viewer quick-look"
+        >
+            <button class="hotspot-button" 
+                    slot="hotspot-stalcius-1" 
+                    data-position="0 0.45 0.5" 
+                    data-normal="0 0 1" 
+                    data-animation-name="stalcius1Action" 
+                    data-is-open="false">
+            </button>
+            
+            <button id="ar-drawer-button" 
+                    slot="ar" 
+                    data-animation-name="stalcius1Action" 
+                    data-is-open="false">
+                 Atidaryti Stalčių 1
+            </button>
+
+            <button slot="ar-button" id="ar-custom-button">
+                 ▶️ Rodyti AR
+            </button>
+        </model-viewer>
+        
+        <div id="status-message"></div>
+    </div>
+
+    <script>
+        const modelViewer = document.getElementById('spintele-model');
+        const statusMessage = document.getElementById('status-message');
+        
+        // Renkame abu mygtukus (Hotspot'ą ir AR mygtuką)
+        const buttonsToControl = [
+            document.querySelector('.hotspot-button'),
+            document.getElementById('ar-drawer-button')
+        ].filter(b => b); 
+        
+        // Animacijos nustatymai (turi atitikti Jūsų 100 kadrų GLB failą):
+        const FPS = 24.0; 
+        const OPEN_FRAMES = 50.0; 
+        const CLOSE_FRAMES = 50.0; 
+        
+        const OPEN_DURATION = OPEN_FRAMES / FPS; 
+        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; 
+        
+        const TARGET_DURATION = 0.5; 
+        const TIME_EPSILON = 0.01; 
+        
+        let isAnimating = false;
+        let animationMonitorId = null;
+        let activeControlButton = null; 
+
+        // Funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
+        function checkAnimation() {
+            if (!isAnimating || !activeControlButton) {
+                cancelAnimationFrame(animationMonitorId);
+                return;
+            }
+
+            const currentTime = modelViewer.currentTime; 
+            const isOpening = activeControlButton.isOpening;
+            const targetTime = activeControlButton.targetTime;
+            const buttonName = activeControlButton.getAttribute('data-animation-name');
+            
+            if (isOpening) {
+                // ATIDARYMAS
+                if (currentTime >= targetTime - TIME_EPSILON) {
+                    modelViewer.pause();
+                    modelViewer.currentTime = targetTime; 
+                    isAnimating = false; 
+                    cancelAnimationFrame(animationMonitorId);
+                    
+                    // Atnaujiname būseną abiem mygtukams
+                    buttonsToControl.forEach(btn => {
+                        if (btn.getAttribute('data-animation-name') === buttonName) {
+                            btn.setAttribute('data-is-open', 'true');
+                            if (btn.id === 'ar-drawer-button') {
+                                btn.textContent = 'Uždaryti Stalčių 1'; 
+                            }
+                        }
+                    });
+                    activeControlButton = null;
+                    return;
+                }
+            } else {
+                // UŽDARYMAS
+                if (currentTime >= targetTime - TIME_EPSILON) {
+                    modelViewer.pause();
+                    modelViewer.currentTime = 0; 
+                    isAnimating = false; 
+                    cancelAnimationFrame(animationMonitorId);
+                    
+                    // Atnaujiname būseną abiem mygtukams
+                    buttonsToControl.forEach(btn => {
+                         if (btn.getAttribute('data-animation-name') === buttonName) {
+                            btn.setAttribute('data-is-open', 'false');
+                            if (btn.id === 'ar-drawer-button') {
+                                btn.textContent = 'Atidaryti Stalčių 1'; 
+                            }
+                         }
+                    });
+                    activeControlButton = null;
+                    return;
+                }
+            }
+            animationMonitorId = requestAnimationFrame(checkAnimation);
+        }
+
+
+        function toggleAnimation(event) {
+            if (isAnimating) return; 
+            
+            const button = event.currentTarget; 
+            const animationName = button.getAttribute('data-animation-name');
+            let isOpen = button.getAttribute('data-is-open') === 'true';
+
+            if (!animationName) return;
+            
+            let timeRange;
+            let targetTime;
+            let isOpening;
+
+            if (!isOpen) {
+                // ATIDARYMAS
+                timeRange = [0, OPEN_DURATION]; 
+                modelViewer.currentTime = 0; 
+                targetTime = OPEN_DURATION; 
+                isOpening = true;
+                
+            } else {
+                // UŽDARYMAS
+                timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
+                modelViewer.currentTime = OPEN_DURATION; 
+                targetTime = TOTAL_DURATION; 
+                isOpening = false;
+            }
+            
+            try {
+                isAnimating = true; 
+                activeControlButton = button; 
+                activeControlButton.isOpening = isOpening; 
+                activeControlButton.targetTime = targetTime;
+
+                modelViewer.animationName = animationName;
+
+                modelViewer.play({ 
+                    timeRange: timeRange,
+                    duration: TARGET_DURATION, 
+                    repetitions: 1,
+                    direction: 'forwards' 
+                });
+                
+                animationMonitorId = requestAnimationFrame(checkAnimation);
+                
+            } catch (e) {
+                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 isAnimating = false; 
+                 activeControlButton = null;
+            }
+        }
+        
+        // Prikabiname valdymą prie abiejų mygtukų
+        buttonsToControl.forEach(button => {
+            if(button) button.addEventListener('click', toggleAnimation);
+        });
+
+        // Pradinis modelio nustatymas
+        modelViewer.addEventListener('model-visibility', () => {
+             const availableAnimations = modelViewer.availableAnimations || [];
+             const animationName = buttonsToControl[0]?.getAttribute('data-animation-name');
+
+             if (animationName && availableAnimations.includes(animationName)) {
+                 modelViewer.animationName = animationName;
+                 modelViewer.currentTime = 0; 
+                 modelViewer.pause();
+                 
+                 statusMessage.innerHTML = `✅ Stalčius 1 animacija ir AR valdymas paruošti.`;
+                 statusMessage.style.backgroundColor = '#4CAF50';
+                 statusMessage.style.display = 'block';
+             } else {
+                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Patikrinkite GLB failą.`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
+             }
+        });
+        
+    </script>
+</body>
+</html>
