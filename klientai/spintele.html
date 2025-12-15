@@ -1,151 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė su Stalčiumi 1</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
-    <style>
-        
-        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { 
-            width: 100%; 
-            height: 100%; 
-            background-color: #ffffff;
-            --camera-controls-touch-radius: 10px; 
-            --camera-controls-move-speed: 2;
-        }
+    <title>3D Spintelė su Stalčiumi 1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    
+    <style>
+        
+        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
+        .container { position: relative; width: 100%; height: 100vh; }
+        model-viewer { 
+            width: 100%; 
+            height: 100%; 
+            background-color: #ffffff;
+            --camera-controls-touch-radius: 10px; 
+            --camera-controls-move-speed: 2;
+        }
 
-        #ar-custom-button {
-            /* Stilius AR mygtukui */
-            background-color: #4CAF50; 
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            position: absolute; 
-            top: 40px; 
-            right: 20px; 
-            z-index: 2500;
-        }
-        #ar-custom-button:hover {
-            background-color: #45a049;
-        }
+        #ar-custom-button {
+            background-color: #4CAF50; 
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            position: absolute; 
+            top: 40px; 
+            right: 20px; 
+            z-index: 2500;
+        }
+        #ar-custom-button:hover {
+            background-color: #45a049;
+        }
 
-        /* Hotspot stilius - Dabar jį padariau matomą, kad matytumėte, kur yra paspaudimo zona */
-        .drawer-hotspot {
-            width: 50px; 
-            height: 50px;
-            background: rgba(0, 123, 255, 0.7); /* Mėlynas, kad matytumėte */
-            border-radius: 50%; /* Apskritas */
-            cursor: pointer;
-            border: 3px solid white; 
-            transition: background-color 0.3s;
-            text-align: center;
-            line-height: 44px;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            pointer-events: auto; /* Užtikrina, kad galima paspausti */
-        }
-        .drawer-hotspot:hover {
-             background: rgba(0, 86, 179, 0.8);
-        }
+        /* Hotspot stilius (NEBEREIKALINGAS ŠIAME TESTE, BET PALIEKU) */
+        .drawer-hotspot {
+            width: 50px; 
+            height: 50px;
+            background: rgba(0, 123, 255, 0.7); 
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white; 
+            text-align: center;
+            line-height: 44px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            pointer-events: auto;
+        }
+        .drawer-hotspot:hover {
+            background: rgba(0, 86, 179, 0.8);
+        }
 
-        /* Klaidos pranešimas CSS */
-        #ar-error-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; display: none; text-align: center; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-        }
-    </style>
+        /* Klaidos pranešimas CSS */
+        #ar-error-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <model-viewer 
-            id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
-            alt="Spintelės modelis" 
-            camera-controls 
-            interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-            disable-tap
-            
-            ar
-            ar-modes="webxr scene-viewer quick-look"
-        >
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
-            
-            <div id="hotspot-1" class="drawer-hotspot" slot="hotspot-stalcius1" 
-                 data-key="stalcius1" data-position="0 0.5 0.5" 
-                 data-target="0 0.5 0.5">
-                1
-            </div>
-            
-        </model-viewer>
-        
-        <div id="ar-error-message"></div>
-    </div>
+    <div class="container">
+        <model-viewer 
+            id="spintele-model" 
+            src="../modeliai/baldai/spintele.glb" 
+            alt="Spintelės modelis" 
+            camera-controls 
+            interaction-prompt="none"
+            shadow-intensity="1.0"
+            exposure="1.0"
+            disable-tap
+            
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+        >
+                        <button slot="ar-button" id="ar-custom-button">
+                 ▶️ Rodyti AR
+            </button>
+            
+            <div id="hotspot-1" class="drawer-hotspot" slot="hotspot-stalcius1" 
+                 data-key="stalcius1" data-position="0 0.5 0.5" 
+                 data-target="0 0.5 0.5">
+                1
+            </div>
+            
+        </model-viewer>
+        
+        <div id="ar-error-message"></div>
+    </div>
 
-    <script>
-        const modelViewer = document.getElementById('spintele-model');
-        const errorMessage = document.getElementById('ar-error-message');
-        
-        // Būsena TIK stalčiui 1
-        const SHAPE_KEY_NAME = 'stalcius1';
-        let isDrawer1Open = false;
-        
-        // Funkcija, kuri valdo stalčiaus atidarymą/uždarymą
-        function toggleDrawer(event) {
-            // Patikriname, ar paspausta ant teisingo Hotspot'o
-            const hotspot = event.target.closest('.drawer-hotspot');
-            if (!hotspot || hotspot.getAttribute('data-key') !== SHAPE_KEY_NAME) return;
+    <script>
+        const modelViewer = document.getElementById('spintele-model');
+        const errorMessage = document.getElementById('ar-error-message');
+        const SHAPE_KEY_NAME = 'stalcius1';
+        
+        // MODELIO ĮKĖLIMO NUSTATYMAI
+        modelViewer.addEventListener('load', () => {
+             // Uždaryti iš pradžių (jei Shape Key pavadinimas teisingas)
+             modelViewer.setMorphTarget(SHAPE_KEY_NAME, 0.0);
 
-            const targetValue = isDrawer1Open ? 0.0 : 1.0;
-            
-            // Paleidžiame Shape Key animaciją
-            // setMorphTarget automatiškai perkelia vertę per 300ms
-            modelViewer.setMorphTarget(SHAPE_KEY_NAME, targetValue);
-            
-            // Atnaujiname būseną
-            isDrawer1Open = !isDrawer1Open;
-        }
-        
-        // Prikabiname funkciją prie paspaudimo įvykio ant modelio peržiūros
-        modelViewer.addEventListener('click', toggleDrawer);
+             // Paleisti atidarymą po 2 sekundžių (TESTAS)
+             setTimeout(() => {
+                 // Nustatome pilną atidarymo vertę (1.0)
+                 modelViewer.setMorphTarget(SHAPE_KEY_NAME, 1.0);
+                 console.log('Stalčius 1 bandymas atsidaryti nustatytas į 1.0');
+             }, 2000);
+        });
+        
 
-        // MODELIO ĮKĖLIMO NUSTATYMAI
-        modelViewer.addEventListener('load', () => {
-             // Užtikriname, kad pradžioje stalčius būtų uždarytas (vertė 0.0)
-             modelViewer.setMorphTarget(SHAPE_KEY_NAME, 0.0);
-        });
-
-        // Klaidos/būsenos valdymas (Jūsų originalus kodas)
-        modelViewer.addEventListener('ar-status', (event) => {
-            const status = event.detail.status;
-            const arCustomButton = document.getElementById('ar-custom-button');
-            
-            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
-                errorMessage.style.display = 'block';
-                if (arCustomButton) arCustomButton.style.display = 'none';
-            } else {
-                errorMessage.style.display = 'none';
-                if (arCustomButton) arCustomButton.style.display = 'block';
-            }
-        });
-        
-    </script>
+        // Klaidos/būsenos valdymas (Jūsų originalus kodas)
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            const arCustomButton = document.getElementById('ar-custom-button');
+            
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
+                errorMessage.style.display = 'block';
+                if (arCustomButton) arCustomButton.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'none';
+                if (arCustomButton) arCustomButton.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
