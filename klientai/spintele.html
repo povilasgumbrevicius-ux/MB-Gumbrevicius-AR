@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Visi 6 Stalčiai (GALUTINIS SPRENDIMAS)</title>
+    <title>3D Spintelė - SPRENDIMAS PER SHAPE KEYS</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     
     <style>
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
+        
         model-viewer { 
-            width: 100%; height: 100%; background-color: #ffffff;
-            --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
+            width: 100%; height: 100%; 
+            background-color: #ffffff;
         }
         
         /* Hotspot stilius */
@@ -22,16 +23,18 @@
             cursor: pointer; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             transition: transform 0.2s, background-color 0.2s;
         }
+        .hotspot-button[data-is-open="true"] {
+             background-color: rgba(40, 167, 69, 0.9); /* Žalia, kai atidaryta */
+        }
         .hotspot-button:hover {
-            transform: scale(1.2); background-color: rgba(40, 167, 69, 0.9); 
+            transform: scale(1.2);
         }
 
-        /* Statuso pranešimas (paliktas debug'ui, galima pašalinti) */
+        /* Statuso pranešimas (DEBUG) */
         #status-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; display: none; text-align: center; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 80%;
+            background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; text-align: center; display: none;
         }
     </style>
 </head>
@@ -46,7 +49,6 @@
             interaction-prompt="none"
             shadow-intensity="1.0"
             exposure="1.0"
-            animation-name="stalcius1Action" 
         >
             <button class="hotspot-button" slot="hotspot-stalcius-1" data-position="-0.2 0.7 0.5" data-drawer-index="1" data-is-open="false"></button>
             <button class="hotspot-button" slot="hotspot-stalcius-2" data-position="0.2 0.7 0.5" data-drawer-index="2" data-is-open="false"></button>
@@ -64,158 +66,56 @@
         const hotspotButtons = document.querySelectorAll('.hotspot-button'); 
         const statusMessage = document.getElementById('status-message');
         
-        // KRITINIAI PARAMETRAI
-        const ANIMATION_NAME = "stalcius1Action"; // VIENINTELĖ JŪSŲ SUDĖTINĖ ANIMACIJA
-        const FPS = 24.0; 
-        const FRAMES_PER_STAGE = 50.0; // Kiek kadrų skirti TIK atidarymui (Uždaryta -> Atidaryta)
-        const FRAMES_PER_DRAWER = FRAMES_PER_STAGE * 2; // 100 kadrų vieno stalčiaus pilnam ciklui
+        // KRITINĖ KONSTANTA: Jūsų Shape Key pavadinimo formatas (stalcius1, stalcius2...)
+        const SHAPE_KEY_PREFIX = "stalcius"; 
+        const SHAPE_KEY_SUFFIX = ""; // Paliekame tuščią, nes pavadinimas yra tiesiog "stalcius1"
 
-        const STAGE_DURATION = FRAMES_PER_STAGE / FPS; // ~2.083s (Atidarymo/Uždarymo laikas)
-        const TARGET_DURATION = 0.5; // Animacijos greitis (realus perėjimo laikas sekundėmis)
-        const TIME_EPSILON = 0.01; 
-        
-        let isAnimating = false;
-        let animationMonitorId = null;
-        let activeControlButton = null; 
-
-        // Funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
-        function checkAnimation() {
-            if (!isAnimating || !activeControlButton) {
-                cancelAnimationFrame(animationMonitorId);
-                return;
-            }
-
-            const currentTime = modelViewer.currentTime; 
-            const isOpening = activeControlButton.isOpening;
-            const targetTime = activeControlButton.targetTime;
-            const drawerIndex = activeControlButton.getAttribute('data-drawer-index');
-            
-            if (isOpening) {
-                // ATIDARYMAS
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = targetTime; // Užtikriname tikslią atidarytą poziciją
-                    isAnimating = false; 
-                    cancelAnimationFrame(animationMonitorId);
-                    
-                    hotspotButtons.forEach(btn => {
-                        if (btn.getAttribute('data-drawer-index') === drawerIndex) {
-                            btn.setAttribute('data-is-open', 'true');
-                        }
-                    });
-                    activeControlButton = null;
-                    return;
-                }
-            } else {
-                // UŽDARYMAS
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    
-                    // Nustatome laiką į UŽDARYTĄ BŪSENĄ (stalčiaus pradžios poziciją)
-                    const frameOffset = (parseInt(drawerIndex) - 1) * FRAMES_PER_DRAWER;
-                    modelViewer.currentTime = frameOffset / FPS; 
-                    
-                    isAnimating = false; 
-                    cancelAnimationFrame(animationMonitorId);
-                    
-                    hotspotButtons.forEach(btn => {
-                        if (btn.getAttribute('data-drawer-index') === drawerIndex) {
-                            btn.setAttribute('data-is-open', 'false');
-                        }
-                    });
-                    activeControlButton = null;
-                    return;
-                }
-            }
-            animationMonitorId = requestAnimationFrame(checkAnimation);
-        }
-
-        // PAGRINDINĖ FUNKCIJA: Paleidžia animaciją nurodytu kadrų diapazonu
-        function toggleAnimation(event) {
-            if (isAnimating) return; 
-            
+        // PAGRINDINĖ FUNKCIJA: Valdymas per Shape Keys
+        function toggleShapeKey(event) {
             const button = event.currentTarget; 
-            const drawerIndex = parseInt(button.getAttribute('data-drawer-index'));
+            const drawerIndex = button.getAttribute('data-drawer-index');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            // Skaičiuojame kadrų/laiko poslinkius pagal stalčiaus eilės numerį (index)
-            const frameOffset = (drawerIndex - 1) * FRAMES_PER_DRAWER; // 0, 100, 200, 300 kadrų poslinkis
-
-            let timeRange;
-            let targetTime;
-            let isOpening;
+            // Sukuriamas tikslus Shape Key pavadinimas (pvz., "stalcius" + 3 = "stalcius3")
+            const targetShapeKey = SHAPE_KEY_PREFIX + drawerIndex + SHAPE_KEY_SUFFIX;
             
-            // Konvertuojame kadrus į sekundes
-            const START_TIME = frameOffset / FPS;         // Uždaryta pozicija
-            const MID_TIME = START_TIME + STAGE_DURATION;  // Atidaryta pozicija
-            const END_TIME = START_TIME + (STAGE_DURATION * 2); // Ciklo pabaiga (grįžimas į kitą stalčiaus pradžią)
+            let targetValue;
+            let targetState;
 
             if (!isOpen) {
-                // ATIDARYMAS (Judame nuo START_TIME iki MID_TIME)
-                timeRange = [START_TIME, MID_TIME]; 
-                targetTime = MID_TIME; 
-                isOpening = true;
-                
+                // ATIDARYMAS: Nustatome Shape Key Value į 1.0 (pilnai atidaryta)
+                targetValue = 1.0;
+                targetState = 'true';
             } else {
-                // UŽDARYMAS (Judame nuo MID_TIME iki END_TIME)
-                timeRange = [MID_TIME, END_TIME]; 
-                targetTime = END_TIME; 
-                isOpening = false;
+                // UŽDARYMAS: Nustatome Shape Key Value į 0.0 (uždaryta)
+                targetValue = 0.0; 
+                targetState = 'false';
             }
             
-            try {
-                isAnimating = true; 
-                activeControlButton = button; 
-                activeControlButton.isOpening = isOpening; 
-                activeControlButton.targetTime = targetTime;
-
-                // 1. Nustatome vienintelę animaciją
-                modelViewer.animationName = ANIMATION_NAME; 
-                
-                // 2. Nustatome pradinį laiką
-                modelViewer.currentTime = isOpening ? START_TIME : MID_TIME;
-
-
-                // 3. Paleidžiame animacijos diapazoną
-                modelViewer.play({ 
-                    timeRange: timeRange,
-                    duration: TARGET_DURATION, // Greitis
-                    repetitions: 1,
-                    direction: 'forwards' 
-                });
-                
-                animationMonitorId = requestAnimationFrame(checkAnimation);
-                
-            } catch (e) {
-                isAnimating = false; 
-                activeControlButton = null;
-                console.error("Klaida paleidžiant animaciją:", e);
-            }
+            // Nustatome Shape Key svorį (valdome istiesti geometrija)
+            // model-viewer automatiškai animuos perėjimą tarp 0.0 ir 1.0
+            modelViewer.setMeshUniform(targetShapeKey, targetValue);
+            
+            // Atnaujiname Hotspot'o būseną
+            button.setAttribute('data-is-open', targetState);
         }
         
         hotspotButtons.forEach(button => {
-            if(button) button.addEventListener('click', toggleAnimation);
+            if(button) button.addEventListener('click', toggleShapeKey);
         });
 
-        // PRADINĖ BŪSENA: Nustatome modelio būseną į uždaryta
+        // PRADINĖ BŪSENA: Nustatome modelį į Uždarytą pozą (visi Shape Keys = 0.0)
         modelViewer.addEventListener('model-visibility', () => {
-             const availableAnimations = modelViewer.availableAnimations || [];
-             
-             if (availableAnimations.includes(ANIMATION_NAME)) {
-                 statusMessage.innerHTML = `✅ Sudėtinė animacija "${ANIMATION_NAME}" rasta. Visi 6 stalčiai paruošti.`;
-                 statusMessage.style.backgroundColor = '#4CAF50'; 
-                 
-                 // Nustatome modelį į UŽDARYTĄ būseną (Stalčius 1 pradžia = 0.0s)
-                 modelViewer.animationName = ANIMATION_NAME; 
-                 modelViewer.currentTime = 0.0;
-                 modelViewer.pause();
-                 
-             } else {
-                 statusMessage.innerHTML = `❌ TRŪKSTA SUDĖTINĖS ANIMACIJOS! Ieškojome: "${ANIMATION_NAME}".`;
-                 statusMessage.style.backgroundColor = '#f44336'; 
-             }
-
+             // Vizualinis patvirtinimas
+             statusMessage.innerHTML = `✅ Modelis paruoštas. Naudojamas Shape Key valdymas.`;
+             statusMessage.style.backgroundColor = '#4CAF50'; 
              statusMessage.style.display = 'block';
+             
+             // Užtikriname, kad pradinė būsena būtų UŽDARYTA (visi raktų svoriai = 0.0)
+             for (let i = 1; i <= 6; i++) {
+                 const initialKey = SHAPE_KEY_PREFIX + i + SHAPE_KEY_SUFFIX;
+                 modelViewer.setMeshUniform(initialKey, 0.0);
+             }
         });
         
     </script>
