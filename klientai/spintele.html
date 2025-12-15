@@ -1,53 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Sustabdymo Pataisa</title>
+    <title>3D Spintelė - Stalčius 1 Patikrintas Sustabdymas (RAF)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        
+        /* ... (Stiliai lieka tie patys) ... */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
-            width: 100%; 
-            height: 100%; 
-            background-color: #ffffff;
-            --camera-controls-touch-radius: 10px; 
-            --camera-controls-move-speed: 2;
+            width: 100%; height: 100%; background-color: #ffffff; --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
         }
 
-        /* Valdymo mygtuko konteineris */
         #controls-overlay {
-            position: absolute; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 2500;
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2500;
         }
-
-        /* Stalčiaus mygtukų stiliai */
         .drawer-button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.2s;
+            padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s;
         }
-        .drawer-button.open {
-            background-color: #28a745; /* Žalia, kai atidarytas */
-        }
-        .drawer-button:hover {
-            background-color: #0056b3;
-        }
+        .drawer-button.open { background-color: #28a745; }
+        .drawer-button:hover { background-color: #0056b3; }
         
-        /* AR Mygtuko ir Statuso stiliai lieka tie patys */
         #ar-custom-button {
             z-index: 3000; position: absolute; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
@@ -88,68 +64,98 @@
         const statusMessage = document.getElementById('status-message');
         const toggleButton = document.getElementById('toggle-stalcius-1');
         
-        // Animacijos nustatymai, pagrįsti Jūsų Blenderio darbais:
+        // Animacijos nustatymai:
         const FPS = 24.0; 
         const OPEN_FRAMES = 50.0; 
-        const CLOSE_FRAMES = 50.0; // Uždarymo segmentas prasideda nuo 51 kadro ir trunka 50 kadrų
+        const CLOSE_FRAMES = 50.0; 
         
-        const OPEN_DURATION = OPEN_FRAMES / FPS; // 0.0s iki 2.08s
-        const CLOSE_DURATION = CLOSE_FRAMES / FPS; // 2.08s iki 4.16s
+        const OPEN_DURATION = OPEN_FRAMES / FPS; // 0.0s iki 2.0833s
+        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; // 0.0s iki 4.1666s
         
-        const TARGET_DURATION = 0.5; // Tikslinis greitis (pvz., per 0.5s)
+        const TARGET_DURATION = 0.5; // Tikslinis greitis (0.5s)
         
-        let isAnimating = false; // Apsauga nuo dvigubo paspaudimo
+        let isAnimating = false;
+        let animationMonitorId = null;
+        let targetTime = 0; 
+        let isOpening = false; // Stebime, ar vyksta atidarymas, ar uždarymas
 
-        // Funkcija, kuri sustabdo animaciją, kai segmentas baigtas
-        function animationFinishedHandler() {
-            modelViewer.pause();
-            isAnimating = false;
+        // Svarbiausia funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
+        function checkAnimation() {
+            if (!isAnimating) {
+                cancelAnimationFrame(animationMonitorId);
+                return;
+            }
+
+            // Dabartinis laikas
+            const currentTime = modelViewer.currentTime; 
+            
+            // Atidarymo atveju tikriname, ar pasiekėme atidarymo pabaigos tašką (OPEN_DURATION)
+            if (isOpening && currentTime >= targetTime) {
+                modelViewer.pause();
+                isAnimating = false;
+                modelViewer.currentTime = targetTime; // Užtikriname, kad sustotų tiksliai 50 kadre
+                cancelAnimationFrame(animationMonitorId);
+                console.log('Sustabdyta ties atidarymo pabaiga (50 kadras).');
+                return;
+            } 
+            
+            // Uždarymo atveju tikriname, ar pasiekėme uždarymo pabaigos tašką (0.0s)
+            // PASTABA: Jei naudojamas Uždarymo segmentas (51-100 kadrų), jis sustos klipo pabaigoje
+            // Mums reikia užtikrinti, kad po uždarymo būtų nustatytas 0 laikas
+            if (!isOpening && currentTime >= targetTime) {
+                 modelViewer.pause();
+                 isAnimating = false;
+                 modelViewer.currentTime = targetTime; // Užtikriname, kad sustotų tiksliai 100 kadre (0 pozicija)
+                 cancelAnimationFrame(animationMonitorId);
+                 console.log('Sustabdyta ties uždarymo pabaiga (100 kadras / 0 pozicija).');
+                 return;
+            }
+
+
+            animationMonitorId = requestAnimationFrame(checkAnimation);
         }
 
+
         function toggleAnimation(event) {
-            if (isAnimating) return; // Jei jau vyksta, ignoruojame paspaudimą
-            isAnimating = true;
+            if (isAnimating) return; 
             
             const button = event.currentTarget; 
             const animationName = button.getAttribute('data-animation-name');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            if (!animationName) {
-                isAnimating = false;
-                return;
-            }
+            if (!animationName) return;
             
             let timeRange;
-            let startDuration; // Animacijos pradžios momentas
 
             if (!isOpen) {
-                // ATIDARYMAS: 0-50 kadrai (0.0s iki OPEN_DURATION)
+                // ATIDARYMAS
                 timeRange = [0, OPEN_DURATION]; 
-                startDuration = 0; 
+                modelViewer.currentTime = 0; // Pradeda nuo uždarytos pozicijos
+                targetTime = OPEN_DURATION; // Tikslas: 50 kadras
+                isOpening = true;
                 
             } else {
-                // UŽDARYMAS: 51-100 kadrai (OPEN_DURATION iki OPEN_DURATION + CLOSE_DURATION)
-                timeRange = [OPEN_DURATION, OPEN_DURATION + CLOSE_DURATION]; 
-                startDuration = OPEN_DURATION; // Pradeda nuo atidarytos pozicijos
+                // UŽDARYMAS
+                // Segmentas: 51-100 kadrai (nuo atidarytos iki uždarytos)
+                timeRange = [OPEN_DURATION, TOTAL_DURATION]; 
+                modelViewer.currentTime = OPEN_DURATION; // Pradeda nuo atidarytos pozicijos (50 kadro)
+                targetTime = TOTAL_DURATION; // Tikslas: 100 kadras (uždaryta)
+                isOpening = false;
             }
             
             try {
-                // Nuimame buvusius klausytojus (apsauga nuo dublikatų)
-                modelViewer.removeEventListener('animation-finished', animationFinishedHandler);
+                isAnimating = true;
                 
-                // Nustatome pradinę poziciją
-                modelViewer.currentTime = startDuration; 
-
                 modelViewer.play({ 
                     animationName: animationName, 
                     timeRange: timeRange,
-                    duration: TARGET_DURATION, 
+                    duration: TARGET_DURATION, // Vykdoma per 0.5s
                     repetitions: 1,
                     direction: 'forwards' 
                 });
                 
-                // Svarbu: Kai animacija baigiasi, ji sustabdoma
-                modelViewer.addEventListener('animation-finished', animationFinishedHandler, { once: true });
+                // Paleidžiame nuolatinį tikrinimą
+                animationMonitorId = requestAnimationFrame(checkAnimation);
                 
                 // Atnaujiname mygtuko būseną ir tekstą
                 button.setAttribute('data-is-open', (!isOpen).toString());
@@ -160,7 +166,7 @@
                  statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
-                 isAnimating = false; // Atlaisviname, jei įvyko klaida
+                 isAnimating = false; 
             }
         }
         
@@ -168,21 +174,21 @@
             toggleButton.addEventListener('click', toggleAnimation);
         }
 
-        // Pradinis modelio nustatymas: Nustatome į 0 poziciją
+        // Pradinis modelio nustatymas: Uždaryta pozicija
         modelViewer.addEventListener('model-visibility', () => {
              const availableAnimations = modelViewer.availableAnimations || [];
              const animationName = toggleButton.getAttribute('data-animation-name');
 
              if (availableAnimations.includes(animationName)) {
                  modelViewer.animationName = animationName;
-                 modelViewer.currentTime = 0; // Uždaryta būsena
+                 modelViewer.currentTime = 0; 
                  modelViewer.pause();
                  
-                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija rasta.`;
+                 statusMessage.innerHTML = `✅ Modelis paruoštas! Naudojamas RAF stebėjimas.`;
                  statusMessage.style.backgroundColor = '#4CAF50';
                  statusMessage.style.display = 'block';
              } else {
-                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Rastos: ${availableAnimations.join(', ')}`;
+                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta.`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
              }
