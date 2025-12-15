@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Spintelės Atvaizdavimas</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* CSS stiliai geresniam atvaizdavimui */
+        body { margin: 0; padding: 0; background-color: #f4f4f4; }
+        model-viewer {
+            width: 100%;
+            height: 80vh; /* Naudojame didelę peržiūros zoną */
+            background-color: #ffffff;
+
+          
+            --camera-controls-touch-radius: 10px; 
+            --camera-controls-move-speed: 2;
+        }
+        .controls {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+</head>
+<body>
+
+    <model-viewer 
+        id="furniture-model" 
+        src="modeliai/baldai/spintele.glb" 
+        alt="Spintelės modelis" 
+        camera-controls 
+        interaction-prompt="none"
+        shadow-intensity="1.5"
+        exposure="1.2"
+        disable-tap 
+    >
+    </model-viewer>
+</body>
+</html>
