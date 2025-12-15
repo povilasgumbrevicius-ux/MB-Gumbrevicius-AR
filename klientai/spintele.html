@@ -84,15 +84,15 @@
 
         <model-viewer 
             id="spintele-model" 
+            
             src="../modeliai/baldai/spintele.glb" 
+            
             alt="Spintelės modelis" 
             camera-controls 
             interaction-prompt="none"
             shadow-intensity="1.0"
             exposure="1.0"
-            
-            ar
-            ar-modes="webxr scene-viewer quick-look"
+            ar ar-modes="webxr scene-viewer quick-look"
         >
             <button slot="ar-button" id="ar-custom-button">
                  ▶️ Rodyti AR
@@ -101,3 +101,65 @@
         
         <div id="status-message"></div>
     </div>
+
+    <script>
+        const modelViewer = document.getElementById('spintele-model');
+        const statusMessage = document.getElementById('status-message');
+        const toggleButton = document.getElementById('toggle-stalcius-1');
+        const animationDuration = 0.5;
+
+        function toggleAnimation(event) {
+            const button = event.currentTarget; 
+            const animationName = button.getAttribute('data-animation-name');
+            let isOpen = button.getAttribute('data-is-open') === 'true';
+
+            const direction = isOpen ? 'reverse' : 'forwards';
+            const newText = isOpen ? `Atidaryti Stalčių 1` : `Uždaryti Stalčių 1`;
+            
+            try {
+                modelViewer.play({ 
+                    animationName: animationName, 
+                    duration: animationDuration,
+                    direction: direction, 
+                    repetitions: 1 
+                });
+                
+                button.setAttribute('data-is-open', (!isOpen).toString());
+                button.textContent = newText;
+                button.classList.toggle('open', !isOpen);
+
+            } catch (e) {
+                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos. Patikrinkite F12!`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
+            }
+        }
+        
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleAnimation);
+        }
+
+        modelViewer.addEventListener('model-visibility', () => {
+             const availableAnimations = modelViewer.availableAnimations || [];
+             const animationName = toggleButton.getAttribute('data-animation-name');
+
+             if (availableAnimations.includes(animationName)) {
+                 // Animacija rasta, nustatome į 0 poziciją (uždaryta)
+                 modelViewer.animationName = animationName;
+                 modelViewer.currentTime = 0; 
+                 modelViewer.pause();
+                 
+                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta.`;
+                 statusMessage.style.backgroundColor = '#4CAF50';
+                 statusMessage.style.display = 'block';
+             } else {
+                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Patikrinkite eksportą. Rastos: ${availableAnimations.join(', ')}`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
+                 console.error(`Rastos animacijos: ${availableAnimations.join(', ')}`);
+             }
+        });
+        
+    </script>
+</body>
+</html>
