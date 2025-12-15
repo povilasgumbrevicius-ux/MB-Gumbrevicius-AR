@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Valdymas Mygtuku (Segmentų Logika)</title>
+    <title>3D Spintelė - Stalčius 1 Sustabdymo Pataisa</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -88,50 +88,68 @@
         const statusMessage = document.getElementById('status-message');
         const toggleButton = document.getElementById('toggle-stalcius-1');
         
-        // Animacijos nustatymai, pagrįsti Jūsų Blenderio darbų:
+        // Animacijos nustatymai, pagrįsti Jūsų Blenderio darbais:
         const FPS = 24.0; 
-        const OPEN_FRAMES = 50.0; // 0-50 kadrai
-        const CLOSE_FRAMES = 50.0; // 51-100 kadrai
+        const OPEN_FRAMES = 50.0; 
+        const CLOSE_FRAMES = 50.0; // Uždarymo segmentas prasideda nuo 51 kadro ir trunka 50 kadrų
         
-        const OPEN_DURATION = OPEN_FRAMES / FPS; 
-        const CLOSE_DURATION = CLOSE_FRAMES / FPS; 
+        const OPEN_DURATION = OPEN_FRAMES / FPS; // 0.0s iki 2.08s
+        const CLOSE_DURATION = CLOSE_FRAMES / FPS; // 2.08s iki 4.16s
         
-        const TARGET_DURATION = 0.5; // Tikslinis laikas, per kurį turi įvykti segmentas (0.5s)
-        let animationDurationTotal = 0; // Bus nustatyta įkrovus modelį
+        const TARGET_DURATION = 0.5; // Tikslinis greitis (pvz., per 0.5s)
+        
+        let isAnimating = false; // Apsauga nuo dvigubo paspaudimo
+
+        // Funkcija, kuri sustabdo animaciją, kai segmentas baigtas
+        function animationFinishedHandler() {
+            modelViewer.pause();
+            isAnimating = false;
+        }
 
         function toggleAnimation(event) {
+            if (isAnimating) return; // Jei jau vyksta, ignoruojame paspaudimą
+            isAnimating = true;
+            
             const button = event.currentTarget; 
             const animationName = button.getAttribute('data-animation-name');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            if (!animationName) return;
+            if (!animationName) {
+                isAnimating = false;
+                return;
+            }
             
             let timeRange;
             let startDuration; // Animacijos pradžios momentas
 
             if (!isOpen) {
-                // ATIDARYMAS (Naudojame Segmentą 0-50 kadrų, kuris trunka OPEN_DURATION sekundžių)
+                // ATIDARYMAS: 0-50 kadrai (0.0s iki OPEN_DURATION)
                 timeRange = [0, OPEN_DURATION]; 
                 startDuration = 0; 
                 
             } else {
-                // UŽDARYMAS (Naudojame Segmentą 51-100 kadrų)
-                // Šis segmentas prasideda ties OPEN_DURATION sekundės žyma ir trunka CLOSE_DURATION sekundžių
+                // UŽDARYMAS: 51-100 kadrai (OPEN_DURATION iki OPEN_DURATION + CLOSE_DURATION)
                 timeRange = [OPEN_DURATION, OPEN_DURATION + CLOSE_DURATION]; 
-                startDuration = OPEN_DURATION;
+                startDuration = OPEN_DURATION; // Pradeda nuo atidarytos pozicijos
             }
             
             try {
-                // Nustatome pradinę poziciją, kad būtų užtikrintas sklandus startas
+                // Nuimame buvusius klausytojus (apsauga nuo dublikatų)
+                modelViewer.removeEventListener('animation-finished', animationFinishedHandler);
+                
+                // Nustatome pradinę poziciją
                 modelViewer.currentTime = startDuration; 
 
                 modelViewer.play({ 
                     animationName: animationName, 
                     timeRange: timeRange,
-                    duration: TARGET_DURATION, // Visada paleidžiame per 0.5s
+                    duration: TARGET_DURATION, 
                     repetitions: 1,
-                    direction: 'forwards' // Visi segmentai vykdomi tik pirmyn
+                    direction: 'forwards' 
                 });
+                
+                // Svarbu: Kai animacija baigiasi, ji sustabdoma
+                modelViewer.addEventListener('animation-finished', animationFinishedHandler, { once: true });
                 
                 // Atnaujiname mygtuko būseną ir tekstą
                 button.setAttribute('data-is-open', (!isOpen).toString());
@@ -142,6 +160,7 @@
                  statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos.`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
+                 isAnimating = false; // Atlaisviname, jei įvyko klaida
             }
         }
         
@@ -149,24 +168,17 @@
             toggleButton.addEventListener('click', toggleAnimation);
         }
 
+        // Pradinis modelio nustatymas: Nustatome į 0 poziciją
         modelViewer.addEventListener('model-visibility', () => {
              const availableAnimations = modelViewer.availableAnimations || [];
              const animationName = toggleButton.getAttribute('data-animation-name');
 
              if (availableAnimations.includes(animationName)) {
-                 
-                 // Šis tikrinimas dabar yra tik informacinis, nes mes nustatome laikus per konstantas (FPS, FRAMES)
-                 const animation = modelViewer.model.animations.find(a => a.name === animationName);
-                 if (animation) {
-                      animationDurationTotal = animation.duration;
-                 }
-                 
-                 // Nustatome į 0 poziciją (uždaryta)
                  modelViewer.animationName = animationName;
-                 modelViewer.currentTime = 0; 
+                 modelViewer.currentTime = 0; // Uždaryta būsena
                  modelViewer.pause();
                  
-                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta. Atidarymo segmentas: ${OPEN_DURATION.toFixed(2)}s. Uždarymo segmentas: ${(CLOSE_DURATION / TARGET_DURATION).toFixed(2)}x greičiu.`;
+                 statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija rasta.`;
                  statusMessage.style.backgroundColor = '#4CAF50';
                  statusMessage.style.display = 'block';
              } else {
