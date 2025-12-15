@@ -1,40 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelės Atvaizdavimas</title>
+    <title>3D Spintelės Atvaizdavimas ir AR</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
     <style>
-        /* CSS stiliai geresniam atvaizdavimui */
-        body { margin: 0; padding: 0; background-color: #f4f4f4; }
-        model-viewer {
-            width: 100%;
-            height: 80vh; /* Naudojame didelę peržiūros zoną */
+        /* Pagrindinis stilius */
+        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
+        .container { position: relative; width: 100%; height: 100vh; }
+        model-viewer { 
+            width: 100%; 
+            height: 100%; 
             background-color: #ffffff;
-
-          
             --camera-controls-touch-radius: 10px; 
             --camera-controls-move-speed: 2;
         }
-        .controls {
-            padding: 20px;
-            text-align: center;
+
+        /* AR Mygtukas CSS (Paimta iš Jūsų pavyzdžio) */
+        #ar-custom-button {
+            background-color: #4CAF50; 
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            position: absolute; 
+            top: 40px; 
+            right: 20px; 
+            z-index: 2500;
+        }
+        #ar-custom-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Klaidos pranešimas CSS */
+        #ar-error-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
     </style>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
+    <div class="container">
+        <model-viewer 
+            id="spintele-model" 
+            src="../modeliai/baldai/spintele.glb" 
+            alt="Spintelės modelis" 
+            camera-controls 
+            interaction-prompt="none"
+            shadow-intensity="1.5"
+            exposure="1.2"
+            disable-tap
+            
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+        >
+            <button slot="ar-button" id="ar-custom-button">
+                 ▶️ Rodyti AR
+            </button>
+        </model-viewer>
+        
+        <div id="ar-error-message"></div>
+    </div>
 
-    <model-viewer 
-        id="furniture-model" 
-        src="../modeliai/baldai/spintele.glb" 
-        alt="Spintelės modelis" 
-        camera-controls 
-        interaction-prompt="none"
-        shadow-intensity="1.5"
-        exposure="1.2"
-        disable-tap 
-    >
-    </model-viewer>
+    <script>
+        const modelViewer = document.getElementById('spintele-model');
+        const errorMessage = document.getElementById('ar-error-message');
+        
+        // Klaidos/būsenos valdymas (Paimtas iš Jūsų pavyzdžio)
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            const arCustomButton = document.getElementById('ar-custom-button');
+            
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
+                errorMessage.style.display = 'block';
+                if (arCustomButton) arCustomButton.style.display = 'none'; // Paslėpti custom mygtuką
+            } else {
+                errorMessage.style.display = 'none';
+                if (arCustomButton) arCustomButton.style.display = 'block'; // Rodyti custom mygtuką
+            }
+        });
+    </script>
 </body>
 </html>
