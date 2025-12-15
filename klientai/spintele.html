@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - Stalčius 1 Animacijos Testas</title>
+    <title>3D Spintelė - Stalčius 1 Animacijos SĖKMĖS Testas</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -77,7 +77,7 @@
     <div class="container">
         
         <div id="controls-overlay">
-            <button id="toggle-stalcius-1" class="drawer-button" data-animation-name="stalcius1animacija" data-is-open="false">
+            <button id="toggle-stalcius-1" class="drawer-button" data-animation-name="stalcius1Action" data-is-open="false">
                 Atidaryti Stalčių 1
             </button>
         </div>
@@ -129,7 +129,7 @@
                 button.classList.toggle('open', !isOpen);
 
             } catch (e) {
-                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos. Patikrinkite F12!`;
+                 statusMessage.innerHTML = `❌ KRITINĖ KLAIDA! Paleidimo klaida. Patikrinkite F12.`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
             }
@@ -149,10 +149,12 @@
                  modelViewer.currentTime = 0; 
                  modelViewer.pause();
                  
+                 // PRANEŠIMAS DĖL STALČIAUS 1
                  statusMessage.innerHTML = `✅ Modelis paruoštas! Animacija '${animationName}' rasta.`;
                  statusMessage.style.backgroundColor = '#4CAF50';
                  statusMessage.style.display = 'block';
              } else {
+                 // Šis pranešimas neturėtų pasirodyti!
                  statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Patikrinkite eksportą. Rastos: ${availableAnimations.join(', ')}`;
                  statusMessage.style.backgroundColor = '#f44336';
                  statusMessage.style.display = 'block';
