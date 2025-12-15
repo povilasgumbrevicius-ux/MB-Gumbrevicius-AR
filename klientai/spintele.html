@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - TIK Įkėlimas</title>
+    <title>3D Spintelė - Shape Key Diagnostika II</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        
+        /* Stiliai tokie patys kaip anksčiau */
         body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { 
@@ -20,7 +20,6 @@
         }
 
         #ar-custom-button {
-            /* Stilius AR mygtukui */
             background-color: #4CAF50; 
             color: white;
             padding: 8px 16px;
@@ -29,17 +28,12 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
-            transition: background-color 0.3s;
             position: absolute; 
             top: 40px; 
             right: 20px; 
             z-index: 2500;
         }
-        #ar-custom-button:hover {
-            background-color: #45a049;
-        }
-
-        /* Klaidos pranešimas CSS */
+        
         #ar-error-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
@@ -51,10 +45,6 @@
 <body>
     <div class="container">
         
-        <div id="controls">
-             <button id="toggle-stalcius-1" style="display:none;"></button>
-        </div>
-
         <model-viewer 
             id="spintele-model" 
             src="../modeliai/baldai/spintele.glb" 
@@ -80,21 +70,37 @@
         const modelViewer = document.getElementById('spintele-model');
         const errorMessage = document.getElementById('ar-error-message');
         
-        // **NĖRA JOKIO SHAPE KEY VALDYMO KODO ŠIOJE DALYJE**
-
         // MODELIO ĮKĖLIMO NUSTATYMAI
         modelViewer.addEventListener('load', () => {
-             // JOKIOS KOMANDOS! TIK TIKRINIMAS
-             console.log('Modelis įkeltas be Shape Key komandų.');
+             try {
+                 // **KRITINIS TESTAS:** Bandome gauti Shape Key sąrašą
+                 const morphTargets = modelViewer.model.morphTargetNames;
+
+                 if (morphTargets && morphTargets.length > 0) {
+                     console.log('✅ Rastos Shape Keys (Morfinių Tikslų) savybės:');
+                     console.log(morphTargets);
+                     
+                     errorMessage.innerHTML = '✅ Modelis matomas. Shape Keys rasti. Atidarykite F12 Konsolę, kad pamatytumėte pavadinimus.';
+                     errorMessage.style.display = 'block';
+
+                 } else {
+                     console.warn('⚠️ Modelis matomas, bet Shape Keys nerasti.');
+                     errorMessage.innerHTML = '⚠️ Modelis matomas, bet Shape Keys nerasti. Patikrinkite GLB eksportą.';
+                     errorMessage.style.display = 'block';
+                 }
+             } catch (e) {
+                 console.error('❌ Kritinė klaida gaunant Shape Key pavadinimus:', e);
+                 errorMessage.innerHTML = '❌ Modelis dingo arba įvyko klaida bandant gauti Shape Keys.';
+                 errorMessage.style.display = 'block';
+             }
         });
 
-        // Klaidos/būsenos valdymas (Jūsų originalus kodas)
+        // Klaidos/būsenos valdymas
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             const arCustomButton = document.getElementById('ar-custom-button');
             
             if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
                 errorMessage.style.display = 'block';
                 if (arCustomButton) arCustomButton.style.display = 'none';
             } else {
