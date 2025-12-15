@@ -14,7 +14,7 @@
         
         model-viewer { 
             width: 100%; height: 100%; 
-            /* Suteikiame perėjimui laiko, kad atidarymas būtų sklandus */
+            /* Perėjimo greitis, kad judesys būtų sklandus */
             --node-operation-transition: 0.3s; 
         }
         
@@ -62,7 +62,7 @@
         </model-viewer>
         
         <div id="status-message"></div>
-        </div>
+    </div>
 
     <script type="module">
         const modelViewer = document.getElementById('spintele-model');
@@ -70,9 +70,15 @@
         const statusMessage = document.getElementById('status-message');
         
         // KRITINIAI NUSTATYMAI
-        const NODE_NAME_PREFIX = "stalcius"; // Turi būti su mažosiomis raidėmis
-        const OPEN_DISTANCE = 0.3; // 0.3 metro
-        const AXIS_INDEX = 2; // Z ašis (0=X, 1=Y, 2=Z)
+        // Patvirtintas pavadinimo prefiksas (mažosios raidės)
+        const NODE_NAME_PREFIX = "stalcius"; 
+        
+        // Atidarymo atstumas (0.3 metro)
+        const OPEN_DISTANCE = 0.3; 
+        
+        // Judėjimo ašis: Nustatome į Z ašį (Dažniausiai atidarymas/uždarymas)
+        // Patikrinti variantai: 0 (X), 1 (Y), 2 (Z).
+        const AXIS_INDEX = 2; 
         
         // Tiesioginė mazgo pozicijos valdymo funkcija
         function toggleDrawerTransform(event) {
@@ -80,7 +86,7 @@
             const index = button.getAttribute('data-drawer-index');
             let isOpen = button.getAttribute('data-is-open') === 'true';
 
-            // Tikslus objekto (Node) pavadinimas (pvz., "stalcius3")
+            // Tikslus objekto (Node) pavadinimas (pvz., "stalcius1")
             const targetNodeName = NODE_NAME_PREFIX + index;
             
             // Nustatome naują poslinkio vertę (0.3m arba 0m)
@@ -91,22 +97,24 @@
             translationVector[AXIS_INDEX] = targetPos;
 
             try {
+                 // Paleidžiame judesį
                  modelViewer.mutateNodeTransform({ 
                      name: targetNodeName, 
                      translation: translationVector, 
                  });
                  
+                 // Atnaujiname būseną
                  button.setAttribute('data-is-open', !isOpen ? 'true' : 'false');
                  
-                 statusMessage.innerHTML = `✅ ${targetNodeName} atidaryta/uždaryta (${targetPos}m).`;
+                 statusMessage.innerHTML = `✅ Bandoma judinti: ${targetNodeName} per ${targetPos}m.`;
                  statusMessage.style.backgroundColor = '#4CAF50'; 
                  statusMessage.style.display = 'block';
 
             } catch (error) {
-                 statusMessage.innerHTML = `❌ Klaida: Patikrinkite "${targetNodeName}" pavadinimą ir ašį (AXIS_INDEX).`;
+                 statusMessage.innerHTML = `❌ Klaida: Nepavyko rasti objekto ${targetNodeName} arba klaidinga ašis.`;
                  statusMessage.style.backgroundColor = '#dc3545';
                  statusMessage.style.display = 'block';
-                 console.error('Node Transform Error:', error);
+                 console.error(`❌ Objekto "${targetNodeName}" pavadinimas ar ašis (AXIS_INDEX=${AXIS_INDEX}) neteisingi.`, error);
             }
         }
         
