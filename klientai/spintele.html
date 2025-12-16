@@ -1,140 +1,197 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Spintelė</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        /* CSS Stiliai (palikti nepakeisti) */
+        /* CSS Stiliai */
+        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
         .container { position: relative; width: 100%; height: 100vh; }
-        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
-        
         model-viewer { 
-            width: 100%; 
-            height: 100%; 
-            z-index: 100; 
-            transform: translateZ(0); 
+            width: 100%; height: 100%; background-color: #ffffff; --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
         }
+
+        /* Mygtukų stiliai */
+        #controls-overlay {
+            position: absolute; top: 10px; right: 10px; z-index: 2500;
+        }
+        .drawer-button {
+            padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s;
+        }
+        .drawer-button.open { background-color: #28a745; }
+        .drawer-button:hover { background-color: #0056b3; }
         
         #ar-custom-button {
-            background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
+             /* Idealioje vietoje, kaip prašėte */
+            z-index: 3000; position: absolute; bottom: 10px; right: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
-        #ar-custom-button:hover {
-            background-color: #45a049;
-        }
-        #drawer-control-button {
-            position: absolute; top: 10px; right: 10px; z-index: 2500; background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        #drawer-control-button:hover {
-            background-color: #0056b3;
-        }
-        #drawer-control-button:disabled {
-            background-color: #adb5bd; cursor: not-allowed;
+        /* Status message for debugging (optional) */
+        #status-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
     </style>
 </head>
 <body>
     <div class="container">
         
+        <div id="controls-overlay">
+            <button id="toggle-spintele-animation" class="drawer-button" data-animation-name="spinteleAction" data-is-open="false">
+                Atidaryti stalčius
+            </button>
+        </div>
+
         <model-viewer 
+            id="spintele-model" 
             src="../modeliai/baldai/spintele.glb" 
             alt="Spintelė" 
-            
-            ar 
-            ar-modes="scene-viewer quick-look webxr" 
-            
             camera-controls 
-            shadow-intensity="1" 
-            exposure="1.0" 
-            > 
-
-            <button slot="ar-button" id="ar-custom-button" style="position: absolute; bottom: 10px; right: 10px; z-index: 2500;">
+            interaction-prompt="none"
+            shadow-intensity="1.0"
+            exposure="1.0"
+            ar ar-modes="webxr scene-viewer quick-look"
+        >
+            <button slot="ar-button" id="ar-custom-button">
                  ▶️ Rodyti AR
             </button>
-
-            <button id="drawer-control-button">
-                 Atidaryti stalčius
-            </button>
-            
         </model-viewer>
         
+        <div id="status-message"></div>
     </div>
 
     <script>
-        const modelViewer = document.querySelector('model-viewer');
-        const controlButton = document.getElementById('drawer-control-button');
+        const modelViewer = document.getElementById('spintele-model');
+        const statusMessage = document.getElementById('status-message');
+        const toggleButton = document.getElementById('toggle-spintele-animation');
         
-        // Būsena: false = Uždaryta (pradinė), true = Atidaryta
-        let drawersOpen = false; 
-
-        // ANIMACIJOS NUSTATYMAI (Laikas sekundėmis)
-        const ANIMATION_NAME = 'spinteleAction'; 
+        // Animacijos nustatymai: PRITAIKYTA JŪSŲ SPINTELĖS MODELIUI
+        const FPS = 24.0; 
+        const OPEN_FRAMES = 72.0; // 0-72 kadrai
+        const CLOSE_FRAMES = 72.0; // 72-144 kadrai
         
-        // Atidarymas (0-3 sek.)
-        const OPEN_START_TIME = 0.0; 
-        const OPEN_END_TIME = 3.0; 
+        const OPEN_DURATION = OPEN_FRAMES / FPS; // 3.0 s
+        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; // 6.0 s
+        
+        const TIME_EPSILON = 0.01; // Tolerancija plaukiojančio kablelio klaidoms
+        
+        let isAnimating = false;
+        let animationMonitorId = null;
+        let targetTime = 0; 
+        let isOpening = false; 
 
-        // Uždarymas (3-6 sek.)
-        const CLOSE_START_TIME = 3.0; 
-        const CLOSE_END_TIME = 6.0; 
+        // Svarbiausia funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
+        function checkAnimation() {
+            if (!isAnimating) {
+                cancelAnimationFrame(animationMonitorId);
+                return;
+            }
 
-        // Paleidžia animacijos segmentą
-        function playAnimationSegment(startTime, endTime) {
+            const currentTime = modelViewer.currentTime; 
             
-            // Išjungiame mygtuką, kol vyksta animacija
-            controlButton.disabled = true;
+            // Tikriname, ar pasiekėme tikslinį laiką (su tolerancija)
+            if (isOpening) {
+                // Atidarymas (Tikslas: 3.0 s)
+                if (currentTime >= targetTime - TIME_EPSILON) {
+                    modelViewer.pause();
+                    modelViewer.currentTime = targetTime; // Užtikriname tikslią 72 kadro (3.0s) poziciją
+                    isAnimating = false; 
+                    cancelAnimationFrame(animationMonitorId);
+                    return;
+                }
+            } else {
+                // Uždarymas (Tikslas: 6.0 s)
+                if (currentTime >= targetTime - TIME_EPSILON) {
+                    modelViewer.pause();
+                    modelViewer.currentTime = 0; // RESETINAME į 0.0s (uždaryta)
+                    isAnimating = false; 
+                    cancelAnimationFrame(animationMonitorId);
+                    return;
+                }
+            }
 
-            // Nustatome modelio pradinį laiką ir animacijos pavadinimą
-            modelViewer.currentTime = startTime; 
-            modelViewer.animationName = ANIMATION_NAME;
-            
-            // Paleidžiame animaciją nustatytam laikotarpiui
-            modelViewer.play({ 
-                duration: endTime - startTime, 
-            });
+            animationMonitorId = requestAnimationFrame(checkAnimation);
         }
 
-        // Pagrindinis mygtuko paspaudimo tvarkyklė
-        controlButton.addEventListener('click', () => {
-            if (drawersOpen) { 
-                // Jei ATIDARYTA, paleidžiame UŽDARYMO segmentą (3s iki 6s)
-                playAnimationSegment(CLOSE_START_TIME, CLOSE_END_TIME);
-            } else { 
-                // Jei UŽDARYTA, paleidžiame ATIDARYMO segmentą (0s iki 3s)
-                playAnimationSegment(OPEN_START_TIME, OPEN_END_TIME);
+        function toggleAnimation(event) {
+            // Mygtukas veikia tik jei animacija nevyksta
+            if (isAnimating) return; 
+            
+            const button = event.currentTarget; 
+            const animationName = button.getAttribute('data-animation-name');
+            let isOpen = button.getAttribute('data-is-open') === 'true';
+
+            if (!animationName) return;
+            
+            let startTime, endTime;
+
+            if (!isOpen) {
+                // ATIDARYMAS: 0.0s iki 3.0s
+                startTime = OPEN_START_TIME; // 0.0
+                endTime = OPEN_DURATION; // 3.0
+                modelViewer.currentTime = startTime; // Pradeda nuo 0.0s
+                targetTime = endTime; // Tikslas: 3.0s
+                isOpening = true;
+                
+            } else {
+                // UŽDARYMAS: 3.0s iki 6.0s
+                startTime = OPEN_DURATION; // 3.0s
+                endTime = TOTAL_DURATION; // 6.0s
+                modelViewer.currentTime = startTime; // Pradeda nuo 3.0s (atidarytos pozicijos)
+                targetTime = endTime; // Tikslas: 6.0s
+                isOpening = false;
             }
-        });
+            
+            try {
+                isAnimating = true; // Blokuojame kitus paspaudimus
+                
+                // Paleidimas naudojant timeRange ir duration, kaip Jūsų pavyzdyje
+                modelViewer.play({ 
+                    animationName: animationName, 
+                    timeRange: [startTime, endTime],
+                    duration: (endTime - startTime), // Trukmė 3.0s
+                    repetitions: 1,
+                    direction: 'forwards' 
+                });
+                
+                // Paleidžiame nuolatinį tikrinimą
+                animationMonitorId = requestAnimationFrame(checkAnimation);
+                
+                // Atnaujiname mygtuko būseną ir tekstą
+                button.setAttribute('data-is-open', (!isOpen).toString());
+                button.textContent = isOpen ? `Atidaryti stalčius` : `Uždaryti stalčius`;
+                button.classList.toggle('open', !isOpen);
+
+            } catch (e) {
+                 // Debugging help
+                 console.error("Animacijos klaida:", e);
+                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos. Patikrinkite animacijos pavadinimą.`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
+                 isAnimating = false; 
+            }
+        }
         
-        // Tvarkome, kai animacija pasibaigia (sustabdo ir atnaujina būseną)
-        modelViewer.addEventListener('animation-finished', () => {
-             // Sustabdome modelį, kad liktų galutinėje padėtyje
-             modelViewer.pause(); 
-             
-             // Keičiame būseną
-             drawersOpen = !drawersOpen;
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleAnimation);
+        }
 
-             // Atnaujiname mygtuko tekstą pagal naują būseną
-             if (drawersOpen) { 
-                 // Jei dabar atidaryta
-                 controlButton.textContent = 'Uždaryti stalčius';
+        // Pradinis modelio nustatymas: Uždaryta pozicija
+        modelViewer.addEventListener('model-visibility', () => {
+             const animationName = toggleButton.getAttribute('data-animation-name');
+             const availableAnimations = modelViewer.availableAnimations || [];
+
+             if (availableAnimations.includes(animationName)) {
+                 modelViewer.animationName = animationName;
+                 modelViewer.currentTime = 0; 
+                 modelViewer.pause();
              } else {
-                 // Jei dabar uždaryta, RESETINAME į 0 sekundę, kad būtų galima vėl atidaryti.
-                 modelViewer.currentTime = OPEN_START_TIME;
-                 controlButton.textContent = 'Atidaryti stalčius';
+                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Galimi pavadinimai: ${availableAnimations.join(', ')}.`;
+                 statusMessage.style.backgroundColor = '#f44336';
+                 statusMessage.style.display = 'block';
              }
-             
-             // Įjungiame mygtuką atgal
-             controlButton.disabled = false; 
-        });
-
-        // Inicializuojame modelį į uždarytą poziciją (0 sekundžių) vos užsikrovus
-        modelViewer.addEventListener('load', () => {
-            modelViewer.animationName = ANIMATION_NAME;
-            modelViewer.currentTime = OPEN_START_TIME; // 0s
-            modelViewer.pause();
         });
         
     </script>
