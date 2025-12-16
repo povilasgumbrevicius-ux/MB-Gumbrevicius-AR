@@ -8,7 +8,7 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
     
     <style>
-        /* CSS Stiliai */
+        /* CSS Stiliai (palikti nepakeisti) */
         .container { position: relative; width: 100%; height: 100vh; }
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         
@@ -20,43 +20,19 @@
         }
         
         #ar-custom-button {
-            background-color: #4CAF50; 
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
         }
         #ar-custom-button:hover {
             background-color: #45a049;
         }
-
-        /* Stilius Stalčių Valdymo Mygtukui */
         #drawer-control-button {
-            position: absolute; 
-            top: 10px; 
-            right: 10px; 
-            z-index: 2500;
-            background-color: #007bff; 
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: absolute; top: 10px; right: 10px; z-index: 2500; background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         #drawer-control-button:hover {
             background-color: #0056b3;
         }
         #drawer-control-button:disabled {
-            background-color: #adb5bd; 
-            cursor: not-allowed;
+            background-color: #adb5bd; cursor: not-allowed;
         }
     </style>
 </head>
@@ -94,21 +70,24 @@
         // Būsena: false = Uždaryta (pradinė), true = Atidaryta
         let drawersOpen = false; 
 
-        // ANIMACIJOS NUSTATYMAI (Valdoma sekundėmis)
+        // ANIMACIJOS NUSTATYMAI (Laikas sekundėmis)
         const ANIMATION_NAME = 'spinteleAction'; 
-
-        // Atidarymas (0-72 kadrai = 0-3 sek.)
+        
+        // Atidarymas (0-3 sek.)
         const OPEN_START_TIME = 0.0; 
-        const OPEN_END_TIME = 3.0; // Tiksliai 3 sekundės
+        const OPEN_END_TIME = 3.0; 
 
-        // Uždarymas (73-144 kadrai = 3-6 sek.)
-        const CLOSE_START_TIME = 3.0; // Pradedame nuo 3 sekundės
-        const CLOSE_END_TIME = 6.0; // Tiksliai 6 sekundės
+        // Uždarymas (3-6 sek.)
+        const CLOSE_START_TIME = 3.0; 
+        const CLOSE_END_TIME = 6.0; 
 
-        // Funkcija, kuri paleidžia animaciją pagal nurodytą laiko diapazoną
+        // Paleidžia animacijos segmentą
         function playAnimationSegment(startTime, endTime) {
             
-            // Nustatome modelio pradinį laiką prieš paleidžiant animaciją
+            // Išjungiame mygtuką, kol vyksta animacija
+            controlButton.disabled = true;
+
+            // Nustatome modelio pradinį laiką ir animacijos pavadinimą
             modelViewer.currentTime = startTime; 
             modelViewer.animationName = ANIMATION_NAME;
             
@@ -120,20 +99,18 @@
 
         // Pagrindinis mygtuko paspaudimo tvarkyklė
         controlButton.addEventListener('click', () => {
-            controlButton.disabled = true;
-
             if (drawersOpen) { 
-                // UŽDARYMAS
+                // Jei ATIDARYTA, paleidžiame UŽDARYMO segmentą (3s iki 6s)
                 playAnimationSegment(CLOSE_START_TIME, CLOSE_END_TIME);
             } else { 
-                // ATIDARYMAS
+                // Jei UŽDARYTA, paleidžiame ATIDARYMO segmentą (0s iki 3s)
                 playAnimationSegment(OPEN_START_TIME, OPEN_END_TIME);
             }
         });
         
-        // Tvarkome, kai animacija pasibaigia (sustabdo ir atnaujina mygtuko būseną)
+        // Tvarkome, kai animacija pasibaigia (sustabdo ir atnaujina būseną)
         modelViewer.addEventListener('animation-finished', () => {
-             // Svarbu: Sustabdome modelį ties naujausio segmento pabaiga
+             // Sustabdome modelį, kad liktų galutinėje padėtyje
              modelViewer.pause(); 
              
              // Keičiame būseną
@@ -141,8 +118,11 @@
 
              // Atnaujiname mygtuko tekstą pagal naują būseną
              if (drawersOpen) { 
+                 // Jei dabar atidaryta
                  controlButton.textContent = 'Uždaryti stalčius';
              } else {
+                 // Jei dabar uždaryta, RESETINAME į 0 sekundę, kad būtų galima vėl atidaryti.
+                 modelViewer.currentTime = OPEN_START_TIME;
                  controlButton.textContent = 'Atidaryti stalčius';
              }
              
@@ -150,10 +130,10 @@
              controlButton.disabled = false; 
         });
 
-        // Inicializuojame modelį į uždarytą poziciją (0 sekundžių)
+        // Inicializuojame modelį į uždarytą poziciją (0 sekundžių) vos užsikrovus
         modelViewer.addEventListener('load', () => {
             modelViewer.animationName = ANIMATION_NAME;
-            modelViewer.currentTime = 0;
+            modelViewer.currentTime = OPEN_START_TIME; // 0s
             modelViewer.pause();
         });
         
