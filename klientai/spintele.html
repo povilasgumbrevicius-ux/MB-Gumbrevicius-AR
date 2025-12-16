@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė</title>
+    <title>3D Spintelė - ŠVARUS VALDYMAS V2</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -15,7 +15,7 @@
             width: 100%; height: 100%; 
         }
 
-        /* Mygtukas perkeliamas į kairįjį viršutinį kampą */
+        /* Mygtukas viršuje kairėje */
         #main-control-button {
             position: fixed; 
             top: 30px; 
@@ -36,13 +36,6 @@
              opacity: 0.5;
              cursor: default;
         }
-
-        /* Žalias/Raudonas Statuso pranešimas apačioje */
-        #main-status { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; text-align: center; display: block;
-        }
     </style>
 </head>
 <body>
@@ -50,7 +43,9 @@
         
         <model-viewer 
             id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
+            
+            src="../modeliai/baldai/spintele.glb?v=2" 
+            
             alt="Spintelės modelis" 
             camera-controls 
             interaction-prompt="none"
@@ -63,7 +58,6 @@
         
         <button id="main-control-button" disabled>Laukiama įkrovimo...</button>
 
-        <div id="main-status">Laukiama įkrovimo...</div>
     </div>
 
     <script type="module">
@@ -71,17 +65,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             const modelViewer = document.getElementById('spintele-model');
             const controlButton = document.getElementById('main-control-button'); 
-            const mainStatus = document.getElementById('main-status');
             
             // JŪSŲ TIKSLŪS ANIMACIJOS PARAMETRAI
             const ANIMATION_NAME = "spinteleAction"; 
-            const TOTAL_DURATION_SECONDS = 6.0; // 144 kadr. / 24 FPS = 6.0 sek.
+            const TOTAL_DURATION_SECONDS = 6.0; 
             const TOTAL_FRAMES = 144; 
+            const OPEN_FRAME = 72; // Atidarymo taškas (3.0 sek.)
             
-            // Atidarymo taškas (MAX atidarymas)
-            const OPEN_FRAME = 72; 
-            
-            // Konvertuojame į laiko taškus
             const OPEN_TIME = (OPEN_FRAME / TOTAL_FRAMES) * TOTAL_DURATION_SECONDS; // 3.0 sek.
             const CLOSED_TIME = 0.0; // Visiškai uždarytas
             
@@ -90,32 +80,33 @@
             // --- ANIMACIJOS PALEIDIMO FUNKCIJA ---
             function toggleDrawerAnimation() {
                 if (!modelViewer.model) return;
-
-                // Nustatome tikslinį laiką
+                
                 const targetTime = isOpen ? CLOSED_TIME : OPEN_TIME; 
 
+                if (!modelViewer.animationNames.includes(ANIMATION_NAME)) {
+                     console.error(`Klaida: Animacija "${ANIMATION_NAME}" nerasta.`);
+                     controlButton.textContent = "ANIMACIJA NERASTA!";
+                     controlButton.style.backgroundColor = 'red';
+                     return;
+                }
+
                 try {
-                     // Nustatome animaciją ir leidžiame jai pereiti iki tikslinio laiko
                      modelViewer.animationName = ANIMATION_NAME;
                      
                      modelViewer.play({
-                        duration: TOTAL_DURATION_SECONDS, // Bendras animacijos laikas
-                        time: targetTime, // Tikslinis laikas (0.0s arba 3.0s)
+                        duration: TOTAL_DURATION_SECONDS, 
+                        time: targetTime, 
                         speed: 1, 
                         onEnd: () => {
                              modelViewer.pause(); 
                         }
                      });
                      
-                     isOpen = !isOpen; // Atnaujiname būseną
-                     
+                     isOpen = !isOpen; 
                      controlButton.textContent = isOpen ? 'UŽDARYTI STALČIUS' : 'ATIDARYTI STALČIUS';
-                     mainStatus.innerHTML = `✅ Judesys: Tikslas ${isOpen ? 'ATIDARYTA' : 'UŽDARYTA'} (${targetTime.toFixed(1)} sek.)`;
-                     mainStatus.style.backgroundColor = '#28a745'; // Žalia
+
                 } catch (error) {
-                     mainStatus.innerHTML = `❌ Klaida: Nepavyksta paleisti veiksmo "${ANIMATION_NAME}".`;
-                     mainStatus.style.backgroundColor = '#dc3545'; // Raudona
-                     console.error('Animation Playback Error:', error);
+                     console.error('Animacijos paleidimo klaida:', error);
                 }
             }
             
@@ -129,27 +120,25 @@
                     controlButton.textContent = 'ATIDARYTI STALČIUS';
                     controlButton.addEventListener('click', toggleDrawerAnimation);
                     
-                    // Nustatome pradinę būseną į UŽDARYTĄ (0.0s)
+                    // Nustatome pradinę būseną
                     modelViewer.animationName = ANIMATION_NAME;
                     modelViewer.currentTime = CLOSED_TIME; 
                     modelViewer.pause();
 
-                    mainStatus.innerHTML = `✅ Modelis paruoštas. Animacija "${ANIMATION_NAME}" rasta!`;
-                    mainStatus.style.backgroundColor = '#28a745'; // Žalia
                 } else {
                     // KLAIDA: Animacija nerasta
-                    controlButton.textContent = 'ANIMACIJA NERASTA';
-                    mainStatus.innerHTML = `❌ KLAIDA: Animacija "${ANIMATION_NAME}" nerasta modelyje.`;
-                    mainStatus.style.backgroundColor = '#dc3545'; // Raudona
+                    controlButton.textContent = `"${ANIMATION_NAME}" NERASTA`;
+                    controlButton.style.backgroundColor = '#dc3545';
                 }
             });
             
             modelViewer.addEventListener('error', (event) => {
-                mainStatus.innerHTML = `❌ KRITINĖ KLAIDA įkeliant modelį: ${event.detail}.`;
-                mainStatus.style.backgroundColor = '#dc3545'; // Raudona
+                controlButton.textContent = 'KRITINĖ KLAIDA';
+                controlButton.style.backgroundColor = '#dc3545';
+                console.error('Kritinė modelio klaida:', event.detail);
             });
 
-            mainStatus.innerHTML = 'Laukiama modelio užkrovimo...';
+            controlButton.textContent = 'Laukiama modelio užkrovimo...';
         });
     </script>
 </body>
