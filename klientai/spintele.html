@@ -55,7 +55,7 @@
             background-color: #0056b3;
         }
         #drawer-control-button:disabled {
-            background-color: #adb5bd; /* Pilka, kai animacija vyksta */
+            background-color: #adb5bd; 
             cursor: not-allowed;
         }
     </style>
@@ -74,9 +74,9 @@
             shadow-intensity="1" 
             exposure="1.0" 
             
-            /* Pataisyta: nustatome tikslų animacijos pavadinimą HTML tag'e */
-            animation-name="spinteleAction" 
-            animation-time="0">
+            /* Svarbu: Nuimame animation-name ir animation-time iš HTML, 
+               kad nekiltų automatinio ciklo problemų */
+            > 
 
             <button slot="ar-button" id="ar-custom-button" style="position: absolute; bottom: 10px; right: 10px; z-index: 2500;">
                  ▶️ Rodyti AR
@@ -103,40 +103,42 @@
         const OPEN_END_FRAME = 72;
         const CLOSE_START_FRAME = 72; 
         const CLOSE_END_FRAME = 144;
-        
-        // KRITINIS PAKEITIMAS: Naudojame tikslų animacijos pavadinimą
         const ANIMATION_NAME = 'spinteleAction'; 
 
+        // Funkcija, kuri paleidžia animaciją pagal nurodytą kadrų diapazoną
         function playAnimationSegment(startFrame, endFrame) {
             const startTime = startFrame / FRAME_RATE;
             const endTime = endFrame / FRAME_RATE;
-
+            
+            // Nustatome modelio pradinį laiką, kad animacija prasidėtų nuo norimo kadro
+            modelViewer.currentTime = startTime; 
             modelViewer.animationName = ANIMATION_NAME;
             
-            // Paleidžiame animaciją, nurodydami segmentą
+            // Paleidžiame animaciją nustatytam laikotarpiui
+            // Pastaba: Model-Viewer automatiškai sustoja, jei nurodytas ilgis (duration) 
+            // pasibaigia anksčiau nei visa animacija.
             modelViewer.play({ 
                 duration: endTime - startTime, 
-                time: startTime 
             });
         }
 
         // Pagrindinis mygtuko paspaudimo tvarkyklė
         controlButton.addEventListener('click', () => {
-            // Išjungiame mygtuką, kol vyksta animacija
             controlButton.disabled = true;
 
             if (drawersOpen) { 
-                // Jei ATIDARYTA, paleidžiame UŽDARYMO animaciją
+                // UŽDARYMAS: Pradedame nuo 72 kadro iki 144
                 playAnimationSegment(CLOSE_START_FRAME, CLOSE_END_FRAME);
             } else { 
-                // Jei UŽDARYTA, paleidžiame ATIDARYMO animaciją
+                // ATIDARYMAS: Pradedame nuo 0 kadro iki 72
                 playAnimationSegment(OPEN_START_FRAME, OPEN_END_FRAME);
             }
         });
         
-        // Tvarkome, kai animacija pasibaigia
+        // Tvarkome, kai animacija pasibaigia (tai yra kritinė vieta)
         modelViewer.addEventListener('animation-finished', () => {
-             // Sustabdome modelį, kad liktų galutinėje padėtyje
+             // Sustabdome modelį, kad liktų galutinėje padėtyje. 
+             // Nors 'play' su 'duration' turėtų sustabdyti, papildomas 'pause()' garantuoja sustojimą.
              modelViewer.pause(); 
              
              // Keičiame būseną
@@ -144,15 +146,20 @@
 
              // Atnaujiname mygtuko tekstą pagal naują būseną
              if (drawersOpen) { 
-                 // Jei dabar atidaryta, kitas veiksmas bus Uždaryti
                  controlButton.textContent = 'Uždaryti stalčius';
              } else {
-                 // Jei dabar uždaryta, kitas veiksmas bus Atidaryti
                  controlButton.textContent = 'Atidaryti stalčius';
              }
              
              // Įjungiame mygtuką atgal
              controlButton.disabled = false; 
+        });
+
+        // Svarbu: Inicializuojame modelį, kai jis pilnai užsikrauna, kad nustatytume 0 kadrą.
+        modelViewer.addEventListener('load', () => {
+            modelViewer.animationName = ANIMATION_NAME;
+            modelViewer.currentTime = 0;
+            modelViewer.pause();
         });
         
     </script>
