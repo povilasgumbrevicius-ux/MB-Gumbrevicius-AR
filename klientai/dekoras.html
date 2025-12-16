@@ -20,7 +20,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
-        /* Stilius Pasirinktiniam AR Mygtukui (Jūsų Stiliai) */
+        /* Stilius Pasirinktiniam AR Mygtukui */
         #ar-custom-button {
             background-color: #4CAF50; 
             color: white;
@@ -32,8 +32,12 @@
             font-size: 16px;
             transition: background-color 0.3s;
             position: absolute; 
-            top: 40px; 
-            right: 20px; 
+            
+            /* PAKEITIMAS: Pozicija apačioje dešinėje */
+            bottom: 10px; /* 10px nuo apačios */
+            right: 10px; /* 10px nuo dešinio krašto */
+            top: auto; /* Pašaliname top: 40px nustatymą */
+            
             z-index: 2500;
         }
         #ar-custom-button:hover {
@@ -80,7 +84,7 @@
         const arCustomButton = document.getElementById('ar-custom-button'); 
 
         
-        // Klaidos/būsenos valdymas (Jūsų kodas)
+        // Klaidos/būsenos valdymas
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             
