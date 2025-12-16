@@ -10,11 +10,51 @@
     <style>
         body { margin: 0; padding: 0; height: 100vh; }
         model-viewer { width: 100%; height: 100%; }
+
+        /* AR Mygtuko Stiliai (Apatiniame Dešiniajame Kampe) */
+        #ar-custom-button {
+            background-color: #4CAF50; 
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            
+            /* Pozicija: Apatinis Dešinysis Kampas */
+            position: absolute; 
+            bottom: 10px; 
+            right: 10px; 
+            z-index: 2500;
+        }
+        #ar-custom-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Klaidos Pranešimo Stiliai */
+        #ar-error-message { 
+            position: fixed; 
+            bottom: 10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #ffc107; 
+            color: #333; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            z-index: 9999; 
+            font-weight: bold; 
+            display: none; /* Pradžioje paslėptas */
+            text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
     </style>
 </head>
 <body>
     <model-viewer 
-        id="model-viewer-element" src="../modeliai/kosmetika/tesori_doriente_bizantium.glb" 
+        id="model-viewer-element" 
+        src="../modeliai/kosmetika/tesori_doriente_bizantium.glb" 
         alt="Tesori d'Oriente Bizantium modelis" 
         ar 
         ar-modes="webxr scene-viewer quick-look" 
@@ -25,6 +65,39 @@
         exposure="1.0" 
         auto-rotate
     >
+        <button slot="ar-button" id="ar-custom-button">
+            ▶️ Rodyti AR
+        </button>
     </model-viewer>
+
+    <div id="ar-error-message"></div>
+
+    <script>
+        const modelViewer = document.querySelector('#model-viewer-element');
+        const errorMessage = document.getElementById('ar-error-message');
+        const arCustomButton = document.getElementById('ar-custom-button');
+
+        // AR statuso tikrinimo logika
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            
+            // Jei AR nepalaikoma (failed, not-present, unsupported)
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
+                errorMessage.style.display = 'block';
+                // Paslėpiame AR mygtuką
+                if (arCustomButton) {
+                    arCustomButton.style.display = 'none';
+                }
+            } else {
+                // Jei AR veikia, paslepiame klaidą
+                errorMessage.style.display = 'none';
+                // Parodome AR mygtuką (jei jis buvo paslėptas, nes AR vis tiek gali būti palaikomas)
+                if (arCustomButton) {
+                    arCustomButton.style.display = 'block';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
