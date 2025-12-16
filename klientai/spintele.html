@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Spintelė - FINALINIS VEIKIANTIS KODAS + DIAGNOSTIKA</title>
+    <title>3D Spintelė</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -13,49 +13,35 @@
         
         model-viewer { 
             width: 100%; height: 100%; 
-            --node-operation-transition: 0.3s; 
-        }
-        
-        /* Hotspot stiliai */
-        .hotspot-button {
-            display: block; width: 30px; height: 30px; border: 4px solid white;
-            border-radius: 50%; background-color: rgba(0, 123, 255, 0.8);
-            cursor: pointer; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-        .hotspot-button[data-is-open="true"] {
-             background-color: rgba(40, 167, 69, 0.9);
-        }
-        .hotspot-button:hover {
-            transform: scale(1.2);
         }
 
-        /* Statuso pranešimas */
-        #status-message { 
+        /* Mygtukas perkeliamas į kairįjį viršutinį kampą */
+        #main-control-button {
+            position: fixed; 
+            top: 30px; 
+            left: 30px; 
+            padding: 10px 20px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s, opacity 0.3s;
+        }
+
+        #main-control-button:disabled {
+             opacity: 0.5;
+             cursor: default;
+        }
+
+        /* Žalias/Raudonas Statuso pranešimas apačioje */
+        #main-status { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #333; color: white; padding: 10px 20px; border-radius: 5px; 
             z-index: 9999; font-weight: bold; text-align: center; display: block;
-        }
-
-        /* DIAGNOSTIKOS langelis viršuje kairėje */
-        #node-list-display {
-            position: fixed; 
-            top: 10px; 
-            left: 10px; 
-            background: rgba(255, 255, 255, 0.9); 
-            border: 2px solid #000;
-            padding: 10px; 
-            max-width: 300px;
-            max-height: 80%;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 14px;
-            color: #333;
-            z-index: 10000;
-        }
-        #node-list-display span {
-            display: block;
-            padding: 2px 0;
         }
     </style>
 </head>
@@ -71,5 +57,100 @@
             shadow-intensity="1.0"
             exposure="1.0"
             ar ar-modes="webxr scene-viewer quick-look"
+            animation-crossfade-duration="0.3" 
         >
-            <button class="hotspot-button" slot="hotspot-stalcius-1" data-position="-0.2 0.7 0.5" data-drawer-index="1" data-is-open="false"></
+        </model-viewer>
+        
+        <button id="main-control-button" disabled>Laukiama įkrovimo...</button>
+
+        <div id="main-status">Laukiama įkrovimo...</div>
+    </div>
+
+    <script type="module">
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const modelViewer = document.getElementById('spintele-model');
+            const controlButton = document.getElementById('main-control-button'); 
+            const mainStatus = document.getElementById('main-status');
+            
+            // JŪSŲ TIKSLŪS ANIMACIJOS PARAMETRAI
+            const ANIMATION_NAME = "spinteleAction"; 
+            const TOTAL_DURATION_SECONDS = 6.0; // 144 kadr. / 24 FPS = 6.0 sek.
+            const TOTAL_FRAMES = 144; 
+            
+            // Atidarymo taškas (MAX atidarymas)
+            const OPEN_FRAME = 72; 
+            
+            // Konvertuojame į laiko taškus
+            const OPEN_TIME = (OPEN_FRAME / TOTAL_FRAMES) * TOTAL_DURATION_SECONDS; // 3.0 sek.
+            const CLOSED_TIME = 0.0; // Visiškai uždarytas
+            
+            let isOpen = false;
+
+            // --- ANIMACIJOS PALEIDIMO FUNKCIJA ---
+            function toggleDrawerAnimation() {
+                if (!modelViewer.model) return;
+
+                // Nustatome tikslinį laiką
+                const targetTime = isOpen ? CLOSED_TIME : OPEN_TIME; 
+
+                try {
+                     // Nustatome animaciją ir leidžiame jai pereiti iki tikslinio laiko
+                     modelViewer.animationName = ANIMATION_NAME;
+                     
+                     modelViewer.play({
+                        duration: TOTAL_DURATION_SECONDS, // Bendras animacijos laikas
+                        time: targetTime, // Tikslinis laikas (0.0s arba 3.0s)
+                        speed: 1, 
+                        onEnd: () => {
+                             modelViewer.pause(); 
+                        }
+                     });
+                     
+                     isOpen = !isOpen; // Atnaujiname būseną
+                     
+                     controlButton.textContent = isOpen ? 'UŽDARYTI STALČIUS' : 'ATIDARYTI STALČIUS';
+                     mainStatus.innerHTML = `✅ Judesys: Tikslas ${isOpen ? 'ATIDARYTA' : 'UŽDARYTA'} (${targetTime.toFixed(1)} sek.)`;
+                     mainStatus.style.backgroundColor = '#28a745'; // Žalia
+                } catch (error) {
+                     mainStatus.innerHTML = `❌ Klaida: Nepavyksta paleisti veiksmo "${ANIMATION_NAME}".`;
+                     mainStatus.style.backgroundColor = '#dc3545'; // Raudona
+                     console.error('Animation Playback Error:', error);
+                }
+            }
+            
+            // --- INICIALIZACIJA IR PATIKRINIMAS ---
+            modelViewer.addEventListener('load', () => {
+                const animationNames = modelViewer.animationNames;
+
+                if (animationNames.includes(ANIMATION_NAME)) {
+                    // SĖKMĖ: Animacija rasta
+                    controlButton.disabled = false;
+                    controlButton.textContent = 'ATIDARYTI STALČIUS';
+                    controlButton.addEventListener('click', toggleDrawerAnimation);
+                    
+                    // Nustatome pradinę būseną į UŽDARYTĄ (0.0s)
+                    modelViewer.animationName = ANIMATION_NAME;
+                    modelViewer.currentTime = CLOSED_TIME; 
+                    modelViewer.pause();
+
+                    mainStatus.innerHTML = `✅ Modelis paruoštas. Animacija "${ANIMATION_NAME}" rasta!`;
+                    mainStatus.style.backgroundColor = '#28a745'; // Žalia
+                } else {
+                    // KLAIDA: Animacija nerasta
+                    controlButton.textContent = 'ANIMACIJA NERASTA';
+                    mainStatus.innerHTML = `❌ KLAIDA: Animacija "${ANIMATION_NAME}" nerasta modelyje.`;
+                    mainStatus.style.backgroundColor = '#dc3545'; // Raudona
+                }
+            });
+            
+            modelViewer.addEventListener('error', (event) => {
+                mainStatus.innerHTML = `❌ KRITINĖ KLAIDA įkeliant modelį: ${event.detail}.`;
+                mainStatus.style.backgroundColor = '#dc3545'; // Raudona
+            });
+
+            mainStatus.innerHTML = 'Laukiama modelio užkrovimo...';
+        });
+    </script>
+</body>
+</html>
