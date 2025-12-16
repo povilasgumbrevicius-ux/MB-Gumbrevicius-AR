@@ -73,9 +73,6 @@
             camera-controls 
             shadow-intensity="1" 
             exposure="1.0" 
-            
-            /* Svarbu: Nuimame animation-name ir animation-time iš HTML, 
-               kad nekiltų automatinio ciklo problemų */
             > 
 
             <button slot="ar-button" id="ar-custom-button" style="position: absolute; bottom: 10px; right: 10px; z-index: 2500;">
@@ -97,26 +94,25 @@
         // Būsena: false = Uždaryta (pradinė), true = Atidaryta
         let drawersOpen = false; 
 
-        // ANIMACIJOS NUSTATYMAI
-        const FRAME_RATE = 24; 
-        const OPEN_START_FRAME = 0; 
-        const OPEN_END_FRAME = 72;
-        const CLOSE_START_FRAME = 72; 
-        const CLOSE_END_FRAME = 144;
+        // ANIMACIJOS NUSTATYMAI (Valdoma sekundėmis)
         const ANIMATION_NAME = 'spinteleAction'; 
 
-        // Funkcija, kuri paleidžia animaciją pagal nurodytą kadrų diapazoną
-        function playAnimationSegment(startFrame, endFrame) {
-            const startTime = startFrame / FRAME_RATE;
-            const endTime = endFrame / FRAME_RATE;
+        // Atidarymas (0-72 kadrai = 0-3 sek.)
+        const OPEN_START_TIME = 0.0; 
+        const OPEN_END_TIME = 3.0; // Tiksliai 3 sekundės
+
+        // Uždarymas (73-144 kadrai = 3-6 sek.)
+        const CLOSE_START_TIME = 3.0; // Pradedame nuo 3 sekundės
+        const CLOSE_END_TIME = 6.0; // Tiksliai 6 sekundės
+
+        // Funkcija, kuri paleidžia animaciją pagal nurodytą laiko diapazoną
+        function playAnimationSegment(startTime, endTime) {
             
-            // Nustatome modelio pradinį laiką, kad animacija prasidėtų nuo norimo kadro
+            // Nustatome modelio pradinį laiką prieš paleidžiant animaciją
             modelViewer.currentTime = startTime; 
             modelViewer.animationName = ANIMATION_NAME;
             
             // Paleidžiame animaciją nustatytam laikotarpiui
-            // Pastaba: Model-Viewer automatiškai sustoja, jei nurodytas ilgis (duration) 
-            // pasibaigia anksčiau nei visa animacija.
             modelViewer.play({ 
                 duration: endTime - startTime, 
             });
@@ -127,18 +123,17 @@
             controlButton.disabled = true;
 
             if (drawersOpen) { 
-                // UŽDARYMAS: Pradedame nuo 72 kadro iki 144
-                playAnimationSegment(CLOSE_START_FRAME, CLOSE_END_FRAME);
+                // UŽDARYMAS
+                playAnimationSegment(CLOSE_START_TIME, CLOSE_END_TIME);
             } else { 
-                // ATIDARYMAS: Pradedame nuo 0 kadro iki 72
-                playAnimationSegment(OPEN_START_FRAME, OPEN_END_FRAME);
+                // ATIDARYMAS
+                playAnimationSegment(OPEN_START_TIME, OPEN_END_TIME);
             }
         });
         
-        // Tvarkome, kai animacija pasibaigia (tai yra kritinė vieta)
+        // Tvarkome, kai animacija pasibaigia (sustabdo ir atnaujina mygtuko būseną)
         modelViewer.addEventListener('animation-finished', () => {
-             // Sustabdome modelį, kad liktų galutinėje padėtyje. 
-             // Nors 'play' su 'duration' turėtų sustabdyti, papildomas 'pause()' garantuoja sustojimą.
+             // Svarbu: Sustabdome modelį ties naujausio segmento pabaiga
              modelViewer.pause(); 
              
              // Keičiame būseną
@@ -155,7 +150,7 @@
              controlButton.disabled = false; 
         });
 
-        // Svarbu: Inicializuojame modelį, kai jis pilnai užsikrauna, kad nustatytume 0 kadrą.
+        // Inicializuojame modelį į uždarytą poziciją (0 sekundžių)
         modelViewer.addEventListener('load', () => {
             modelViewer.animationName = ANIMATION_NAME;
             modelViewer.currentTime = 0;
