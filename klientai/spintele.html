@@ -12,7 +12,6 @@
         .container { position: relative; width: 100%; height: 100vh; }
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         
-        /* Pagrindinis Model-Viewer stilius */
         model-viewer { 
             width: 100%; 
             height: 100%; 
@@ -20,9 +19,8 @@
             transform: translateZ(0); 
         }
         
-        /* Stilius AR Mygtukui (minimalistinis pavyzdys, kad būtų matomas) */
         #ar-custom-button {
-            background-color: #4CAF50; /* Žalia spalva */
+            background-color: #4CAF50; 
             color: white;
             padding: 8px 16px;
             border-radius: 4px;
@@ -34,6 +32,31 @@
         }
         #ar-custom-button:hover {
             background-color: #45a049;
+        }
+
+        /* Stilius Stalčių Valdymo Mygtukui */
+        #drawer-control-button {
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            z-index: 2500;
+            background-color: #007bff; 
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #drawer-control-button:hover {
+            background-color: #0056b3;
+        }
+        #drawer-control-button:disabled {
+            background-color: #adb5bd; /* Pilka, kai animacija vyksta */
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -50,10 +73,17 @@
             camera-controls 
             shadow-intensity="1" 
             exposure="1.0" 
-            auto-rotate>
+            
+            /* Pataisyta: nustatome tikslų animacijos pavadinimą HTML tag'e */
+            animation-name="spinteleAction" 
+            animation-time="0">
 
             <button slot="ar-button" id="ar-custom-button" style="position: absolute; bottom: 10px; right: 10px; z-index: 2500;">
                  ▶️ Rodyti AR
+            </button>
+
+            <button id="drawer-control-button">
+                 Atidaryti stalčius
             </button>
             
         </model-viewer>
@@ -61,6 +91,69 @@
     </div>
 
     <script>
+        const modelViewer = document.querySelector('model-viewer');
+        const controlButton = document.getElementById('drawer-control-button');
+        
+        // Būsena: false = Uždaryta (pradinė), true = Atidaryta
+        let drawersOpen = false; 
+
+        // ANIMACIJOS NUSTATYMAI
+        const FRAME_RATE = 24; 
+        const OPEN_START_FRAME = 0; 
+        const OPEN_END_FRAME = 72;
+        const CLOSE_START_FRAME = 72; 
+        const CLOSE_END_FRAME = 144;
+        
+        // KRITINIS PAKEITIMAS: Naudojame tikslų animacijos pavadinimą
+        const ANIMATION_NAME = 'spinteleAction'; 
+
+        function playAnimationSegment(startFrame, endFrame) {
+            const startTime = startFrame / FRAME_RATE;
+            const endTime = endFrame / FRAME_RATE;
+
+            modelViewer.animationName = ANIMATION_NAME;
+            
+            // Paleidžiame animaciją, nurodydami segmentą
+            modelViewer.play({ 
+                duration: endTime - startTime, 
+                time: startTime 
+            });
+        }
+
+        // Pagrindinis mygtuko paspaudimo tvarkyklė
+        controlButton.addEventListener('click', () => {
+            // Išjungiame mygtuką, kol vyksta animacija
+            controlButton.disabled = true;
+
+            if (drawersOpen) { 
+                // Jei ATIDARYTA, paleidžiame UŽDARYMO animaciją
+                playAnimationSegment(CLOSE_START_FRAME, CLOSE_END_FRAME);
+            } else { 
+                // Jei UŽDARYTA, paleidžiame ATIDARYMO animaciją
+                playAnimationSegment(OPEN_START_FRAME, OPEN_END_FRAME);
+            }
+        });
+        
+        // Tvarkome, kai animacija pasibaigia
+        modelViewer.addEventListener('animation-finished', () => {
+             // Sustabdome modelį, kad liktų galutinėje padėtyje
+             modelViewer.pause(); 
+             
+             // Keičiame būseną
+             drawersOpen = !drawersOpen;
+
+             // Atnaujiname mygtuko tekstą pagal naują būseną
+             if (drawersOpen) { 
+                 // Jei dabar atidaryta, kitas veiksmas bus Uždaryti
+                 controlButton.textContent = 'Uždaryti stalčius';
+             } else {
+                 // Jei dabar uždaryta, kitas veiksmas bus Atidaryti
+                 controlButton.textContent = 'Atidaryti stalčius';
+             }
+             
+             // Įjungiame mygtuką atgal
+             controlButton.disabled = false; 
+        });
         
     </script>
 </body>
