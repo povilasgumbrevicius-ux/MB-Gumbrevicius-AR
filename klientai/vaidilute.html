@@ -19,7 +19,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
-        /* AR Mygtukas */
+        /* AR Mygtukas: PAKEISTA POZICIJA Į APATINĮ DEŠINĮ KAMPĄ */
         #ar-custom-button {
             background-color: #4CAF50; 
             color: white;
@@ -31,8 +31,12 @@
             font-size: 16px;
             transition: background-color 0.3s;
             position: absolute; 
-            top: 40px; 
-            right: 20px; 
+            
+            /* Svarbiausias pakeitimas: bottom ir right */
+            bottom: 10px; /* 10px nuo apačios */
+            right: 10px; /* 10px nuo dešinio krašto */
+            top: auto; /* Pašaliname viršaus nustatymą */
+            
             z-index: 2500;
         }
         #ar-custom-button:hover {
@@ -53,11 +57,11 @@
             ar-modes="scene-viewer quick-look webxr" 
             
             camera-controls 
-            shadow-intensity="2"  
-            exposure="1.5"        
+            shadow-intensity="2" 
+            exposure="1.5" 
             
-            camera-orbit="auto auto auto"  
-            camera-target="auto"           
+            camera-orbit="auto auto auto" 
+            camera-target="auto" 
             
             disable-tap
             min-field-of-view="10deg"
