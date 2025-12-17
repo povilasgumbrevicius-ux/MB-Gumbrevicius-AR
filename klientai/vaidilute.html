@@ -19,12 +19,12 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
-        /* AR Mygtukas: PAKEISTA POZICIJA Į APATINĮ DEŠINĮ KAMPĄ */
+        /* AR Mygtukas: GRĄŽINTA POZICIJA Į VIRŠŲ */
         #ar-custom-button {
             background-color: #4CAF50; 
             color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 5px;
             border: none;
             cursor: pointer;
             font-weight: bold;
@@ -32,10 +32,10 @@
             transition: background-color 0.3s;
             position: absolute; 
             
-            /* Svarbiausias pakeitimas: bottom ir right */
-            bottom: 40px; /* 10px nuo apačios */
-            right: 10px; /* 10px nuo dešinio krašto */
-            top: auto; /* Pašaliname viršaus nustatymą */
+            /* Pakeitimai pozicijai */
+            top: 50px;       /* Saugus atstumas nuo ekrano viršaus (iPhone notch) */
+            right: 20px;     /* Atstumas nuo dešinio krašto */
+            bottom: auto;    /* Pašaliname apačios nustatymą */
             
             z-index: 2500;
         }
