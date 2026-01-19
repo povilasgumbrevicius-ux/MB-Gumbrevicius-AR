@@ -10,24 +10,25 @@
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         
-        /* Mygtukų konteineris viršuje */
+        /* Mygtukų konteineris - PAŽEMINTAS */
         .top-nav {
-            position: absolute; top: 20px; left: 0; width: 100%;
-            display: flex; justify-content: center; gap: 10px; z-index: 999;
+            position: absolute; top: 40px; left: 0; width: 100%;
+            display: flex; justify-content: center; gap: 10px; z-index: 1000;
             padding: 0 10px; box-sizing: border-box;
         }
 
         /* Suvienodintas mygtukų stilius */
-        .action-btn {
-            background-color: #ffffff; color: #000; padding: 12px 20px;
+        .action-btn, #ar-button {
+            background-color: #ffffff; color: #000; padding: 12px 18px;
             border-radius: 30px; border: 2px solid #000; cursor: pointer;
-            font-weight: bold; font-size: 13px; text-transform: uppercase;
+            font-weight: bold; font-size: 12px; text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             white-space: nowrap; transition: 0.3s;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-family: sans-serif;
         }
         
-        /* Išskirtas pirkimo mygtukas (galima palikti baltą arba padaryti juodą) */
-        #buy-button { background-color: #000; color: #fff; }
+        #buy-button { background-color: #000; color: #fff; text-decoration: none; }
 
         /* Navigacija apačioje (1/12) */
         .controls {
@@ -40,20 +41,23 @@
         #model-label { font-size: 14px; font-weight: bold; min-width: 60px; text-align: center; }
 
         @media (max-width: 400px) {
-            .action-btn { font-size: 11px; padding: 10px 15px; }
+            .action-btn, #ar-button { font-size: 10px; padding: 10px 12px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="top-nav">
-            <button id="buy-button" class="action-btn" onclick="goToProduct()">🛒 ĮSIGYTI KŪRINĮ</button>
-            <button class="action-btn" onclick="document.getElementById('mv').activateAR()">🖼️ VAIZDUOTI ERDVĖJE</button>
-        </div>
-
         <model-viewer id="mv" src="" ar ar-modes="webxr scene-viewer quick-look" ar-placement="wall" camera-controls touch-action="pan-y">
-            <button slot="ar-button" style="display:none;"></button>
+            
+            <div class="top-nav">
+                <a id="buy-button" class="action-btn" href="#" onclick="goToProduct(); return false;">🛒 ĮSIGYTI KŪRINĮ</a>
+                
+                <button slot="ar-button" id="ar-button">
+                    🖼️ VAIZDUOTI ERDVĖJE
+                </button>
+            </div>
+
         </model-viewer>
 
         <div class="controls" id="nav-ui">
@@ -84,4 +88,40 @@
         const models = [
             "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
             "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
-            "lizdeika.glb
+            "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb",
+            "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
+        ];
+
+        const mv = document.getElementById('mv');
+        const label = document.getElementById('model-label');
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
+        if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
+
+        function updateModel() {
+            // Svarbu: užtikriname, kad src nustatomas tiksliai
+            const modelPath = folder + models[currentIndex];
+            mv.setAttribute('src', modelPath);
+            
+            label.innerText = (currentIndex + 1) + " / " + models.length;
+            if(urlParams.get('hide') === '1') document.getElementById('nav-ui').style.display = 'none';
+        }
+
+        window.goToProduct = function() {
+            const targetUrl = purchaseLinks[currentIndex];
+            if (targetUrl) {
+                window.top.location.href = targetUrl;
+            }
+        };
+
+        window.changeModel = function(step) {
+            currentIndex = (currentIndex + step + models.length) % models.length;
+            updateModel();
+        };
+
+        // Paleidžiame krovimą
+        updateModel();
+    </script>
+</body>
+</html>
