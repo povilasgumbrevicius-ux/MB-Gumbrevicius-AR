@@ -12,7 +12,6 @@
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; background-color: #f7f7f7; }
         
-        /* Navigacija apačioje */
         .controls {
             position: fixed; 
             bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); 
@@ -36,7 +35,6 @@
 
         #model-label { font-size: 15px; font-weight: bold; min-width: 80px; text-align: center; color: #333; }
 
-        /* AR Mygtukas */
         #ar-custom-button {
             background-color: #4CAF50; color: white; padding: 14px 24px;
             border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
@@ -45,12 +43,6 @@
             right: 20px;
             z-index: 9999; 
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        #ar-error-message { 
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
-            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
-            z-index: 10000; font-weight: bold; display: none;
         }
     </style>
 </head>
@@ -78,9 +70,16 @@
         </div>
     </div>
 
-    <div id="ar-error-message"></div>
-
     <script>
         const models = [
             "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
-            "jasinskiai.glb",
+            "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
+            "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb",
+            "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
+        ];
+
+        // PATAISYTAS KELIAS Į TAVO NAUJĄ APLANKĄ
+        const basePath = "1001legends/"; 
+
+        const modelViewer = document.querySelector('#ar-model');
+        const modelLabel = document.
