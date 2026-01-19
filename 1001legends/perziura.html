@@ -12,21 +12,21 @@
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; background-color: #f7f7f7; }
         
-        /* Navigacija apačioje - sutvarkyta, kad nedingtų Safari/Chrome */
+        /* Navigacija apačioje */
         .controls {
-            position: fixed; /* Pakeista į fixed, kad visada būtų ekrano viršuje */
-            bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); /* Pridėta apsauga iPhone juostai */
+            position: fixed; 
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); 
             left: 50%; 
             transform: translateX(-50%);
             display: flex; 
             align-items: center; 
             gap: 20px; 
-            z-index: 9999; /* Maksimalus prioritetas prieš model-viewer */
+            z-index: 9999; 
             background: rgba(255, 255, 255, 0.9); 
             padding: 10px 25px; 
             border-radius: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            pointer-events: auto; /* Užtikrina, kad paspaudimai veiktų */
+            pointer-events: auto; 
         }
 
         .nav-btn {
@@ -36,12 +36,12 @@
 
         #model-label { font-size: 15px; font-weight: bold; min-width: 80px; text-align: center; color: #333; }
 
-        /* AR Mygtukas "Pasimatuok" */
+        /* AR Mygtukas */
         #ar-custom-button {
             background-color: #4CAF50; color: white; padding: 14px 24px;
             border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
             font-size: 16px; position: absolute; 
-            top: calc(env(safe-area-inset-top, 0px) + 20px); /* Pridėta apsauga iPhone "ragams" */
+            top: calc(env(safe-area-inset-top, 0px) + 20px); 
             right: 20px;
             z-index: 9999; 
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -69,4 +69,18 @@
             disable-tap
         >
             <button slot="ar-button" id="ar-custom-button">🖼️ Pasimatuok</button>
-        </model-
+        </model-viewer>
+
+        <div class="controls">
+            <button class="nav-btn" onclick="changeModel(-1)">❮</button>
+            <span id="model-label">Kraunama...</span>
+            <button class="nav-btn" onclick="changeModel(1)">❯</button>
+        </div>
+    </div>
+
+    <div id="ar-error-message"></div>
+
+    <script>
+        const models = [
+            "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
+            "jasinskiai.glb",
