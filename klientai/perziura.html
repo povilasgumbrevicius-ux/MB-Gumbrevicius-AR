@@ -10,30 +10,40 @@
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         
-        /* Mygtukų konteineris */
+        /* Mygtukų konteineris viršuje (40px nuo viršaus) */
         .top-nav {
             position: absolute; top: 40px; left: 0; width: 100%;
-            display: flex; justify-content: center; gap: 10px; z-index: 1000;
-            padding: 0 10px; box-sizing: border-box; pointer-events: none; /* Leidžia sukti modelį po mygtukais */
+            display: flex; justify-content: center; gap: 10px; z-index: 2500;
+            padding: 0 10px; box-sizing: border-box;
         }
 
-        .action-btn, #ar-button {
-            pointer-events: auto; /* Grąžina paspaudimą mygtukams */
-            background-color: #ffffff; color: #000; padding: 12px 18px;
-            border-radius: 30px; border: 2px solid #000; cursor: pointer;
-            font-weight: bold; font-size: 12px; text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        /* SUVIONODINTAS STILIUS (pagal tavo žalią mygtuką, bet juoda/balta elegancija) */
+        .action-btn, #ar-custom-button {
+            background-color: #ffffff; color: #000; padding: 12px 20px;
+            border-radius: 5px; border: 2px solid #000; cursor: pointer;
+            font-weight: bold; font-size: 14px; text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             white-space: nowrap; display: inline-flex; align-items: center;
+            transition: background-color 0.3s; text-decoration: none;
+            font-family: sans-serif;
         }
         
-        #buy-button { background-color: #000; color: #fff; text-decoration: none; }
+        /* Pirkti mygtukas - juodas fonas */
+        #buy-button { background-color: #000; color: #fff; }
+        #buy-button:hover { background-color: #333; }
+        
+        /* PASIMATUOK mygtukas (Pagal nutylėjimą slepiame, kol nepatvirtintas AR) */
+        #ar-custom-button { display: none; }
+        #ar-custom-button:hover { background-color: #f0f0f0; }
 
-        /* Svarbu: model-viewer automatiškai prideda klasę "not-presenting", kai AR nepalaikomas */
-        #ar-button { display: none; } /* Pagal nutylėjimą paslėptas (PC) */
-        model-viewer[ar-status="not-presenting"] #ar-button { display: none; }
-        /* Tik kai AR įmanomas, model-viewer parodys šį mygtuką */
-        model-viewer:not([ar-status="not-presenting"]) #ar-button { display: inline-flex; }
+        /* Klaidos pranešimas */
+        #ar-error-message { 
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); 
+            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+        }
 
+        /* Navigacija apačioje (1/12) */
         .controls {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 15px; z-index: 999; 
@@ -46,17 +56,27 @@
 <body>
 
     <div class="container">
-        <model-viewer id="mv" src="" ar ar-modes="webxr scene-viewer quick-look" ar-placement="wall" camera-controls touch-action="pan-y">
-            
+        <model-viewer 
+            id="ar-model"
+            src="" 
+            ar 
+            ar-modes="scene-viewer quick-look webxr" 
+            camera-controls 
+            shadow-intensity="2" 
+            exposure="1.5"
+            touch-action="pan-y">
+
             <div class="top-nav">
                 <a id="buy-button" class="action-btn" href="#" onclick="goToProduct(); return false;">🛒 ĮSIGYTI KŪRINĮ</a>
                 
-                <button slot="ar-button" id="ar-button">
-                    🖼️ VAIZDUOTI ERDVĖJE
+                <button slot="ar-button" id="ar-custom-button">
+                    🖼️ PASIMATUOK
                 </button>
             </div>
-
+            
         </model-viewer>
+
+        <div id="ar-error-message"></div>
 
         <div class="controls" id="nav-ui">
             <button class="nav-btn" onclick="changeModel(-1)">❮</button>
@@ -83,27 +103,45 @@
             "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
         ];
 
-        const mv = document.getElementById('mv');
+        const modelViewer = document.querySelector('#ar-model');
         const label = document.getElementById('model-label');
+        const errorMessage = document.getElementById('ar-error-message');
         const urlParams = new URLSearchParams(window.location.search);
         
         let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
         if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
 
+        // Modelio užkrovimas
         function updateModel() {
-            mv.src = folder + models[currentIndex];
+            modelViewer.src = folder + models[currentIndex];
             label.innerText = (currentIndex + 1) + " / " + models.length;
             if(urlParams.get('hide') === '1') document.getElementById('nav-ui').style.display = 'none';
         }
 
+        // Grįžimas į parduotuvę
         window.goToProduct = function() {
             window.top.location.href = purchaseLinks[currentIndex];
         };
 
+        // Navigacija
         window.changeModel = function(step) {
             currentIndex = (currentIndex + step + models.length) % models.length;
             updateModel();
         };
+
+        // AR BŪSENOS VALDYMAS (Tavo originali logika)
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            const arCustomButton = document.getElementById('ar-custom-button');
+            
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                // Jei nepalaiko AR (PC ar senas tel), mygtuko nerodome
+                arCustomButton.style.display = 'none';
+            } else {
+                // Tik jei palaiko AR, rodome PASIMATUOK
+                arCustomButton.style.display = 'inline-flex';
+            }
+        });
 
         updateModel();
     </script>
