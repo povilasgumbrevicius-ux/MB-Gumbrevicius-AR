@@ -10,39 +10,37 @@
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         
-        /* Mygtukų konteineris - PAŽEMINTAS */
+        /* Mygtukų konteineris */
         .top-nav {
             position: absolute; top: 40px; left: 0; width: 100%;
             display: flex; justify-content: center; gap: 10px; z-index: 1000;
-            padding: 0 10px; box-sizing: border-box;
+            padding: 0 10px; box-sizing: border-box; pointer-events: none; /* Leidžia sukti modelį po mygtukais */
         }
 
-        /* Suvienodintas mygtukų stilius */
         .action-btn, #ar-button {
+            pointer-events: auto; /* Grąžina paspaudimą mygtukams */
             background-color: #ffffff; color: #000; padding: 12px 18px;
             border-radius: 30px; border: 2px solid #000; cursor: pointer;
             font-weight: bold; font-size: 12px; text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            white-space: nowrap; transition: 0.3s;
-            display: inline-flex; align-items: center; justify-content: center;
-            font-family: sans-serif;
+            white-space: nowrap; display: inline-flex; align-items: center;
         }
         
         #buy-button { background-color: #000; color: #fff; text-decoration: none; }
 
-        /* Navigacija apačioje (1/12) */
+        /* Svarbu: model-viewer automatiškai prideda klasę "not-presenting", kai AR nepalaikomas */
+        #ar-button { display: none; } /* Pagal nutylėjimą paslėptas (PC) */
+        model-viewer[ar-status="not-presenting"] #ar-button { display: none; }
+        /* Tik kai AR įmanomas, model-viewer parodys šį mygtuką */
+        model-viewer:not([ar-status="not-presenting"]) #ar-button { display: inline-flex; }
+
         .controls {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 15px; z-index: 999; 
-            background: rgba(255, 255, 255, 0.8); padding: 8px 20px; 
-            border-radius: 25px; backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.8); padding: 8px 20px; border-radius: 25px;
         }
         .nav-btn { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; }
         #model-label { font-size: 14px; font-weight: bold; min-width: 60px; text-align: center; }
-
-        @media (max-width: 400px) {
-            .action-btn, #ar-button { font-size: 10px; padding: 10px 12px; }
-        }
     </style>
 </head>
 <body>
@@ -69,20 +67,13 @@
 
     <script>
         const folder = "../1001legends/"; 
-        
         const purchaseLinks = [
-            "https://1001legends.lt/product/barboros-smekla/",      
-            "https://1001legends.lt/product/basiliskas/",           
-            "https://1001legends.lt/product/gelezinis-vilkas/",     
-            "https://1001legends.lt/product/jasinskiai/",           
-            "https://1001legends.lt/product/kazimiero-kariuomene/", 
-            "https://1001legends.lt/product/kestucio-laidotuves/",  
-            "https://1001legends.lt/product/lizdeika/",             
-            "https://1001legends.lt/product/onos-baznycia/",        
-            "https://1001legends.lt/product/perkuno-zinycia/",      
-            "https://1001legends.lt/product/tvardausko-knyga/",     
-            "https://1001legends.lt/product/vaidilute/",            
-            "https://1001legends.lt/product/vilniaus-ikurimas/"     
+            "https://1001legends.lt/product/barboros-smekla/", "https://1001legends.lt/product/basiliskas/",
+            "https://1001legends.lt/product/gelezinis-vilkas/", "https://1001legends.lt/product/jasinskiai/",
+            "https://1001legends.lt/product/kazimiero-kariuomene/", "https://1001legends.lt/product/kestucio-laidotuves/",
+            "https://1001legends.lt/product/lizdeika/", "https://1001legends.lt/product/onos-baznycia/",
+            "https://1001legends.lt/product/perkuno-zinycia/", "https://1001legends.lt/product/tvardausko-knyga/",
+            "https://1001legends.lt/product/vaidilute/", "https://1001legends.lt/product/vilniaus-ikurimas/"
         ];
 
         const models = [
@@ -100,19 +91,13 @@
         if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
 
         function updateModel() {
-            // Svarbu: užtikriname, kad src nustatomas tiksliai
-            const modelPath = folder + models[currentIndex];
-            mv.setAttribute('src', modelPath);
-            
+            mv.src = folder + models[currentIndex];
             label.innerText = (currentIndex + 1) + " / " + models.length;
             if(urlParams.get('hide') === '1') document.getElementById('nav-ui').style.display = 'none';
         }
 
         window.goToProduct = function() {
-            const targetUrl = purchaseLinks[currentIndex];
-            if (targetUrl) {
-                window.top.location.href = targetUrl;
-            }
+            window.top.location.href = purchaseLinks[currentIndex];
         };
 
         window.changeModel = function(step) {
@@ -120,7 +105,6 @@
             updateModel();
         };
 
-        // Paleidžiame krovimą
         updateModel();
     </script>
 </body>
