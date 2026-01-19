@@ -6,49 +6,54 @@
     <title>1001 Legends AR</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     <style>
-        /* Transparent fonas, kad WordPress svetainėje atrodytų kaip paveiksliukas */
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: transparent; overflow: hidden; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         
-        /* Valdymas: Paslepiamas, jei WordPress puslapyje rodome tik 1 konkretų modelį */
+        /* Mygtukų konteineris viršuje */
+        .top-nav {
+            position: absolute; top: 20px; left: 0; width: 100%;
+            display: flex; justify-content: center; gap: 10px; z-index: 999;
+            padding: 0 10px; box-sizing: border-box;
+        }
+
+        /* Suvienodintas mygtukų stilius */
+        .action-btn {
+            background-color: #ffffff; color: #000; padding: 12px 20px;
+            border-radius: 30px; border: 2px solid #000; cursor: pointer;
+            font-weight: bold; font-size: 13px; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            white-space: nowrap; transition: 0.3s;
+        }
+        
+        /* Išskirtas pirkimo mygtukas (galima palikti baltą arba padaryti juodą) */
+        #buy-button { background-color: #000; color: #fff; }
+
+        /* Navigacija apačioje (1/12) */
         .controls {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 15px; z-index: 999; 
             background: rgba(255, 255, 255, 0.8); padding: 8px 20px; 
             border-radius: 25px; backdrop-filter: blur(5px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .nav-btn {
-            background: #333; color: white; border: none; padding: 8px 15px;
-            border-radius: 15px; cursor: pointer; font-weight: bold;
-        }
-        #model-label { font-size: 14px; font-weight: bold; min-width: 60px; text-align: center; color: #000; }
-        
-        /* AR Mygtukas: pozicija pritaikyta mobiliam WordPress peržiūros langui */
-        #ar-button {
-            background-color: #ffffff; color: #000; padding: 10px 20px;
-            border-radius: 30px; border: 2px solid #000; cursor: pointer; font-weight: bold;
-            font-size: 14px; position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
-            z-index: 999; white-space: nowrap;
+        .nav-btn { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; }
+        #model-label { font-size: 14px; font-weight: bold; min-width: 60px; text-align: center; }
+
+        @media (max-width: 400px) {
+            .action-btn { font-size: 11px; padding: 10px 15px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <model-viewer 
-            id="mv"
-            src="" 
-            ar 
-            ar-modes="webxr scene-viewer quick-look" 
-            ar-placement="wall"
-            camera-controls 
-            touch-action="pan-y"
-            shadow-intensity="1" 
-            exposure="1"
-            alt="1001 Legends 3D modelis">
-            <button slot="ar-button" id="ar-button">VAIZDUOTI ERDVĖJE</button>
+        <div class="top-nav">
+            <button id="buy-button" class="action-btn" onclick="goToProduct()">🛒 ĮSIGYTI KŪRINĮ</button>
+            <button class="action-btn" onclick="document.getElementById('mv').activateAR()">🖼️ VAIZDUOTI ERDVĖJE</button>
+        </div>
+
+        <model-viewer id="mv" src="" ar ar-modes="webxr scene-viewer quick-look" ar-placement="wall" camera-controls touch-action="pan-y">
+            <button slot="ar-button" style="display:none;"></button>
         </model-viewer>
 
         <div class="controls" id="nav-ui">
@@ -59,49 +64,24 @@
     </div>
 
     <script>
-        // Svarbu: Kelias išeina iš "klientai" į projektą "1001legends"
         const folder = "../1001legends/"; 
         
-        const models = [
-            "barboros_smekla.glb",      // id=1
-            "basiliskas.glb",           // id=2
-            "gelezinis_vilkas.glb",     // id=3
-            "jasinskiai.glb",           // id=4 
-            "kazimiero_kariuomene.glb", // id=5
-            "kestucio_laidotuves.glb",  // id=6
-            "lizdeika.glb",             // id=7
-            "onos_baznycia.glb",        // id=8
-            "perkuno_zinycia.glb",      // id=9
-            "tvardausko_knyga.glb",     // id=10
-            "vaidilute.glb",            // id=11
-            "vilniaus_ikurimas.glb"      // id=12
+        const purchaseLinks = [
+            "https://1001legends.lt/product/barboros-smekla/",      
+            "https://1001legends.lt/product/basiliskas/",           
+            "https://1001legends.lt/product/gelezinis-vilkas/",     
+            "https://1001legends.lt/product/jasinskiai/",           
+            "https://1001legends.lt/product/kazimiero-kariuomene/", 
+            "https://1001legends.lt/product/kestucio-laidotuves/",  
+            "https://1001legends.lt/product/lizdeika/",             
+            "https://1001legends.lt/product/onos-baznycia/",        
+            "https://1001legends.lt/product/perkuno-zinycia/",      
+            "https://1001legends.lt/product/tvardausko-knyga/",     
+            "https://1001legends.lt/product/vaidilute/",            
+            "https://1001legends.lt/product/vilniaus-ikurimas/"     
         ];
 
-        const mv = document.getElementById('mv');
-        const label = document.getElementById('model-label');
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
-        if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
-
-        function updateModel() {
-            mv.src = folder + models[currentIndex];
-            label.innerText = (currentIndex + 1) + " / " + models.length;
-            
-            // Jei nuorodoje pridėta &hide=1, paslepiame navigaciją (patogu WordPress prekės puslapyje)
-            if(urlParams.get('hide') === '1') {
-                document.getElementById('nav-ui').style.display = 'none';
-            }
-        }
-
-        window.changeModel = function(step) {
-            currentIndex = (currentIndex + step + models.length) % models.length;
-            updateModel();
-            const newUrl = window.location.pathname + '?id=' + (currentIndex + 1) + (urlParams.get('hide') === '1' ? '&hide=1' : '');
-            window.history.replaceState({}, '', newUrl);
-        }
-
-        updateModel();
-    </script>
-</body>
-</html>
+        const models = [
+            "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
+            "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
+            "lizdeika.glb
