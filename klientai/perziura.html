@@ -2,22 +2,31 @@
 <html lang="lt">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>1001 Legends Galerija</title>
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     
     <style>
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: #fff; overflow: hidden; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; background-color: #f7f7f7; }
         
-        /* Navigacija apačioje */
+        /* Navigacija apačioje - sutvarkyta, kad nedingtų Safari/Chrome */
         .controls {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 20px; z-index: 2000;
-            background: rgba(255, 255, 255, 0.9); padding: 10px 25px; border-radius: 30px;
+            position: fixed; /* Pakeista į fixed, kad visada būtų ekrano viršuje */
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); /* Pridėta apsauga iPhone juostai */
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+            z-index: 9999; /* Maksimalus prioritetas prieš model-viewer */
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 10px 25px; 
+            border-radius: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            pointer-events: auto; /* Užtikrina, kad paspaudimai veiktų */
         }
 
         .nav-btn {
@@ -31,14 +40,17 @@
         #ar-custom-button {
             background-color: #4CAF50; color: white; padding: 14px 24px;
             border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
-            font-size: 16px; position: absolute; top: 20px; right: 20px;
-            z-index: 2500; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 16px; position: absolute; 
+            top: calc(env(safe-area-inset-top, 0px) + 20px); /* Pridėta apsauga iPhone "ragams" */
+            right: 20px;
+            z-index: 9999; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         #ar-error-message { 
             position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
-            z-index: 9999; font-weight: bold; display: none;
+            z-index: 10000; font-weight: bold; display: none;
         }
     </style>
 </head>
@@ -57,67 +69,4 @@
             disable-tap
         >
             <button slot="ar-button" id="ar-custom-button">🖼️ Pasimatuok</button>
-        </model-viewer>
-
-        <div class="controls">
-            <button class="nav-btn" onclick="changeModel(-1)">❮</button>
-            <span id="model-label">Kraunama...</span>
-            <button class="nav-btn" onclick="changeModel(1)">❯</button>
-        </div>
-    </div>
-
-    <div id="ar-error-message"></div>
-
-    <script>
-        // Modeliai iš tavo Paveikslai.PNG nuotraukos
-        const models = [
-            "barboros_smekla.glb",
-            "basiliskas.glb",
-            "gelezinis_vilkas.glb",
-            "jasinskiai.glb",
-            "kazimiero_kariuomene.glb",
-            "kestucio_laidotuves.glb",
-            "lizdeika.glb",
-            "onos_baznycia.glb",
-            "perkuno_zinycia.glb",
-            "tvardausko_knyga.glb",
-            "vaidilute.glb",
-            "vilniaus_ikurimas.glb"
-        ];
-
-        // Kelias iki modelių
-        const basePath = "../modeliai/101legends/";
-
-        const modelViewer = document.querySelector('#ar-model');
-        const modelLabel = document.getElementById('model-label');
-        const errorMessage = document.getElementById('ar-error-message');
-
-        // URL id nustatymas
-        const urlParams = new URLSearchParams(window.location.search);
-        let currentIndex = parseInt(urlParams.get('id')) - 1 || 0;
-        
-        if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
-
-        function updateModel() {
-            modelViewer.src = basePath + models[currentIndex];
-            modelLabel.innerText = `${currentIndex + 1} / ${models.length}`;
-        }
-
-        window.changeModel = function(step) {
-            currentIndex += step;
-            if (currentIndex >= models.length) currentIndex = 0;
-            if (currentIndex < 0) currentIndex = models.length - 1;
-            updateModel();
-        };
-
-        modelViewer.addEventListener('ar-status', (event) => {
-            if (event.detail.status === 'failed') {
-                errorMessage.innerHTML = '⚠️ AR nepalaikoma šiame įrenginyje';
-                errorMessage.style.display = 'block';
-            }
-        });
-
-        window.addEventListener('load', updateModel);
-    </script>
-</body>
-</html>
+        </model-
