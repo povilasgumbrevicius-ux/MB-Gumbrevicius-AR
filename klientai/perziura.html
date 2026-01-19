@@ -1,49 +1,59 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>1001 Legends AR</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    
     <style>
-        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: transparent; overflow: hidden; }
         .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
+        model-viewer { width: 100%; height: 100%; z-index: 100; }
         
-        /* Mygtukų konteineris viršuje (40px nuo viršaus) */
-        .top-nav {
-            position: absolute; top: 40px; left: 0; width: 100%;
-            display: flex; justify-content: center; gap: 10px; z-index: 2500;
-            padding: 0 10px; box-sizing: border-box;
-        }
-
-        /* SUVIONODINTAS STILIUS (pagal tavo žalią mygtuką, bet juoda/balta elegancija) */
-        .action-btn, #ar-custom-button {
-            background-color: #ffffff; color: #000; padding: 12px 20px;
-            border-radius: 5px; border: 2px solid #000; cursor: pointer;
-            font-weight: bold; font-size: 14px; text-transform: uppercase;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            white-space: nowrap; display: inline-flex; align-items: center;
-            transition: background-color 0.3s; text-decoration: none;
-            font-family: sans-serif;
-        }
-        
-        /* Pirkti mygtukas - juodas fonas */
-        #buy-button { background-color: #000; color: #fff; }
-        #buy-button:hover { background-color: #333; }
-        
-        /* PASIMATUOK mygtukas (Pagal nutylėjimą slepiame, kol nepatvirtintas AR) */
-        #ar-custom-button { display: none; }
-        #ar-custom-button:hover { background-color: #f0f0f0; }
-
-        /* Klaidos pranešimas */
         #ar-error-message { 
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
             z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
-        /* Navigacija apačioje (1/12) */
+        /* TAVO VEIKIANTIS STILIUS ABIEM MYGTUKAMS */
+        .custom-nav-btn {
+            background-color: #4CAF50; /* Tavo žalia spalva */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            position: absolute; 
+            z-index: 2500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Pirkimo mygtukas - KAIRĖJE */
+        #buy-button {
+            top: 50px;
+            left: 20px;
+            background-color: #000; /* Padariau juodą, kad skirtųsi nuo AR */
+        }
+
+        /* Tavo originalus AR mygtukas - DEŠINĖJE */
+        #ar-custom-button {
+            top: 50px;
+            right: 20px;
+            display: none; /* Bus parodytas per JS, kaip tavo kode */
+        }
+
+        #ar-custom-button:hover { background-color: #45a049; }
+        
+        /* Apatinė navigacija (1/12) */
         .controls {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 15px; z-index: 999; 
@@ -54,35 +64,41 @@
     </style>
 </head>
 <body>
-
     <div class="container">
+        
         <model-viewer 
             id="ar-model"
             src="" 
+            alt="1001 Legends" 
             ar 
             ar-modes="scene-viewer quick-look webxr" 
             camera-controls 
             shadow-intensity="2" 
             exposure="1.5"
-            touch-action="pan-y">
+            camera-orbit="auto auto auto" 
+            camera-target="auto" 
+            disable-tap
+            min-field-of-view="10deg"
+            max-field-of-view="45deg"
+        >
+            <a id="buy-button" class="custom-nav-btn" href="#" onclick="goToProduct(); return false;">
+                🛒 PIRKTI
+            </a>
 
-            <div class="top-nav">
-                <a id="buy-button" class="action-btn" href="#" onclick="goToProduct(); return false;">🛒 ĮSIGYTI KŪRINĮ</a>
-                
-                <button slot="ar-button" id="ar-custom-button">
-                    🖼️ PASIMATUOK
-                </button>
-            </div>
+            <button slot="ar-button" id="ar-custom-button">
+                ▶️ PASIMATUOK
+            </button>
             
         </model-viewer>
+        
+    </div>
 
-        <div id="ar-error-message"></div>
+    <div id="ar-error-message"></div>
 
-        <div class="controls" id="nav-ui">
-            <button class="nav-btn" onclick="changeModel(-1)">❮</button>
-            <span id="model-label">1 / 12</span>
-            <button class="nav-btn" onclick="changeModel(1)">❯</button>
-        </div>
+    <div class="controls" id="nav-ui">
+        <button class="nav-btn" onclick="changeModel(-1)">❮</button>
+        <span id="model-label">1 / 12</span>
+        <button class="nav-btn" onclick="changeModel(1)">❯</button>
     </div>
 
     <script>
@@ -104,42 +120,40 @@
         ];
 
         const modelViewer = document.querySelector('#ar-model');
-        const label = document.getElementById('model-label');
         const errorMessage = document.getElementById('ar-error-message');
+        const label = document.getElementById('model-label');
         const urlParams = new URLSearchParams(window.location.search);
         
         let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
         if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
 
-        // Modelio užkrovimas
         function updateModel() {
             modelViewer.src = folder + models[currentIndex];
             label.innerText = (currentIndex + 1) + " / " + models.length;
             if(urlParams.get('hide') === '1') document.getElementById('nav-ui').style.display = 'none';
         }
 
-        // Grįžimas į parduotuvę
         window.goToProduct = function() {
             window.top.location.href = purchaseLinks[currentIndex];
         };
 
-        // Navigacija
         window.changeModel = function(step) {
             currentIndex = (currentIndex + step + models.length) % models.length;
             updateModel();
         };
 
-        // AR BŪSENOS VALDYMAS (Tavo originali logika)
+        // TAVO ORIGINALUS KLAIDOS/BŪSENOS VALDYMAS
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             const arCustomButton = document.getElementById('ar-custom-button');
             
             if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
-                // Jei nepalaiko AR (PC ar senas tel), mygtuko nerodome
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko Papildytosios Realybės (AR) funkcijos...';
+                errorMessage.style.display = 'block';
                 arCustomButton.style.display = 'none';
             } else {
-                // Tik jei palaiko AR, rodome PASIMATUOK
-                arCustomButton.style.display = 'inline-flex';
+                errorMessage.style.display = 'none';
+                arCustomButton.style.display = 'block';
             }
         });
 
