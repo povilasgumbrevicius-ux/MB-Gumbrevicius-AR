@@ -6,27 +6,31 @@
     <title>1001 Legends AR</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: #fff; overflow: hidden; }
+        /* Transparent fonas, kad WordPress svetainėje atrodytų kaip paveiksliukas */
+        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: transparent; overflow: hidden; }
         .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { width: 100%; height: 100%; background-color: #f7f7f7; }
+        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         
+        /* Valdymas: Paslepiamas, jei WordPress puslapyje rodome tik 1 konkretų modelį */
         .controls {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 20px; z-index: 9999; 
-            background: rgba(255, 255, 255, 0.9); padding: 10px 25px; 
-            border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 15px; z-index: 999; 
+            background: rgba(255, 255, 255, 0.8); padding: 8px 20px; 
+            border-radius: 25px; backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .nav-btn {
-            background: #222; color: white; border: none; padding: 10px 18px;
-            border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 18px;
+            background: #333; color: white; border: none; padding: 8px 15px;
+            border-radius: 15px; cursor: pointer; font-weight: bold;
         }
-        #model-label { font-size: 15px; font-weight: bold; min-width: 80px; text-align: center; color: #333; }
+        #model-label { font-size: 14px; font-weight: bold; min-width: 60px; text-align: center; color: #000; }
         
+        /* AR Mygtukas: pozicija pritaikyta mobiliam WordPress peržiūros langui */
         #ar-button {
-            background-color: #4CAF50; color: white; padding: 14px 24px;
-            border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
-            font-size: 16px; position: absolute; top: 20px; right: 20px;
-            z-index: 9999; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background-color: #ffffff; color: #000; padding: 10px 20px;
+            border-radius: 30px; border: 2px solid #000; cursor: pointer; font-weight: bold;
+            font-size: 14px; position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            z-index: 999; white-space: nowrap;
         }
     </style>
 </head>
@@ -40,14 +44,14 @@
             ar-modes="webxr scene-viewer quick-look" 
             ar-placement="wall"
             camera-controls 
-            shadow-intensity="2" 
-            exposure="1.2"
-            disable-tap
-        >
-            <button slot="ar-button" id="ar-button">🖼️ Pasimatuok</button>
+            touch-action="pan-y"
+            shadow-intensity="1" 
+            exposure="1"
+            alt="1001 Legends 3D modelis">
+            <button slot="ar-button" id="ar-button">VAIZDUOTI ERDVĖJE</button>
         </model-viewer>
 
-        <div class="controls">
+        <div class="controls" id="nav-ui">
             <button class="nav-btn" onclick="changeModel(-1)">❮</button>
             <span id="model-label">1 / 12</span>
             <button class="nav-btn" onclick="changeModel(1)">❯</button>
@@ -55,46 +59,48 @@
     </div>
 
     <script>
-        /* SVARBU: 
-           Kadangi perziura.html yra /klientai/ aplanke, 
-           o modeliai yra /1001legends/ aplanke, 
-           mums reikia išeiti vienu lygiu aukštyn (../) 
-        */
+        // Svarbu: Kelias išeina iš "klientai" į projektą "1001legends"
         const folder = "../1001legends/"; 
         
         const models = [
-            "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
-            "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
-            "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb",
-            "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
+            "barboros_smekla.glb",      // id=1
+            "basiliskas.glb",           // id=2
+            "gelezinis_vilkas.glb",     // id=3
+            "jasinskiai.glb",           // id=4 
+            "kazimiero_kariuomene.glb", // id=5
+            "kestucio_laidotuves.glb",  // id=6
+            "lizdeika.glb",             // id=7
+            "onos_baznycia.glb",        // id=8
+            "perkuno_zinycia.glb",      // id=9
+            "tvardausko_knyga.glb",     // id=10
+            "vaidilute.glb",            // id=11
+            "vilniaus_ikurimas.glb"      // id=12
         ];
 
         const mv = document.getElementById('mv');
         const label = document.getElementById('model-label');
-
         const urlParams = new URLSearchParams(window.location.search);
+        
         let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
         if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
 
         function updateModel() {
-            // Suformuojame pilną kelią: ../1001legends/failas.glb
-            const path = folder + models[currentIndex];
-            console.log("Kraunamas modelis iš:", path);
-            
-            mv.src = path;
+            mv.src = folder + models[currentIndex];
             label.innerText = (currentIndex + 1) + " / " + models.length;
             
-            // Atnaujiname URL adreso juostoje
-            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + (currentIndex + 1);
-            window.history.replaceState({path:newUrl}, '', newUrl);
+            // Jei nuorodoje pridėta &hide=1, paslepiame navigaciją (patogu WordPress prekės puslapyje)
+            if(urlParams.get('hide') === '1') {
+                document.getElementById('nav-ui').style.display = 'none';
+            }
         }
 
         window.changeModel = function(step) {
             currentIndex = (currentIndex + step + models.length) % models.length;
             updateModel();
-        };
+            const newUrl = window.location.pathname + '?id=' + (currentIndex + 1) + (urlParams.get('hide') === '1' ? '&hide=1' : '');
+            window.history.replaceState({}, '', newUrl);
+        }
 
-        // Paleidžiame krovimą
         updateModel();
     </script>
 </body>
