@@ -3,54 +3,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>1001 Legends Galerija</title>
-    
+    <title>1001 Legends AR</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-    
     <style>
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: #fff; overflow: hidden; }
         .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; background-color: #f7f7f7; }
         
-        /* Navigacija apačioje - sutvarkyta, kad nedingtų Safari/Chrome */
         .controls {
-            position: fixed; /* Pakeista į fixed, kad visada būtų ekrano viršuje */
-            bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); /* Pridėta apsauga iPhone juostai */
-            left: 50%; 
-            transform: translateX(-50%);
-            display: flex; 
-            align-items: center; 
-            gap: 20px; 
-            z-index: 9999; /* Maksimalus prioritetas prieš model-viewer */
-            background: rgba(255, 255, 255, 0.9); 
-            padding: 10px 25px; 
-            border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            pointer-events: auto; /* Užtikrina, kad paspaudimai veiktų */
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 20px; z-index: 9999; 
+            background: rgba(255, 255, 255, 0.9); padding: 10px 25px; 
+            border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-
         .nav-btn {
             background: #222; color: white; border: none; padding: 10px 18px;
             border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 18px;
         }
-
         #model-label { font-size: 15px; font-weight: bold; min-width: 80px; text-align: center; color: #333; }
-
-        /* AR Mygtukas "Pasimatuok" */
-        #ar-custom-button {
+        
+        #ar-button {
             background-color: #4CAF50; color: white; padding: 14px 24px;
             border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
-            font-size: 16px; position: absolute; 
-            top: calc(env(safe-area-inset-top, 0px) + 20px); /* Pridėta apsauga iPhone "ragams" */
-            right: 20px;
-            z-index: 9999; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        #ar-error-message { 
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
-            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
-            z-index: 10000; font-weight: bold; display: none;
+            font-size: 16px; position: absolute; top: 20px; right: 20px;
+            z-index: 9999; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -58,15 +34,68 @@
 
     <div class="container">
         <model-viewer 
-            id="ar-model"
+            id="mv"
             src="" 
             ar 
-            ar-modes="scene-viewer quick-look webxr" 
+            ar-modes="webxr scene-viewer quick-look" 
             ar-placement="wall"
             camera-controls 
             shadow-intensity="2" 
             exposure="1.2"
             disable-tap
         >
-            <button slot="ar-button" id="ar-custom-button">🖼️ Pasimatuok</button>
-        </model-
+            <button slot="ar-button" id="ar-button">🖼️ Pasimatuok</button>
+        </model-viewer>
+
+        <div class="controls">
+            <button class="nav-btn" onclick="changeModel(-1)">❮</button>
+            <span id="model-label">1 / 12</span>
+            <button class="nav-btn" onclick="changeModel(1)">❯</button>
+        </div>
+    </div>
+
+    <script>
+        /* SVARBU: 
+           Kadangi perziura.html yra /klientai/ aplanke, 
+           o modeliai yra /1001legends/ aplanke, 
+           mums reikia išeiti vienu lygiu aukštyn (../) 
+        */
+        const folder = "../1001legends/"; 
+        
+        const models = [
+            "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
+            "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
+            "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb",
+            "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
+        ];
+
+        const mv = document.getElementById('mv');
+        const label = document.getElementById('model-label');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
+        if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
+
+        function updateModel() {
+            // Suformuojame pilną kelią: ../1001legends/failas.glb
+            const path = folder + models[currentIndex];
+            console.log("Kraunamas modelis iš:", path);
+            
+            mv.src = path;
+            label.innerText = (currentIndex + 1) + " / " + models.length;
+            
+            // Atnaujiname URL adreso juostoje
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + (currentIndex + 1);
+            window.history.replaceState({path:newUrl}, '', newUrl);
+        }
+
+        window.changeModel = function(step) {
+            currentIndex = (currentIndex + step + models.length) % models.length;
+            updateModel();
+        };
+
+        // Paleidžiame krovimą
+        updateModel();
+    </script>
+</body>
+</html>
