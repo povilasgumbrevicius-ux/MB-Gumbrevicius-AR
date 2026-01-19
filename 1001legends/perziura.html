@@ -1,85 +1,80 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>1001 Legends Galerija</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vilniaus legendos</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-    
     <style>
-        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: #fff; overflow: hidden; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { width: 100%; height: 100%; background-color: #f7f7f7; }
+        body { margin: 0; background: #f0f0f0; font-family: sans-serif; }
+        .wrapper { position: relative; width: 100vw; height: 100vh; }
+        model-viewer { width: 100%; height: 100%; }
         
         .controls {
-            position: fixed; 
-            bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); 
-            left: 50%; 
-            transform: translateX(-50%);
-            display: flex; 
-            align-items: center; 
-            gap: 20px; 
-            z-index: 9999; 
-            background: rgba(255, 255, 255, 0.9); 
-            padding: 10px 25px; 
-            border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            pointer-events: auto; 
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; display: flex; gap: 20px; align-items: center;
+            background: white; padding: 15px; border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
-
-        .nav-btn {
-            background: #222; color: white; border: none; padding: 10px 18px;
-            border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 18px;
+        button { 
+            padding: 10px 20px; font-size: 20px; cursor: pointer; 
+            background: #333; color: white; border: none; border-radius: 25px;
         }
-
-        #model-label { font-size: 15px; font-weight: bold; min-width: 80px; text-align: center; color: #333; }
-
-        #ar-custom-button {
-            background-color: #4CAF50; color: white; padding: 14px 24px;
-            border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
-            font-size: 16px; position: absolute; 
-            top: calc(env(safe-area-inset-top, 0px) + 20px); 
-            right: 20px;
-            z-index: 9999; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        #model-label { font-weight: bold; color: #333; min-width: 50px; text-align: center; }
+        
+        #ar-button {
+            position: absolute; top: 20px; right: 20px; z-index: 1000;
+            padding: 15px; background: #4CAF50; color: white; border: none; border-radius: 10px;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <model-viewer 
-            id="ar-model"
-            src="" 
-            ar 
-            ar-modes="scene-viewer quick-look webxr" 
-            ar-placement="wall"
-            camera-controls 
-            shadow-intensity="2" 
-            exposure="1.2"
-            disable-tap
-        >
-            <button slot="ar-button" id="ar-custom-button">🖼️ Pasimatuok</button>
+    <div class="wrapper">
+        <model-viewer id="viewer" ar ar-modes="webxr scene-viewer quick-look" ar-placement="wall" camera-controls shadow-intensity="1">
+            <button slot="ar-button" id="ar-button">🖼️ PASIMATUOTI</button>
         </model-viewer>
 
         <div class="controls">
-            <button class="nav-btn" onclick="changeModel(-1)">❮</button>
-            <span id="model-label">Kraunama...</span>
-            <button class="nav-btn" onclick="changeModel(1)">❯</button>
+            <button onclick="move(-1)">❮</button>
+            <div id="model-label">1 / 12</div>
+            <button onclick="move(1)">❯</button>
         </div>
     </div>
 
     <script>
-        const models = [
+        const folder = "1001legends/";
+        const files = [
             "barboros_smekla.glb", "basiliskas.glb", "gelezinis_vilkas.glb",
             "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
             "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb",
             "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
         ];
 
-        // PATAISYTAS KELIAS Į TAVO NAUJĄ APLANKĄ
-        const basePath = "1001legends/"; 
+        let current = 0;
+        const viewer = document.getElementById('viewer');
+        const label = document.getElementById('model-label');
 
-        const modelViewer = document.querySelector('#ar-model');
-        const modelLabel = document.
+        // Pasiimam ID iš URL, jei yra
+        const params = new URLSearchParams(window.location.search);
+        let startId = parseInt(params.get('id'));
+        if (startId && startId >= 1 && startId <= files.length) {
+            current = startId - 1;
+        }
+
+        function loadModel() {
+            const path = folder + files[current];
+            console.log("Kraunamas failas:", path);
+            viewer.src = path;
+            label.innerText = (current + 1) + " / " + files.length;
+        }
+
+        window.move = function(dir) {
+            current += dir;
+            if (current >= files.length) current = 0;
+            if (current < 0) current = files.length - 1;
+            loadModel();
+        };
+
+        loadModel();
+    </script>
+</body>
+</html>
