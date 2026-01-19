@@ -1,77 +1,111 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>1001 Legends AR</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    
     <style>
-        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: transparent; overflow: hidden; }
         .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+        body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
+        model-viewer { width: 100%; height: 100%; z-index: 100; }
         
-        /* Viršutinis pirkimo mygtukas */
-        #buy-button {
-            position: absolute; top: 20px; left: 20px; z-index: 999;
-            background-color: #000; color: #fff; border: none;
-            padding: 12px 20px; border-radius: 5px; font-weight: bold;
-            cursor: pointer; font-size: 14px; text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        #ar-error-message { 
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
+            z-index: 9999; font-weight: bold; display: none; text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
 
-        /* AR Mygtukas apačioje */
-        #ar-button {
-            background-color: #fff; color: #000; padding: 12px 24px;
-            border-radius: 30px; border: 2px solid #000; cursor: pointer;
-            font-weight: bold; font-size: 14px; position: absolute;
-            bottom: 80px; left: 50%; transform: translateX(-50%);
-            z-index: 999; white-space: nowrap;
+        /* TAVO ORIGINALUS MYGTUKO STILIUS */
+        #ar-custom-button, .buy-button-style {
+            background-color: #4CAF50; 
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            position: absolute; 
+            z-index: 2500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
 
-        /* Navigacija */
+        /* Tavo AR mygtuko pozicija (kaip buvo) */
+        #ar-custom-button {
+            top: 50px;
+            right: 20px;
+        }
+
+        /* NAUJAS PIRKIMO MYGTUKAS (perkeltas į kairę, kad netrukdytų) */
+        .buy-button-style {
+            top: 50px;
+            left: 20px;
+            background-color: #000; /* Juodas, kad skirtųsi */
+        }
+
+        /* Apatinė navigacija */
         .controls {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 15px; z-index: 999; 
-            background: rgba(255, 255, 255, 0.8); padding: 8px 20px; 
-            border-radius: 25px; backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.8); padding: 8px 20px; border-radius: 25px;
         }
         .nav-btn { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; }
         #model-label { font-size: 14px; font-weight: bold; min-width: 60px; text-align: center; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <button id="buy-button" onclick="goToProduct()">🛒 ĮSIGYTI KŪRINĮ</button>
+        
+        <model-viewer 
+            id="ar-model"
+            src="" 
+            ar 
+            ar-modes="scene-viewer quick-look webxr" 
+            camera-controls 
+            shadow-intensity="2" 
+            exposure="1.5"
+            camera-orbit="auto auto auto" 
+            camera-target="auto" 
+            disable-tap
+            min-field-of-view="10deg"
+            max-field-of-view="45deg"
+        >
+            <button slot="ar-button" id="ar-custom-button">
+                ▶️ PASIMATUOK
+            </button>
 
-        <model-viewer id="mv" src="" ar ar-modes="webxr scene-viewer quick-look" ar-placement="wall" camera-controls touch-action="pan-y">
-            <button slot="ar-button" id="ar-button">VAIZDUOTI ERDVĖJE</button>
+            <a href="#" class="buy-button-style" onclick="goToProduct(); return false;">
+                🛒 PIRKTI
+            </a>
+            
         </model-viewer>
+        
+    </div>
 
-        <div class="controls" id="nav-ui">
-            <button class="nav-btn" onclick="changeModel(-1)">❮</button>
-            <span id="model-label">1 / 12</span>
-            <button class="nav-btn" onclick="changeModel(1)">❯</button>
-        </div>
+    <div id="ar-error-message"></div>
+
+    <div class="controls" id="nav-ui">
+        <button class="nav-btn" onclick="changeModel(-1)">❮</button>
+        <span id="model-label">1 / 12</span>
+        <button class="nav-btn" onclick="changeModel(1)">❯</button>
     </div>
 
     <script>
         const folder = "../1001legends/"; 
-        
-        // Pirkimo nuorodų sąrašas (surašyk visas 12 eiliškumu)
         const purchaseLinks = [
-            "https://1001legends.lt/product/barboros-smekla/",      // id=1
-            "https://1001legends.lt/product/basiliskas/",           // id=2 (pavyzdys)
-            "https://1001legends.lt/product/gelezinis-vilkas/",     // id=3 (pavyzdys)
-            "https://1001legends.lt/product/jasinskiai/",           // id=4
-            "https://1001legends.lt/product/kazimiero-kariuomene/", // id=5
-            "https://1001legends.lt/product/kestucio-laidotuves/",  // id=6
-            "https://1001legends.lt/product/lizdeika/",             // id=7
-            "https://1001legends.lt/product/onos-baznycia/",        // id=8
-            "https://1001legends.lt/product/perkuno-zinycia/",      // id=9
-            "https://1001legends.lt/product/tvardausko-knyga/",     // id=10
-            "https://1001legends.lt/product/vaidilute/",            // id=11
-            "https://1001legends.lt/product/vilniaus-ikurimas/"     // id=12
+            "https://1001legends.lt/product/barboros-smekla/", "https://1001legends.lt/product/baziliskas/",
+            "https://1001legends.lt/product/gelezinis-vilkas/", "https://1001legends.lt/product/jasinskiai/",
+            "https://1001legends.lt/product/kazimiero-kariuomene/", "https://1001legends.lt/product/kestucio-laidotuves/",
+            "https://1001legends.lt/product/lizdeika/", "https://1001legends.lt/product/onos-baznycia/",
+            "https://1001legends.lt/product/perkuno-zinycia/", "https://1001legends.lt/product/tvardausko-knyga/",
+            "https://1001legends.lt/product/vaidilute/", "https://1001legends.lt/product/vilniaus-ikurimas/"
         ];
 
         const models = [
@@ -81,7 +115,8 @@
             "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
         ];
 
-        const mv = document.getElementById('mv');
+        const modelViewer = document.querySelector('#ar-model');
+        const errorMessage = document.getElementById('ar-error-message');
         const label = document.getElementById('model-label');
         const urlParams = new URLSearchParams(window.location.search);
         
@@ -89,24 +124,33 @@
         if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
 
         function updateModel() {
-            mv.src = folder + models[currentIndex];
+            modelViewer.src = folder + models[currentIndex];
             label.innerText = (currentIndex + 1) + " / " + models.length;
             if(urlParams.get('hide') === '1') document.getElementById('nav-ui').style.display = 'none';
         }
 
-        // PAGRINDINĖ FUNKCIJA GRĮŽIMUI Į PARDUOTUVĘ
         window.goToProduct = function() {
-            const targetUrl = purchaseLinks[currentIndex];
-            if (targetUrl) {
-                // window.top nukreipia visą naršyklės langą, ne tik iframe vidų
-                window.top.location.href = targetUrl;
-            }
+            window.top.location.href = purchaseLinks[currentIndex];
         };
 
         window.changeModel = function(step) {
             currentIndex = (currentIndex + step + models.length) % models.length;
             updateModel();
         };
+
+        // TAVO ORIGINALUS KLAIDOS VALDYMAS
+        modelViewer.addEventListener('ar-status', (event) => {
+            const status = event.detail.status;
+            const arCustomButton = document.getElementById('ar-custom-button');
+            if (status === 'failed' || status === 'not-present' || status === 'unsupported') {
+                errorMessage.innerHTML = '⚠️ Šis įrenginys nepalaiko AR...';
+                errorMessage.style.display = 'block';
+                arCustomButton.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'none';
+                arCustomButton.style.display = 'block';
+            }
+        });
 
         updateModel();
     </script>
