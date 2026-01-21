@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>AR Kupolas</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #ffffff; }
+        .container { position: relative; width: 100%; height: 100vh; }
+        
+        model-viewer { 
+            width: 100%; 
+            height: 100%; 
+            --poster-color: transparent;
+        }
+
+        /* ATSPARUS UI: Mygtukas pritaikytas visiems ekranams */
+        #ar-custom-button {
+            position: absolute;
+            bottom: 6vh; /* Naudojame vh (ekrano aukščio %), kad visada būtų virš naršyklės juostos */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2500;
+            white-space: nowrap;
+            display: none;
+        }
+
+        #ar-error-message { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #ffc107; 
+            color: #333; 
+            padding: 15px; 
+            border-radius: 10px; 
+            z-index: 9999; 
+            font-weight: bold; 
+            display: none; 
+            text-align: center; 
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <model-viewer 
+            src="..sferos/kupolas1.glb" 
+            ar 
+            ar-modes="scene-viewer quick-look" 
+            ar-placement="floor"
+            camera-controls 
+            touch-action="pan-y"
+            shadow-intensity="1" 
+            exposure="1.0"
+            autoplay
+            /* Kadangi kupolas didelis, šis nustatymas neleis jam atsirasti 'veide' */
+            camera-target="0m 0m 0m" 
+            min-camera-orbit="auto auto auto"
+            max-camera-orbit="auto auto auto">
+
+            <button slot="ar-button" id="ar-custom-button">
+                ▶️ PAŽIŪRĖTI
+            </button>
+
+        </model-viewer>
+    </div>
+
+    <div id="ar-error-message"></div>
+
+    <script>
+        const modelViewer = document.querySelector('model-viewer');
+        const arButton = document.getElementById('ar-custom-button');
+        const errorMessage = document.getElementById('ar-error-message');
+
+        // Rodome mygtuką, kai modelis pilnai užkraunamas
+        modelViewer.addEventListener('load', () => {
+            arButton.style.display = 'block';
+        });
+
+        // Klaidų gaudymas
+        modelViewer.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'failed') {
+                errorMessage.innerHTML = '⚠️ AR nepalaikoma arba reikia leidimo kamerai.';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
