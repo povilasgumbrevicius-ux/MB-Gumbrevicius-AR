@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Master AR Projektas</title>
+    <title>AR Kupolas</title>
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #ffffff; font-family: sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #ffffff; }
         .container { position: relative; width: 100%; height: 100vh; }
         
         model-viewer { 
@@ -17,7 +17,6 @@
             --poster-color: transparent;
         }
 
-        /* Guminis mygtukas: visada matomas ir patogus */
         #ar-custom-button {
             position: absolute;
             bottom: 6vh;
@@ -33,59 +32,28 @@
             font-size: 18px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             z-index: 2500;
-            display: none; 
             white-space: nowrap;
-        }
-
-        #ar-error-message { 
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-            background: #ffc107; color: #333; padding: 15px; border-radius: 10px; 
-            z-index: 9999; font-weight: bold; display: none; text-align: center; width: 85%;
-        }
-
-        /* Licencijos vandenženklis (atsiranda tik pasibaigus licencijai) */
-        #license-watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 50px;
-            color: rgba(255, 0, 0, 0.2);
-            font-weight: bold;
-            z-index: 10;
-            pointer-events: none;
             display: none;
-            text-transform: uppercase;
-            white-space: nowrap;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="license-watermark">Licencija pasibaigė</div>
-
         <model-viewer 
-            id="master-model"
             src="../sferos/kupolas.glb" 
             ar 
-            ar-modes="webxr scene-viewer quick-look" 
+            ar-modes="scene-viewer quick-look" 
             ar-placement="floor"
             camera-controls 
             touch-action="pan-y"
-            shadow-intensity="2" 
+            shadow-intensity="1" 
             exposure="1.0"
             autoplay
             
-            /* SPRENDIMAS: Kad neatsirastum viduje, nustatome 2 metrų orbitą */
+            /* Tik šitie du nustatymai pakeisti: atstumas 2m ir aukštis 1m */
             camera-orbit="0deg 75deg 2m"
-            camera-target="0m 1m 0m"
-            
-            /* Greito krovimo nustatymai iš tavo veikiančių kodų */
-            loading="eager"
-            reveal="auto"
-            min-field-of-view="10deg"
-            max-field-of-view="45deg">
+            camera-target="0m 1m 0m">
 
             <button slot="ar-button" id="ar-custom-button">
                 ▶️ PASTATYTI
@@ -94,38 +62,12 @@
         </model-viewer>
     </div>
 
-    <div id="ar-error-message"></div>
-
     <script>
-        const modelViewer = document.querySelector('#master-model');
+        const modelViewer = document.querySelector('model-viewer');
         const arButton = document.getElementById('ar-custom-button');
-        const errorMessage = document.getElementById('ar-error-message');
-        const watermark = document.getElementById('license-watermark');
 
-        // --- LICENCIJOS INTEGRACIJA ---
-        const expirationDate = new Date('2026-01-17');
-        const today = new Date();
-
-        function checkLicense() {
-            if (today > expirationDate) {
-                // Jei licencija pasibaigė, rodome vandenženklį
-                watermark.style.display = 'block';
-                console.warn("DĖMESIO: Licencija pasibaigė!");
-                // Čia galime pridėti papildomą logiką, pvz., pakeisti modelio tekstūrą
-            }
-        }
-
-        // Rodome mygtuką ir tikriname licenciją kai modelis užkrautas
         modelViewer.addEventListener('load', () => {
-            checkLicense();
             arButton.style.display = 'block';
-        });
-
-        modelViewer.addEventListener('ar-status', (event) => {
-            if (event.detail.status === 'failed') {
-                errorMessage.innerHTML = '⚠️ AR nepalaikoma arba reikia kameros leidimo.';
-                errorMessage.style.display = 'block';
-            }
         });
     </script>
 </body>
