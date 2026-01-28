@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Diaro AR: Sieninė reklama</title>
+    <title>Diaro AR įrankis</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     <style>
         body, html { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: #1a1a1a; overflow: hidden; }
-        .container { position: relative; width: 100%; height: 100vh; }
         model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         
         #ar-button {
@@ -19,31 +18,34 @@
         .controls {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 20px; z-index: 999; 
-            background: rgba(255, 255, 255, 0.9); padding: 12px 25px; border-radius: 100px;
+            background: rgba(255, 255, 255, 0.95); padding: 12px 25px; border-radius: 100px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .nav-btn { background: #333; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 20px; }
-        #model-label { font-size: 16px; font-weight: bold; min-width: 80px; text-align: center; color: #333; }
+        #model-label { font-size: 15px; font-weight: bold; min-width: 90px; text-align: center; color: #333; }
+        
+        #mode-indicator {
+            position: fixed; top: 25px; left: 25px; color: rgba(255,255,255,0.5);
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <model-viewer 
-            id="viewer"
-            src="" 
-            ar 
-            ar-modes="scene-viewer webxr quick-look" 
-            ar-placement="wall" 
-            ar-scale="fixed"
-            camera-controls 
-            exposure="0.5" 
-            shadow-intensity="0"
-            camera-orbit="0deg 75deg auto"
-            interaction-prompt="none"
-        >
-            <button slot="ar-button" id="ar-button">🔳 MATUOTI ANT SIENOS</button>
-        </model-viewer>
-    </div>
+    <div id="mode-indicator">Režimas: kraunama...</div>
+
+    <model-viewer 
+        id="viewer"
+        src="" 
+        ar 
+        ar-modes="scene-viewer webxr quick-look" 
+        ar-scale="fixed"
+        camera-controls 
+        exposure="0.6" 
+        interaction-prompt="none"
+    >
+        <button slot="ar-button" id="ar-button">🔳 MATUOTI</button>
+    </model-viewer>
 
     <div class="controls" id="nav-ui" style="display: none;">
         <button class="nav-btn" onclick="changeModel(-1)">❮</button>
@@ -52,31 +54,38 @@
     </div>
 
     <script>
+        const params = new URLSearchParams(window.location.search);
+        // Nuskaitome režimą iš URL: wall, floor arba ceiling. Jei nėra - wall.
+        const mode = params.get('mode') || 'wall'; 
+        
+        const viewer = document.querySelector('#viewer');
+        const modeIndicator = document.getElementById('mode-indicator');
+        
+        // Konfigūruojame viewerį pagal režimą
+        viewer.setAttribute('ar-placement', mode);
+        modeIndicator.innerText = "Režimas: " + (mode === 'wall' ? 'Siena' : mode === 'floor' ? 'Žemė' : 'Lubos');
+
+        // CSV krovimo logika (tokia pati kaip anksčiau)
         const folder = "../Diaro/";
         const csvPath = folder + "models.csv?v=" + new Date().getTime(); 
         let models = [];
         let currentIndex = 0;
-
-        const viewer = document.querySelector('#viewer');
-        const label = document.getElementById('model-label');
-        const navUI = document.getElementById('nav-ui');
 
         async function init() {
             try {
                 const response = await fetch(csvPath);
                 const text = await response.text();
                 models = text.split('\n').map(l => l.trim()).filter(l => l.length > 0 && l.includes('.glb'));
-
                 if (models.length > 0) {
-                    if (models.length > 1) navUI.style.display = 'flex';
+                    if (models.length > 1) document.getElementById('nav-ui').style.display = 'flex';
                     updateModel();
                 }
-            } catch (e) { console.error("CSV error"); }
+            } catch (e) { console.error("CSV klaida"); }
         }
 
         function updateModel() {
             viewer.src = folder + models[currentIndex];
-            label.innerText = (currentIndex + 1) + " / " + models.length;
+            document.getElementById('model-label').innerText = (currentIndex + 1) + " / " + models.length;
         }
 
         window.changeModel = (step) => {
