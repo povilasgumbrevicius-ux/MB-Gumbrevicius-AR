@@ -3,22 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>1001 Legends AR</title>
-    
+    <title>Vilniaus Legendos pasimatuok</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
     <style>
         .container { position: relative; width: 100%; height: 100vh; }
         body { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; }
         model-viewer { width: 100%; height: 100%; z-index: 100; }
-        
         #ar-error-message { 
             position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
             background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; 
             z-index: 9999; font-weight: bold; display: none; text-align: center; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
         }
-
         #ar-custom-button, .buy-button-style, .rent-button-style {
             color: white;
             border-radius: 5px;
@@ -33,7 +29,6 @@
             align-items: center;
             justify-content: center;
         }
-
         #ar-custom-button {
             top: 50px;
             right: 20px;
@@ -41,7 +36,6 @@
             padding: 12px 20px;
             font-size: 16px;
         }
-
         .buy-button-style {
             top: 50px;
             left: 20px;
@@ -49,16 +43,14 @@
             padding: 12px 20px;
             font-size: 16px;
         }
-
         .rent-button-style {
-            top: 105px; /* Pozicija po PIRKTI mygtuku */
+            top: 105px;
             left: 20px;
             background-color: rgba(0, 0, 0, 0.6);
             padding: 8px 16px;
             font-size: 13px;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
-
         .controls {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; gap: 15px; z-index: 999; 
@@ -70,45 +62,18 @@
 </head>
 <body>
     <div class="container">
-        
-        <model-viewer 
-            id="ar-model"
-            src="" 
-            ar 
-            ar-modes="scene-viewer quick-look webxr" 
-            camera-controls 
-            shadow-intensity="2" 
-            exposure="1.5"
-            camera-orbit="auto auto auto" 
-            camera-target="auto" 
-            disable-tap
-            min-field-of-view="10deg"
-            max-field-of-view="45deg"
-        >
-            <button slot="ar-button" id="ar-custom-button">
-                ▶️ PASIMATUOK
-            </button>
-
-            <a href="#" class="buy-button-style" onclick="goToProduct(); return false;">
-                🛒 PIRKTI
-            </a>
-
-            <a href="#" class="rent-button-style" onclick="goToRent(); return false;">
-                🔑 NUOMOTIS
-            </a>
-            
+        <model-viewer id="ar-model" src="" ar ar-modes="scene-viewer quick-look webxr" camera-controls shadow-intensity="2" exposure="1.5" camera-orbit="auto auto auto" camera-target="auto" disable-tap min-field-of-view="10deg" max-field-of-view="45deg">
+            <button slot="ar-button" id="ar-custom-button">▶️ PASIMATUOK</button>
+            <a href="#" class="buy-button-style" onclick="goToProduct(); return false;">🛒 PIRKTI</a>
+            <a href="#" class="rent-button-style" onclick="goToRent(); return false;">🔑 NUOMOTIS</a>
         </model-viewer>
-        
     </div>
-
     <div id="ar-error-message"></div>
-
     <div class="controls" id="nav-ui">
         <button class="nav-btn" onclick="changeModel(-1)">❮</button>
         <span id="model-label">1 / 12</span>
         <button class="nav-btn" onclick="changeModel(1)">❯</button>
     </div>
-
     <script>
         const folder = "../1001legends/"; 
         const purchaseLinks = [
@@ -119,44 +84,38 @@
             "https://1001legends.lt/produktas/perkuno-zinycia/", "https://1001legends.lt/produktas/tvardausko-knyga/",
             "https://1001legends.lt/produktas/vaidilute/", "https://1001legends.lt/produktas/vilniaus-ikurimas/"
         ];
-
-        // Pradinė nuoroda į bendrą puslapį, paruošta 12-kai ID
-        const rentLinks = Array(12).fill("https://1001legends.lt/paveikslu-nuoma/");
-
-        const models = [
-            "barboros_smekla.glb", "baziliskas.glb", "gelezinis_vilkas.glb",
-            "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb",
-            "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb",
-            "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"
+        const rentLinks = [
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=barboros-smekla&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=baziliskas&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=gelezinis-vilkas&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=Jasinskiai&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=kazimiero-kariuomene&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=kestucio-laidotuves&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=Lizdeika&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=sv-onos-baznycia&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=perkuno-zinycia&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=tvardausko-knyga&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=vaidilute&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1",
+            "https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=vilniaus-ikurimas&dydis=100x100&pirkimas_nuoma=nuoma&periodas=6&kiekis=1"
         ];
-
+        const models = ["barboros_smekla.glb", "baziliskas.glb", "gelezinis_vilkas.glb", "jasinskiai.glb", "kazimiero_kariuomene.glb", "kestucio_laidotuves.glb", "lizdeika.glb", "onos_baznycia.glb", "perkuno_zinycia.glb", "tvardausko_knyga.glb", "vaidilute.glb", "vilniaus_ikurimas.glb"];
         const modelViewer = document.querySelector('#ar-model');
         const errorMessage = document.getElementById('ar-error-message');
         const label = document.getElementById('model-label');
         const urlParams = new URLSearchParams(window.location.search);
-        
         let currentIndex = (parseInt(urlParams.get('id')) || 1) - 1;
         if (currentIndex < 0 || currentIndex >= models.length) currentIndex = 0;
-
         function updateModel() {
             modelViewer.src = folder + models[currentIndex];
             label.innerText = (currentIndex + 1) + " / " + models.length;
             if(urlParams.get('hide') === '1') document.getElementById('nav-ui').style.display = 'none';
         }
-
-        window.goToProduct = function() {
-            window.top.location.href = purchaseLinks[currentIndex];
-        };
-
-        window.goToRent = function() {
-            window.top.location.href = rentLinks[currentIndex];
-        };
-
+        window.goToProduct = function() { window.top.location.href = purchaseLinks[currentIndex]; };
+        window.goToRent = function() { window.top.location.href = rentLinks[currentIndex]; };
         window.changeModel = function(step) {
             currentIndex = (currentIndex + step + models.length) % models.length;
             updateModel();
         };
-
         modelViewer.addEventListener('ar-status', (event) => {
             const status = event.detail.status;
             const arCustomButton = document.getElementById('ar-custom-button');
@@ -169,7 +128,6 @@
                 arCustomButton.style.display = 'block';
             }
         });
-
         updateModel();
     </script>
 </body>
