@@ -8,15 +8,17 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     
     <style>
+        /* Užtikriname, kad puslapis užimtų visą ekraną be slankiojimo */
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #ffffff; }
         .container { position: relative; width: 100%; height: 100vh; }
         
         model-viewer { 
             width: 100%; 
             height: 100%; 
-            --poster-color: transparent;
+            --poster-color: transparent; /* Paslepiame standartinį krovimosi foną */
         }
 
+        /* Mygtuko stilius */
         #ar-custom-button {
             position: absolute;
             bottom: 6vh;
@@ -33,7 +35,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             z-index: 2500;
             white-space: nowrap;
-            display: none;
+            display: none; /* Paslėptas, kol neužsikraus modelis */
         }
     </style>
 </head>
@@ -46,6 +48,7 @@
             ar 
             ar-modes="webxr scene-viewer quick-look" 
             ar-placement="floor"
+            ar-scale="auto"
             camera-controls 
             touch-action="pan-y"
             shadow-intensity="1" 
@@ -64,14 +67,18 @@
         const modelViewer = document.querySelector('#ar-model');
         const arButton = document.getElementById('ar-custom-button');
 
+        // Parodome mygtuką tik tada, kai 3.7MB failas yra pilnai parsiųstas
         modelViewer.addEventListener('load', () => {
             arButton.style.display = 'block';
         });
 
-        // Papildomas klaidų sekimas Android įrenginiams
+        // Stebime AR būseną. Jei nepavyksta (failed), išvedame klaidą į konsolę.
+        // Tai padeda suprasti, kodėl Android telefonas atsisako paleisti kamerą.
         modelViewer.addEventListener('ar-status', (event) => {
             if (event.detail.status === 'failed') {
-                alert('AR nepavyko pasileisti. Patikrinkite, ar Google Play Services for AR yra atnaujintas.');
+                console.error("AR klaida / Priežastis:", event.detail.failureReason);
+                // Galima atkomentuoti žemiau esančią eilutę, jei norite rodyti pranešimą vartotojui
+                // alert('AR nepavyko pasileisti. Patikrinkite, ar Google Play Services for AR yra atnaujintas ir suteikti kameros leidimai.');
             }
         });
     </script>
