@@ -41,33 +41,38 @@
 
     <div class="container">
         <model-viewer 
+            id="ar-model"
             src="../sferos/kupolas.glb" 
             ar 
-            ar-modes="scene-viewer quick-look" 
+            ar-modes="webxr scene-viewer quick-look" 
             ar-placement="floor"
             camera-controls 
             touch-action="pan-y"
             shadow-intensity="1" 
             exposure="1.0"
             autoplay
-            
-            /* Tik šitie du nustatymai pakeisti: atstumas 2m ir aukštis 1m */
             camera-orbit="0deg 75deg 2m"
             camera-target="0m 1m 0m">
 
             <button slot="ar-button" id="ar-custom-button">
                 ▶️ PASTATYTI
             </button>
-
         </model-viewer>
     </div>
 
     <script>
-        const modelViewer = document.querySelector('model-viewer');
+        const modelViewer = document.querySelector('#ar-model');
         const arButton = document.getElementById('ar-custom-button');
 
         modelViewer.addEventListener('load', () => {
             arButton.style.display = 'block';
+        });
+
+        // Papildomas klaidų sekimas Android įrenginiams
+        modelViewer.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'failed') {
+                alert('AR nepavyko pasileisti. Patikrinkite, ar Google Play Services for AR yra atnaujintas.');
+            }
         });
     </script>
 </body>
