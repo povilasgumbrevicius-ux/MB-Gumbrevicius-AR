@@ -4,49 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Kupolinis namas</title>
-    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-    
     <style>
-        /* Užtikriname, kad puslapis užimtų visą ekraną be slankiojimo */
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #ffffff; }
         .container { position: relative; width: 100%; height: 100vh; }
-        
-        model-viewer { 
-            width: 100%; 
-            height: 100%; 
-            --poster-color: transparent; /* Paslepiame standartinį krovimosi foną */
-        }
-
-        /* Mygtuko stilius */
+        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
         #ar-custom-button {
-            position: absolute;
-            bottom: 6vh;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            z-index: 2500;
-            white-space: nowrap;
-            display: none; /* Paslėptas, kol neužsikraus modelis */
+            position: absolute; bottom: 6vh; left: 50%; transform: translateX(-50%);
+            background-color: #4CAF50; color: white; padding: 16px 32px;
+            border-radius: 50px; border: none; cursor: pointer; font-weight: bold;
+            font-size: 18px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); z-index: 2500;
+            display: none;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <model-viewer 
             id="ar-model"
             src="../sferos/kupolas.glb" 
             ar 
-            ar-modes="webxr scene-viewer quick-look" 
+            ar-modes="scene-viewer webxr quick-look" 
             ar-placement="floor"
             ar-scale="auto"
             camera-controls 
@@ -56,29 +34,16 @@
             autoplay
             camera-orbit="0deg 75deg 2m"
             camera-target="0m 1m 0m">
-
-            <button slot="ar-button" id="ar-custom-button">
-                ▶️ PASTATYTI
-            </button>
+            <button slot="ar-button" id="ar-custom-button">▶️ PASTATYTI</button>
         </model-viewer>
     </div>
-
     <script>
         const modelViewer = document.querySelector('#ar-model');
         const arButton = document.getElementById('ar-custom-button');
-
-        // Parodome mygtuką tik tada, kai 3.7MB failas yra pilnai parsiųstas
-        modelViewer.addEventListener('load', () => {
-            arButton.style.display = 'block';
-        });
-
-        // Stebime AR būseną. Jei nepavyksta (failed), išvedame klaidą į konsolę.
-        // Tai padeda suprasti, kodėl Android telefonas atsisako paleisti kamerą.
+        modelViewer.addEventListener('load', () => { arButton.style.display = 'block'; });
         modelViewer.addEventListener('ar-status', (event) => {
             if (event.detail.status === 'failed') {
-                console.error("AR klaida / Priežastis:", event.detail.failureReason);
-                // Galima atkomentuoti žemiau esančią eilutę, jei norite rodyti pranešimą vartotojui
-                // alert('AR nepavyko pasileisti. Patikrinkite, ar Google Play Services for AR yra atnaujintas ir suteikti kameros leidimai.');
+                console.error("AR klaida:", event.detail.failureReason);
             }
         });
     </script>
