@@ -24,6 +24,7 @@
             overflow-y: auto;
         }
 
+        /* --- ŽVAKĖ (Desktop) --- */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
@@ -75,7 +76,7 @@
             transform: scale(1.05);
         }
 
-        /* MASONRY GRID */
+        /* --- MASONRY GRID --- */
         .portfolio-container {
             position: relative;
             z-index: 20;
@@ -123,31 +124,55 @@
         }
 
         @media (max-width: 768px) {
+            #candlelight { display: none; } /* Išjungiam žvakę telefone */
+
             header {
                 top: 20px;
                 left: 20px;
             }
             .logo-wow {
-                height: 50px; /* Mažesnis logo telefonui */
+                height: 50px;
                 margin-right: 15px;
             }
             .company-name {
-                font-size: 0.8rem; /* Mažesnis šriftas, kad tilptų į eilutę */
-                letter-spacing: 5px;
+                font-size: 0.8rem;
+                letter-spacing: 4px;
             }
             .portfolio-container { 
-                column-count: 1; /* Viena nuotrauka po kita */
-                padding: 100px 20px 50px 20px; /* Sumažinti tarpai aplink */
+                column-count: 1; 
+                padding: 100px 20px 50px 20px;
             }
+            
             .portfolio-item {
-                opacity: 0.6; /* Telefonuose nuotraukos matosi ryškiau iškart */
-                filter: blur(2px);
-                margin-bottom: 20px;
+                /* AŠTRUMAS: Nuimtas blur ir nustatyta pilna opacity */
+                opacity: 1; 
+                filter: blur(0px);
+                margin-bottom: 25px;
+                /* PULSAVIMAS: Automatinis mėlynas rėmelis telefone */
+                border-color: rgba(0, 210, 255, 0.3);
+                animation: item-pulse 3s infinite alternate ease-in-out;
             }
-            .rekvizitai {
-                font-size: 0.7rem;
-                letter-spacing: 2px;
+
+            .portfolio-item:hover {
+                transform: none; /* Telefone nebereikia scale efekto */
             }
+        }
+
+        /* --- ANIMACIJOS --- */
+        @keyframes item-pulse {
+            from { 
+                box-shadow: 0 0 5px rgba(0, 210, 255, 0.1);
+                border-color: rgba(0, 210, 255, 0.1);
+            }
+            to { 
+                box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+                border-color: rgba(0, 210, 255, 0.6);
+            }
+        }
+
+        @keyframes pulse-glow {
+            from { opacity: 0.4; }
+            to { opacity: 1; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
         footer {
@@ -164,11 +189,6 @@
             letter-spacing: 4px;
             color: var(--wow-blue);
             animation: pulse-glow 3s infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            from { opacity: 0.4; }
-            to { opacity: 1; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
         .dust {
