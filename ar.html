@@ -8,10 +8,8 @@
     <style>
         :root {
             --wow-blue: #00d2ff;
-            /* Prabangus Platinum Silver fonas */
             --silver-bg: #cfd4d9;    
             --silver-light: #f0f2f5; 
-            /* Tamsus tekstas aštrumui */
             --text-main: #1a1c1f;    
             --text-dim: rgba(26, 28, 31, 0.7);
         }
@@ -49,7 +47,7 @@
         .logo-wow {
             height: 80px; 
             width: auto;
-            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.4));
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
             opacity: 0.9;
             margin-right: 25px; 
             transition: all 0.6s ease;
@@ -65,7 +63,7 @@
             opacity: 0.8;
         }
 
-        /* --- AR HERO --- */
+        /* --- AR HERO IR GALERIJA --- */
         .ar-hero {
             max-width: 1400px;
             margin: 0 auto;
@@ -77,16 +75,39 @@
         }
 
         .render-frame {
-            /* PNG be fono čia atrodys kaip pakabintas studijoje */
             position: relative;
             z-index: 10;
+            text-align: center;
         }
 
-        .render-frame img {
+        #main-render {
             width: 100%;
+            height: auto;
             display: block;
-            /* Švelnus šešėlis po kupolu, kad jis "stovėtų" ant fono */
-            filter: drop-shadow(0 30px 40px rgba(0,0,0,0.15));
+            filter: drop-shadow(0 30px 40px rgba(0,0,0,0.12));
+            transition: opacity 0.5s ease;
+        }
+
+        /* Maži taškeliai kampams keisti */
+        .gallery-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .nav-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--text-dim);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-dot.active {
+            background-color: var(--wow-blue);
+            border-color: var(--wow-blue);
+            box-shadow: 0 0 10px var(--wow-blue);
         }
 
         .tech-info h1 {
@@ -116,8 +137,8 @@
             padding: 15px;
             width: 180px;
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 210, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 210, 255, 0.1);
         }
 
         .qr-card img { width: 100%; display: block; }
@@ -169,21 +190,12 @@
 
         .card:hover {
             border-color: var(--wow-blue);
-            background: rgba(0, 210, 255, 0.03);
+            background: rgba(0, 210, 255, 0.02);
             transform: translateY(-8px);
         }
 
-        .card h3 {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 3px;
-        }
-
-        .card span {
-            font-size: 0.75rem;
-            color: #008eb3; /* Tamsesnė mėlyna geresniam skaitomumui ant šviesaus fono */
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        .card h3 { font-family: 'Cinzel', serif; letter-spacing: 3px; margin-bottom: 10px; }
+        .card span { font-size: 0.75rem; color: #008eb3; letter-spacing: 2px; text-transform: uppercase; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
@@ -213,7 +225,13 @@
 
     <main class="ar-hero">
         <div class="render-frame">
-            <img src="portfolio/sferos_final.webp" alt="Geodezinio kupolo studija">
+            <img id="main-render" src="portfolio/1-Sfera-Gumbrevicius.webp" alt="Geodezinio kupolo studija">
+            
+            <div class="gallery-nav">
+                <div class="nav-dot active" onclick="changeRender(this, 'portfolio/1-Sfera-Gumbrevicius.webp')"></div>
+                <div class="nav-dot" onclick="changeRender(this, 'portfolio/2-Sfera-Gumbrevicius.webp')"></div>
+                <div class="nav-dot" onclick="changeRender(this, 'portfolio/3-Sfera-Gumbrevicius.webp')"></div>
+            </div>
         </div>
 
         <div class="tech-info">
@@ -240,12 +258,28 @@
                 <h3>SFEROS.LT</h3>
                 <span>3D vizualizacijos sprendimai</span>
             </a>
-            <div class="card" style="opacity: 0.4;">
+            <div class="card" style="opacity: 0.5;">
                 <h3>ARCHITEKTŪRINIS PROJEKTAS</h3>
-                <span>Procesas: Modernus namas</span>
+                <span>Statusas: Modeliavimas (Namas)</span>
             </div>
         </div>
     </section>
 
+    <script>
+        function changeRender(dot, src) {
+            // Pakeičiame nuotrauką
+            const img = document.getElementById('main-render');
+            img.style.opacity = '0';
+            
+            setTimeout(() => {
+                img.src = src;
+                img.style.opacity = '1';
+            }, 300);
+
+            // Atnaujiname taškelius
+            document.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+        }
+    </script>
 </body>
 </html>
