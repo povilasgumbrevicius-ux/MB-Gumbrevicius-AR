@@ -25,41 +25,36 @@
             justify-content: space-between;
         }
 
-        /* --- Headeris: LOGO + PAVADINIMAS ŠALIA --- */
+        /* --- Headeris --- */
         header {
             z-index: 30;
             padding: 50px;
             display: flex;
-            flex-direction: row; /* Horizontalus išdėstymas */
-            align-items: center; /* Centruojame vertikaliai vienas kito atžvilgiu */
+            flex-direction: row; 
+            align-items: center;
             box-sizing: border-box;
         }
 
         .logo-wow {
-            height: 80px; /* Padidintas logo aukštis desktopui */
+            height: 80px; 
             width: auto;
             filter: drop-shadow(0 0 30px var(--wow-blue));
             opacity: 0.9;
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            margin-right: 25px; /* Tarpas tarp logo ir pavadinimo */
+            margin-right: 25px; 
         }
 
         .company-name {
             font-family: 'Montserrat', sans-serif;
             font-weight: 400;
-            font-size: 1.4rem; /* Didesnis pavadinimas */
+            font-size: 1.4rem; 
             letter-spacing: 10px;
             color: rgba(255, 255, 255, 0.6);
             text-transform: uppercase;
-            white-space: nowrap; /* Kad nesulaužytų į dvi eilutes */
+            white-space: nowrap; 
         }
 
-        .logo-wow:hover {
-            filter: drop-shadow(0 0 25px var(--wow-blue));
-            transform: scale(1.05);
-        }
-
-        /* --- Candlelight (35px core, bet su minkštu perėjimu) --- */
+        /* --- Žvakė (Padidintas spindulys geresniam matomumui) --- */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
@@ -71,7 +66,7 @@
             pointer-events: none;
         }
 
-        /* --- Meniu: PADIDINTAS DESKTOPUI --- */
+        /* --- Meniu --- */
         .nav-container {
             z-index: 20;
             text-align: center;
@@ -80,12 +75,11 @@
 
         .menu-item {
             display: block;
-            font-size: 4rem; /* Drastiškai padidintas šriftas (buvo 2.2) */
+            font-size: 4rem; 
             text-decoration: none;
-            /* TIK TAI PAKEISTA: Padidintas opacity iš 0.1 į 0.25 ir sumažintas blur */
             color: rgba(255, 255, 255, 0.25);
             text-transform: uppercase;
-            letter-spacing: 25px; /* Didesni tarpai tarp raidžių */
+            letter-spacing: 25px; 
             margin: 40px 0;
             filter: blur(4px);
             transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
@@ -96,100 +90,4 @@
         .menu-item:hover {
             filter: blur(0px);
             color: #fff;
-            /* TIK TAI PAKEISTA: Pridėta daugiau švytėjimo sluoksnių gyliui ir gyvybei */
-            text-shadow: 0 0 10px #fff, 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue), 0 0 80px var(--wow-blue);
-            transform: scale(1.1);
-            letter-spacing: 35px;
-        }
-
-        /* --- Footeris --- */
-        footer {
-            z-index: 30;
-            padding-bottom: 60px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .rekvizitai {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 5px;
-            color: var(--wow-blue);
-            text-transform: uppercase;
-            animation: pulse-glow 2.5s infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            from { opacity: 0.3; text-shadow: 0 0 10px var(--wow-blue); }
-            to { opacity: 1; text-shadow: 0 0 30px var(--wow-blue); }
-        }
-
-        .dust {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: var(--silver-dust);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 5;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="candlelight"></div>
-
-    <header>
-        <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
-        <div class="company-name">MB Gumbrevičius</div>
-    </header>
-
-    <div class="nav-container">
-        <a href="portfolio.html" class="menu-item">Portfolio</a>
-        <a href="#ar" class="menu-item">Papildyta realybė</a>
-        <a href="#web" class="menu-item">Web Design</a>
-    </div>
-
-    <footer>
-        <div class="rekvizitai">
-            Povilas Gumbrevičius | info@gumbrevicius.lt
-        </div>
-    </footer>
-
-  <script>
-        const candle = document.getElementById('candlelight');
-
-        // Funkcija koordinačių atnaujinimui
-        const moveHandler = (e) => {
-            let x, y;
-            if (e.type.includes('touch')) {
-                // Paimame pirmo piršto vietą ekrane
-                x = e.touches[0].clientX;
-                y = e.touches[0].clientY;
-            } else {
-                // Paimame pelės vietą
-                x = e.clientX;
-                y = e.clientY;
-            }
-            candle.style.setProperty('--x', x + 'px');
-            candle.style.setProperty('--y', y + 'px');
-        };
-
-        // Desktop: Pelės sekimas
-        document.addEventListener('mousemove', moveHandler);
-
-        // Mobile: Piršto sekimas (touchstart ir touchmove)
-        document.addEventListener('touchstart', moveHandler, { passive: false });
-        document.addEventListener('touchmove', moveHandler, { passive: false });
-
-        // Sidabro dulkių animacija (palikta originali, nieko nekeičiam)
-        setInterval(() => {
-            const dust = document.createElement('div');
-            dust.className = 'dust';
-            dust.style.left = Math.random() * 100 + 'vw';
-            dust.style.top = Math.random() * 100 + 'vh';
-            document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 10000);
-        }, 400);
-    </script>
-</body>
-</html>
+            text-shadow: 0 0 10px #fff
