@@ -7,14 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-    --wow-blue: #00d2ff;
-    /* Prabangus šviesus sidabras / Platinum */
-    --silver-bg: #cfd4d9;    
-    --silver-light: #f0f2f5; 
-    /* Tekstą dabar darome tamsų, kad jis būtų aštrus ir skaitomas */
-    --text-main: #1a1c1f;    
-    --text-dim: rgba(26, 28, 31, 0.7);
-}
+            --wow-blue: #00d2ff;
+            /* Prabangus Platinum Silver fonas */
+            --silver-bg: #cfd4d9;    
+            --silver-light: #f0f2f5; 
+            /* Tamsus tekstas aštrumui */
+            --text-main: #1a1c1f;    
+            --text-dim: rgba(26, 28, 31, 0.7);
+        }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,7 +28,7 @@
             background: radial-gradient(circle at center, var(--silver-light) 0%, var(--silver-bg) 100%);
         }
 
-        /* --- Headeris (Identiškas Portfolio) --- */
+        /* --- Headeris --- */
         header {
             position: absolute;
             top: 50px;
@@ -43,12 +43,13 @@
             display: flex;
             align-items: center;
             text-decoration: none;
+            color: var(--text-main);
         }
 
         .logo-wow {
             height: 80px; 
             width: auto;
-            filter: drop-shadow(0 0 10px var(--wow-blue));
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.4));
             opacity: 0.9;
             margin-right: 25px; 
             transition: all 0.6s ease;
@@ -59,16 +60,12 @@
             font-weight: 400;
             font-size: 1.4rem; 
             letter-spacing: 10px;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-main);
             text-transform: uppercase;
+            opacity: 0.8;
         }
 
-        .back-link:hover .logo-wow {
-            filter: drop-shadow(0 0 25px var(--wow-blue));
-            transform: scale(1.05);
-        }
-
-        /* --- AR HERO SEKCIJA --- */
+        /* --- AR HERO --- */
         .ar-hero {
             max-width: 1400px;
             margin: 0 auto;
@@ -80,16 +77,16 @@
         }
 
         .render-frame {
-            background: #1a1c1f;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-            border-radius: 4px;
-            overflow: hidden;
+            /* PNG be fono čia atrodys kaip pakabintas studijoje */
+            position: relative;
+            z-index: 10;
         }
 
         .render-frame img {
             width: 100%;
             display: block;
+            /* Švelnus šešėlis po kupolu, kad jis "stovėtų" ant fono */
+            filter: drop-shadow(0 30px 40px rgba(0,0,0,0.15));
         }
 
         .tech-info h1 {
@@ -97,11 +94,11 @@
             font-size: 2.8rem;
             letter-spacing: 6px;
             margin-bottom: 25px;
-            line-height: 1.2;
+            color: var(--text-main);
         }
 
         .tech-info p {
-            font-weight: 200;
+            font-weight: 400;
             line-height: 1.8;
             color: var(--text-dim);
             margin-bottom: 45px;
@@ -119,7 +116,8 @@
             padding: 15px;
             width: 180px;
             border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 210, 255, 0.2);
         }
 
         .qr-card img { width: 100%; display: block; }
@@ -127,8 +125,8 @@
         .launch-button {
             display: none; 
             padding: 22px 40px;
-            border: 1px solid var(--wow-blue);
-            color: var(--wow-blue);
+            border: 2px solid var(--wow-blue);
+            color: var(--text-main);
             text-decoration: none;
             text-align: center;
             letter-spacing: 4px;
@@ -138,7 +136,7 @@
             transition: 0.3s;
         }
 
-        /* --- ĮGYVENDINTI PROJEKTAI --- */
+        /* --- PROJEKTAI --- */
         .projects-section {
             max-width: 1400px;
             margin: 80px auto 120px;
@@ -147,12 +145,11 @@
 
         .label {
             font-family: 'Cinzel', serif;
-            color: rgba(255, 255, 255, 0.25);
+            color: var(--text-dim);
             font-size: 0.8rem;
             letter-spacing: 12px;
             margin-bottom: 40px;
             text-transform: uppercase;
-            display: block;
         }
 
         .grid {
@@ -162,33 +159,33 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             padding: 40px;
             text-decoration: none;
-            color: #fff;
-            transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            color: var(--text-main);
+            transition: 0.4s ease;
         }
 
         .card:hover {
             border-color: var(--wow-blue);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 210, 255, 0.03);
             transform: translateY(-8px);
         }
 
         .card h3 {
             font-family: 'Cinzel', serif;
             letter-spacing: 3px;
-            margin-bottom: 12px;
         }
 
         .card span {
             font-size: 0.75rem;
-            color: var(--wow-blue);
+            color: #008eb3; /* Tamsesnė mėlyna geresniam skaitomumui ant šviesaus fono */
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
+        /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
             .ar-hero { grid-template-columns: 1fr; padding-top: 200px; }
             header { top: 30px; left: 30px; }
@@ -196,12 +193,12 @@
 
         @media (max-width: 768px) {
             header { left: 0; width: 100%; justify-content: center; }
-            .logo-wow { height: 50px; margin-right: 15px; }
-            .company-name { font-size: 0.8rem; letter-spacing: 4px; }
+            .logo-wow { height: 50px; }
+            .company-name { font-size: 0.8rem; }
             .qr-card { display: none; }
             .launch-button { display: block; }
             .tech-info h1 { font-size: 2rem; text-align: center; }
-            .tech-info p { text-align: center; font-size: 1rem; }
+            .tech-info p { text-align: center; }
         }
     </style>
 </head>
@@ -216,12 +213,12 @@
 
     <main class="ar-hero">
         <div class="render-frame">
-            <img src="JUSU_RENDERIS.webp" alt="Kupolo Vizualizacija">
+            <img src="portfolio/sferos_final.webp" alt="Geodezinio kupolo studija">
         </div>
 
         <div class="tech-info">
             <h1>GEODEZINIS KUPOLAS</h1>
-            <p>Medžiagiškumo ir geometrijos studija. AR sprendimas leidžia klientui pamatyti būsimo statinio tūrį ir stogo dangos atspindžius realioje aplinkoje dar prieš pradedant gamybą.</p>
+            <p>Rafinuota medžiagiškumo ir geometrijos studija. AR sprendimas leidžia pajusti būsimo statinio tūrį ir pamatyti stiklo atspindžius realioje aplinkoje dar prieš pradedant gamybą.</p>
             
             <div class="module-group">
                 <div class="qr-card">
@@ -235,22 +232,18 @@
     <section class="projects-section">
         <span class="label">Įgyvendinti projektai</span>
         <div class="grid">
-            
             <a href="https://1001legends.lt/..." class="card">
                 <h3>VILNIAUS LEGENDOS</h3>
                 <span>Papildyta realybė paveikslams</span>
             </a>
-
             <a href="https://sferos.lt/3d-vizualizacija/" class="card">
                 <h3>SFEROS.LT</h3>
                 <span>3D vizualizacijos sprendimai</span>
             </a>
-
             <div class="card" style="opacity: 0.4;">
                 <h3>ARCHITEKTŪRINIS PROJEKTAS</h3>
-                <span>Statusas: Modeliavimas (Namas)</span>
+                <span>Procesas: Modernus namas</span>
             </div>
-
         </div>
     </section>
 
