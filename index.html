@@ -115,11 +115,19 @@
         /* --- MOBILIŲJŲ ĮRENGINIŲ VALDYMAS --- */
         @media (max-width: 768px) {
             
-            /* 1. ŽVAKĖS JUNGIKLIS: dabar išjungta. Ištrink "display: none;", jei nori grąžinti. */
             #candlelight { display: none; }
 
-            /* 2. BLUR JUNGIKLIS: dabar paliktas 2px, kad matytųsi. Keisk skaičių arba trink eilutę. */
-            .menu-item { filter: blur(0px); color: rgba(255, 255, 255, 0.6); }
+            .menu-item { 
+                /* BLUR JUNGIKLIS: dabar 0px. Jei nori grąžinti - įrašyk skaičių. */
+                filter: blur(0px); 
+                color: rgba(255, 255, 255, 0.8); /* Ryškesnės raidės telefone */
+                font-size: 1.5rem;
+                letter-spacing: 10px;
+                margin: 30px 0;
+                /* NUOLATINIS ŠVYTĖJIMAS TELEFONE: Kadangi nėra hover, padarome jį pastovų */
+                text-shadow: 0 0 10px var(--wow-blue);
+                animation: pulse-mobile 3s infinite ease-in-out;
+            }
 
             header {
                 padding: 30px 20px;
@@ -133,15 +141,6 @@
                 font-size: 0.8rem;
                 letter-spacing: 4px;
             }
-            .menu-item {
-                font-size: 1.5rem;
-                letter-spacing: 10px;
-                margin: 25px 0;
-            }
-            .menu-item:hover {
-                letter-spacing: 15px;
-                transform: scale(1.05);
-            }
             footer {
                 padding-bottom: 30px;
             }
@@ -149,6 +148,13 @@
                 font-size: 0.7rem;
                 letter-spacing: 2px;
             }
+        }
+
+        /* Meniu kvėpavimo animacija telefonams */
+        @keyframes pulse-mobile {
+            0% { opacity: 0.5; text-shadow: 0 0 5px var(--wow-blue); }
+            50% { opacity: 1; text-shadow: 0 0 15px var(--wow-blue), 0 0 30px var(--wow-blue); }
+            100% { opacity: 0.5; text-shadow: 0 0 5px var(--wow-blue); }
         }
 
         @keyframes pulse-glow {
@@ -211,4 +217,10 @@
             const dust = document.createElement('div');
             dust.className = 'dust';
             dust.style.left = Math.random() * 100 + 'vw';
-            dust.style.top = Math.random() * 100
+            dust.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 10000);
+        }, 400);
+    </script>
+</body>
+</html>
