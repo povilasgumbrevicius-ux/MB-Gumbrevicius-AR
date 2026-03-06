@@ -3,52 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gumbrevičius | Digital Artisan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>Gumbrevičius MB | CGI & Web Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --wow-blue: #00d2ff;
-            --silver-dust: rgba(200, 200, 200, 0.15);
+            /* TIKRA ŽVAKĖS ŠVIESA: padidintas ryškumas ir šiltesnė spalva (raudonai-oranžinė) */
+            --candle-warm: rgba(255, 120, 30, 0.4); 
+            --silver-dust: rgba(200, 200, 200, 0.12);
         }
+
+        /* Išvalome viską, kad užpildytų 4K ekraną be rėmų */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body, html {
-            margin: 0; padding: 0;
-            background-color: #010101;
+            background-color: #000;
             color: #fff;
             font-family: 'Cinzel', serif;
+            width: 100vw;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        /* --- Pakeistas Headeris iš pirmojo kodo (Horizontalus išdėstymas kairėje) --- */
+        /* ŽVAKĖ - dabar ji dengia VISĄ plotą be apribojimų */
+        #candlelight {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* Sumažintas z-index, kad neuždengtų raidžių, ir spalva imama iš root */
+            background: radial-gradient(circle 35px at var(--x, 50%) var(--y, 50%), 
+                        var(--candle-warm) 0%, 
+                        rgba(0, 0, 0, 1) 100%);
+            z-index: 5; 
+            pointer-events: none;
+        }
+
+        /* HEADERIS KAIRĖJE - Logo ir Vardas vienoje eilėje */
         header {
-            position: absolute; /* Atkabina nuo centravimo */
+            position: absolute;
             top: 50px;
             left: 50px;
             z-index: 30;
             display: flex;
-            flex-direction: row; /* Išdėsto horizontaliai */
-            align-items: center; /* Išlygiuoja per centrą vertikaliai */
+            flex-direction: row; /* Horizontalus išdėstymas */
+            align-items: center; /* Išlygiuoja logo ir tekstą per vidurį vertikaliai */
         }
 
         .logo-wow {
-            height: 80px; /* Dydis pritaikytas iš pirmojo kodo */
+            height: 80px; /* Solidus dydis desktopui */
             width: auto;
-            /* Invertuojame spalvą ir pridedame švytėjimą iš antrojo kodo, padidinant ryškumą */
-            filter: invert(1) drop-shadow(0 0 10px var(--wow-blue)); 
-            opacity: 0.9;
-            margin-right: 25px; /* Tarpas iki teksto */
-            transition: all 0.5s ease;
-        }
-        
-        .logo-wow:hover {
-            filter: invert(1) drop-shadow(0 0 20px var(--wow-blue)) drop-shadow(0 0 5px #fff);
-            transform: scale(1.05);
-            opacity: 1;
+            filter: drop-shadow(0 0 10px var(--wow-blue));
+            margin-right: 25px; /* Tarpas iki pavadinimo */
         }
 
         .company-name {
@@ -59,83 +65,69 @@
             color: rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
         }
-        /* --- Pabaiga Pakeisto Headerio --- */
 
-        /* --- Toliau viskas palikta iš antrojo kodo --- */
-        /* --- Candlelight (Mažesnis: 125px) --- */
-        #candlelight {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle 125px at var(--x, 50%) var(--y, 50%), 
-                        rgba(255, 255, 255, 0.03) 0%, 
-                        rgba(0, 0, 0, 1) 100%);
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        /* --- Meniu Punktai --- */
+        /* MENIU - Centruotas visame ekrane */
         .nav-container {
-            z-index: 20;
-            text-align: center;
-            /* Pridėtas margin-top kompensuoti, kad headeris dabar absolute */
-            margin-top: auto; 
-            margin-bottom: auto;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Iškeliame meniu virš žvakės, kad raidės būtų matomos */
+            z-index: 20; 
         }
 
         .menu-item {
-            display: block;
-            font-size: 2rem;
+            font-size: 4.5rem; /* Didelis šriftas tavo aukštai raiškai */
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.1);
+            /* PADIDINTAS MATOMUMAS: Pakeista iš 0.08 į 0.15, kad matytųsi be užvedimo */
+            color: rgba(255, 255, 255, 0.15); 
             text-transform: uppercase;
-            letter-spacing: 8px;
-            margin: 20px 0;
-            filter: blur(6px);
-            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            letter-spacing: 25px;
+            margin: 30px 0;
+            /* MISTINIS BLUR, kaip prašei */
+            filter: blur(8px); 
+            transition: all 0.8s ease;
+            position: relative; /* Pridėta dėl z-index */
         }
 
         .menu-item:hover {
             filter: blur(0px);
             color: #fff;
-            text-shadow: 0 0 15px var(--wow-blue), 0 0 30px var(--wow-blue);
-            letter-spacing: 12px;
+            text-shadow: 0 0 30px var(--wow-blue);
+            letter-spacing: 35px;
         }
 
-        /* --- Footeris su pulsuojančiu el. paštu --- */
+        /* FOOTERIS APAČIOJE */
         footer {
-            z-index: 30;
-            padding-bottom: 30px;
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
             text-align: center;
+            z-index: 30;
         }
 
         .rekvizitai {
-            font-size: 0.9rem;
-            letter-spacing: 3px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
             color: var(--wow-blue);
             animation: pulse-glow 3s infinite alternate;
         }
 
         @keyframes pulse-glow {
-            from { opacity: 0.3; text-shadow: 0 0 5px var(--wow-blue); }
-            to { opacity: 1; text-shadow: 0 0 20px var(--wow-blue); }
+            from { opacity: 0.3; }
+            to { opacity: 0.9; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
-        /* --- Sidabro dulkės (PETG stilius) --- */
         .dust {
             position: absolute;
-            width: 1.5px; height: 1.5px;
+            width: 2px; height: 2px;
             background: var(--silver-dust);
             border-radius: 50%;
             pointer-events: none;
             z-index: 5;
-            animation: drift linear infinite;
-        }
-
-        @keyframes drift {
-            from { transform: translateY(0) translateX(0); opacity: 0; }
-            50% { opacity: 0.4; }
-            to { transform: translateY(-150px) translateX(20px); opacity: 0; }
         }
     </style>
 </head>
@@ -156,7 +148,7 @@
 
     <footer>
         <div class="rekvizitai">
-            povilas@gumbrevicius.lt
+            Povilas Gumbrevičius | info@gumbrevicius.lt
         </div>
     </footer>
 
@@ -167,17 +159,14 @@
             candle.style.setProperty('--y', e.clientY + 'px');
         });
 
-        // Sidabro dulkių generavimas
-        function createDust() {
+        setInterval(() => {
             const dust = document.createElement('div');
             dust.className = 'dust';
             dust.style.left = Math.random() * 100 + 'vw';
             dust.style.top = Math.random() * 100 + 'vh';
-            dust.style.animationDuration = (Math.random() * 8 + 4) + 's';
             document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 12000);
-        }
-        setInterval(createDust, 400);
+            setTimeout(() => dust.remove(), 10000);
+        }, 500);
     </script>
 </body>
 </html>
