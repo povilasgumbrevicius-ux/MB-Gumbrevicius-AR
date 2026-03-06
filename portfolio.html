@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Gumbrevičius MB</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
-   <style>
+    <style>
         :root {
             --wow-blue: #00d2ff;
             --candle-warm: rgba(255, 120, 30, 0.4);
@@ -75,30 +75,23 @@
             transform: scale(1.05);
         }
 
-        /* --- ČIA PRASIDEDA MASONRY GRID (Mūro siena) --- */
+        /* MASONRY GRID */
         .portfolio-container {
             position: relative;
             z-index: 20;
             width: 100%;
-            max-width: 1800px; /* Pritaikyta tavo rezoliucijai */
+            max-width: 1800px;
             margin: 0 auto;
             padding: 180px 50px 100px 50px;
-            column-count: 3; /* Padalinta į 3 stulpelius */
+            column-count: 3;
             column-gap: 30px;
-        }
-
-        @media (max-width: 1200px) {
-            .portfolio-container { column-count: 2; }
-        }
-        @media (max-width: 768px) {
-            .portfolio-container { column-count: 1; }
         }
 
         .portfolio-item {
             position: relative;
             width: 100%;
-            margin-bottom: 30px; /* Tarpas po nuotrauka */
-            break-inside: avoid; /* Neleidžia nuotraukai lūžti į kitą stulpelį */
+            margin-bottom: 30px;
+            break-inside: avoid;
             background-color: #050505;
             border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
@@ -110,7 +103,7 @@
 
         .portfolio-item img {
             width: 100%;
-            height: auto; /* Leidžia nuotraukai būti savo natūralaus aukščio */
+            height: auto;
             display: block;
             transition: transform 0.8s ease;
         }
@@ -120,14 +113,42 @@
             filter: blur(0px);
             border-color: var(--wow-blue);
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
-            transform: scale(1.02); /* Švelnus padidėjimas */
+            transform: scale(1.02);
             z-index: 25;
         }
 
-        .portfolio-item:hover img {
-            transform: none; /* Sustabdomas vidinis didėjimas, nes didėja visas blokas */
+        /* --- MOBILI ADAPTACIJA (FIXES) --- */
+        @media (max-width: 1200px) {
+            .portfolio-container { column-count: 2; }
         }
-        /* --- ČIA BAIGIASI MASONRY GRID --- */
+
+        @media (max-width: 768px) {
+            header {
+                top: 20px;
+                left: 20px;
+            }
+            .logo-wow {
+                height: 50px; /* Mažesnis logo telefonui */
+                margin-right: 15px;
+            }
+            .company-name {
+                font-size: 0.8rem; /* Mažesnis šriftas, kad tilptų į eilutę */
+                letter-spacing: 5px;
+            }
+            .portfolio-container { 
+                column-count: 1; /* Viena nuotrauka po kita */
+                padding: 100px 20px 50px 20px; /* Sumažinti tarpai aplink */
+            }
+            .portfolio-item {
+                opacity: 0.6; /* Telefonuose nuotraukos matosi ryškiau iškart */
+                filter: blur(2px);
+                margin-bottom: 20px;
+            }
+            .rekvizitai {
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+            }
+        }
 
         footer {
             width: 100%;
@@ -179,4 +200,47 @@
         <div class="portfolio-item"><img src="portfolio/Dark-side1-Gumbrevicius.webp" alt="Dark Side 1"></div>
         <div class="portfolio-item"><img src="portfolio/Dark-side2-Gumbrevicius.webp" alt="Dark Side 2"></div>
         <div class="portfolio-item"><img src="portfolio/Dezute3-Gumbrevicius.webp" alt="Package Design"></div>
-        <div class="portfolio-item"><img src="
+        <div class="portfolio-item"><img src="portfolio/Gumbrevicius-k1.webp" alt="Engine Core"></div>
+        <div class="portfolio-item"><img src="portfolio/Improvizacija7-Gumbrevicius.webp" alt="Improvisation"></div>
+        <div class="portfolio-item"><img src="portfolio/Micelinis-vanduo4-Gumbrevicius.webp" alt="Product 4"></div>
+        <div class="portfolio-item"><img src="portfolio/Micelinis-vanduo8-Gumbrevicius.webp" alt="Product 8"></div>
+        <div class="portfolio-item"><img src="portfolio/Micelinis-vanduo9-Gumbrevicius.webp" alt="Product 9"></div>
+    </div>
+
+    <footer>
+        <div class="rekvizitai">
+            Povilas Gumbrevičius | info@gumbrevicius.lt
+        </div>
+    </footer>
+
+    <script>
+        const candle = document.getElementById('candlelight');
+
+        const moveHandler = (e) => {
+            let x, y;
+            if (e.type.includes('touch')) {
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else {
+                x = e.clientX;
+                y = e.clientY;
+            }
+            candle.style.setProperty('--x', x + 'px');
+            candle.style.setProperty('--y', y + 'px');
+        };
+
+        document.addEventListener('mousemove', moveHandler);
+        document.addEventListener('touchstart', moveHandler, { passive: false });
+        document.addEventListener('touchmove', moveHandler, { passive: false });
+
+        setInterval(() => {
+            const dust = document.createElement('div');
+            dust.className = 'dust';
+            dust.style.left = Math.random() * 100 + 'vw';
+            dust.style.top = (Math.random() * document.documentElement.scrollHeight) + 'px';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 10000);
+        }, 500);
+    </script>
+</body>
+</html>
