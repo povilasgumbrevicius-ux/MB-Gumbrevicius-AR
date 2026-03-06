@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gumbrevičius MB | CGI & Web Design</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --wow-blue: #00d2ff;
             --candle-warm: rgba(255, 140, 50, 0.25);
-            --silver-dust: rgba(200, 200, 200, 0.15);
+            --silver-dust: rgba(200, 200, 200, 0.12);
         }
 
+        /* Išvalome viską, kad užpildytų 4K ekraną be rėmų */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body, html {
@@ -23,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* ŽVAKĖ - Maža ir fokusuota (35px) */
+        /* ŽVAKĖ - dabar ji dengia VISĄ plotą be apribojimų */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
@@ -32,39 +33,38 @@
             background: radial-gradient(circle 35px at var(--x, 50%) var(--y, 50%), 
                         var(--candle-warm) 0%, 
                         rgba(0, 0, 0, 1) 100%);
-            z-index: 5;
+            z-index: 10;
             pointer-events: none;
         }
 
-        /* HEADERIS: Logo ir Vardas šalia vienas kito kairėje */
+        /* HEADERIS KAIRĖJE - Logo ir Vardas vienoje eilėje */
         header {
             position: absolute;
-            top: 60px;
-            left: 60px;
+            top: 50px;
+            left: 50px;
             z-index: 30;
             display: flex;
-            flex-direction: row; 
-            align-items: center;
+            flex-direction: row; /* Horizontalus išdėstymas */
+            align-items: center; /* Išlygiuoja logo ir tekstą per vidurį vertikaliai */
         }
 
         .logo-wow {
-            height: 90px;
+            height: 80px; /* Solidus dydis desktopui */
             width: auto;
-            filter: drop-shadow(0 0 15px var(--wow-blue));
-            margin-right: 35px;
-            transition: all 0.5s ease;
+            filter: drop-shadow(0 0 10px var(--wow-blue));
+            margin-right: 25px; /* Tarpas iki pavadinimo */
         }
 
         .company-name {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 400;
-            font-size: 1.4rem;
-            letter-spacing: 10px;
-            color: rgba(255, 255, 255, 0.6);
+            font-weight: 200;
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            color: rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
         }
 
-        /* MENIU - Tikslūs pavadinimai ir preciziškas blur */
+        /* MENIU - Centruotas visame ekrane */
         .nav-container {
             width: 100vw;
             height: 100vh;
@@ -76,25 +76,24 @@
         }
 
         .menu-item {
-            font-size: 5rem;
+            font-size: 4.5rem; /* Didelis šriftas tavo aukštai raiškai */
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.08);
             text-transform: uppercase;
-            letter-spacing: 20px;
-            margin: 35px 0;
-            filter: blur(12px); /* Mistinis blur, kurį norėjai išlaikyti */
-            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            letter-spacing: 25px;
+            margin: 30px 0;
+            filter: blur(8px);
+            transition: all 0.8s ease;
         }
 
         .menu-item:hover {
-            filter: blur(0px); /* Aštrumas užvedus */
+            filter: blur(0px);
             color: #fff;
-            text-shadow: 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue), 0 0 60px var(--wow-blue);
-            letter-spacing: 30px;
-            transform: scale(1.05);
+            text-shadow: 0 0 30px var(--wow-blue);
+            letter-spacing: 35px;
         }
 
-        /* FOOTERIS */
+        /* FOOTERIS APAČIOJE */
         footer {
             position: absolute;
             bottom: 50px;
@@ -105,25 +104,24 @@
 
         .rekvizitai {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 5px;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
             color: var(--wow-blue);
             animation: pulse-glow 3s infinite alternate;
         }
 
         @keyframes pulse-glow {
-            from { opacity: 0.4; text-shadow: 0 0 10px var(--wow-blue); }
-            to { opacity: 1; text-shadow: 0 0 25px var(--wow-blue); }
+            from { opacity: 0.3; }
+            to { opacity: 0.9; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
-        /* Sidabro dulkės fone */
         .dust {
             position: absolute;
             width: 2px; height: 2px;
             background: var(--silver-dust);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 2;
+            z-index: 5;
         }
     </style>
 </head>
@@ -138,8 +136,8 @@
 
     <div class="nav-container">
         <a href="#portfolio" class="menu-item">Portfolio</a>
-        <a href="#ar" class="menu-item">Papildyta realybė</a>
-        <a href="#web" class="menu-item">Web dizainas</a>
+        <a href="#ar" class="menu-item">AR</a>
+        <a href="#web" class="menu-item">Web Design</a>
     </div>
 
     <footer>
@@ -161,4 +159,8 @@
             dust.style.left = Math.random() * 100 + 'vw';
             dust.style.top = Math.random() * 100 + 'vh';
             document.body.appendChild(dust);
-            setTimeout(()
+            setTimeout(() => dust.remove(), 10000);
+        }, 500);
+    </script>
+</body>
+</html>
