@@ -54,7 +54,7 @@
             white-space: nowrap; 
         }
 
-        /* --- Žvakė (Padidintas spindulys geresniam matomumui) --- */
+        /* --- Žvakė (Desktopo sluoksnis) --- */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
@@ -112,14 +112,21 @@
             animation: pulse-glow 2.5s infinite alternate;
         }
 
-        /* --- MOBILIŲJŲ ĮRENGINIŲ INSTRUKCIJOS (Media Queries) --- */
+        /* --- MOBILIŲJŲ ĮRENGINIŲ VALDYMAS --- */
         @media (max-width: 768px) {
+            
+            /* 1. ŽVAKĖS JUNGIKLIS: dabar išjungta. Ištrink "display: none;", jei nori grąžinti. */
+            #candlelight { display: none; }
+
+            /* 2. BLUR JUNGIKLIS: dabar paliktas 2px, kad matytųsi. Keisk skaičių arba trink eilutę. */
+            .menu-item { filter: blur(2px); color: rgba(255, 255, 255, 0.6); }
+
             header {
                 padding: 30px 20px;
-                justify-content: center; /* Centruojame logo telefone */
+                justify-content: center;
             }
             .logo-wow {
-                height: 50px; /* Mažesnis logo */
+                height: 50px;
                 margin-right: 15px;
             }
             .company-name {
@@ -127,11 +134,9 @@
                 letter-spacing: 4px;
             }
             .menu-item {
-                font-size: 1.5rem; /* Smarkiai sumažinam šriftą */
-                letter-spacing: 10px; /* Mažesni tarpai, kad tilptų į ekraną */
+                font-size: 1.5rem;
+                letter-spacing: 10px;
                 margin: 25px 0;
-                filter: blur(2px); /* Mažiau bluro mažame ekrane */
-                color: rgba(255, 255, 255, 0.4); /* Ryškiau telefone */
             }
             .menu-item:hover {
                 letter-spacing: 15px;
@@ -143,12 +148,6 @@
             .rekvizitai {
                 font-size: 0.7rem;
                 letter-spacing: 2px;
-            }
-            #candlelight {
-                /* Telefone žvakė gali būti šiek tiek didesnė patogumui */
-                background: radial-gradient(circle 80px at var(--x, 50%) var(--y, 50%), 
-                            var(--candle-warm) 0%, 
-                            rgba(0, 0, 0, 1) 100%);
             }
         }
 
@@ -193,12 +192,10 @@
 
         const moveHandler = (e) => {
             let x, y;
-            // Jei tai lietimas (touch)
             if (e.type.includes('touch')) {
                 x = e.touches[0].clientX;
                 y = e.touches[0].clientY;
             } else {
-                // Jei tai pelė
                 x = e.clientX;
                 y = e.clientY;
             }
@@ -206,20 +203,12 @@
             candle.style.setProperty('--y', y + 'px');
         };
 
-        // Klausomės visų įmanomų judesių
         document.addEventListener('mousemove', moveHandler);
         document.addEventListener('touchstart', moveHandler, { passive: false });
         document.addEventListener('touchmove', moveHandler, { passive: false });
 
-        // Sidabro dulkės
         setInterval(() => {
             const dust = document.createElement('div');
             dust.className = 'dust';
             dust.style.left = Math.random() * 100 + 'vw';
-            dust.style.top = Math.random() * 100 + 'vh';
-            document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 10000);
-        }, 400);
-    </script>
-</body>
-</html>
+            dust.style.top = Math.random() * 100
