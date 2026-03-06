@@ -23,36 +23,35 @@
             overflow: hidden;
         }
 
-        /* ŽVAKĖ - Sluoksnis apačioje, bet virš fono */
+        /* ŽVAKĖ - Maža ir fokusuota (35px) */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle 50px at var(--x, 50%) var(--y, 50%), 
+            background: radial-gradient(circle 35px at var(--x, 50%) var(--y, 50%), 
                         var(--candle-warm) 0%, 
                         rgba(0, 0, 0, 1) 100%);
-            z-index: 5; /* Žemiau nei tekstas ir logo */
+            z-index: 5;
             pointer-events: none;
         }
 
-        /* HEADERIS: Logo + Vardas ŠALIA vienas kito */
+        /* HEADERIS: Logo ir Vardas šalia vienas kito kairėje */
         header {
             position: absolute;
             top: 60px;
             left: 60px;
             z-index: 30;
             display: flex;
-            flex-direction: row; /* LOGO IR VARDAS VIENOJE EILĖJE */
+            flex-direction: row; 
             align-items: center;
         }
 
         .logo-wow {
             height: 90px;
             width: auto;
-            /* Padidintas drop-shadow 4K ekranui */
-            filter: drop-shadow(0 0 15px var(--wow-blue)) drop-shadow(0 0 5px #fff);
-            margin-right: 30px;
+            filter: drop-shadow(0 0 15px var(--wow-blue));
+            margin-right: 35px;
             transition: all 0.5s ease;
         }
 
@@ -65,7 +64,7 @@
             text-transform: uppercase;
         }
 
-        /* MENIU - Išnaudojame visą erdvę */
+        /* MENIU - Tikslūs pavadinimai ir preciziškas blur */
         .nav-container {
             width: 100vw;
             height: 100vh;
@@ -79,21 +78,19 @@
         .menu-item {
             font-size: 5rem;
             text-decoration: none;
-            /* Padidintas pradinis matomumas, kad nebūtų "dingę" */
-            color: rgba(255, 255, 255, 0.15); 
+            color: rgba(255, 255, 255, 0.12);
             text-transform: uppercase;
-            letter-spacing: 25px;
+            letter-spacing: 20px;
             margin: 35px 0;
-            filter: blur(10px);
+            filter: blur(12px); /* Mistinis blur, kurį norėjai išlaikyti */
             transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .menu-item:hover {
-            filter: blur(0px);
+            filter: blur(0px); /* Aštrumas užvedus */
             color: #fff;
-            /* "Mėlynos ugnies" efektas */
             text-shadow: 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue), 0 0 60px var(--wow-blue);
-            letter-spacing: 35px;
+            letter-spacing: 30px;
             transform: scale(1.05);
         }
 
@@ -119,7 +116,7 @@
             to { opacity: 1; text-shadow: 0 0 25px var(--wow-blue); }
         }
 
-        /* Sidabro dulkės */
+        /* Sidabro dulkės fone */
         .dust {
             position: absolute;
             width: 2px; height: 2px;
@@ -141,8 +138,8 @@
 
     <div class="nav-container">
         <a href="#portfolio" class="menu-item">Portfolio</a>
-        <a href="#ar" class="menu-item">AR</a>
-        <a href="#web" class="menu-item">Web Design</a>
+        <a href="#ar" class="menu-item">Papildyta realybė</a>
+        <a href="#web" class="menu-item">Web dizainas</a>
     </div>
 
     <footer>
@@ -158,15 +155,10 @@
             candle.style.setProperty('--y', e.clientY + 'px');
         });
 
-        // Dulkių generavimas
         setInterval(() => {
             const dust = document.createElement('div');
             dust.className = 'dust';
             dust.style.left = Math.random() * 100 + 'vw';
             dust.style.top = Math.random() * 100 + 'vh';
             document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 10000);
-        }, 400);
-    </script>
-</body>
-</html>
+            setTimeout(()
