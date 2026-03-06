@@ -155,14 +155,33 @@
         </div>
     </footer>
 
-    <script>
+  <script>
         const candle = document.getElementById('candlelight');
-        document.addEventListener('mousemove', (e) => {
-            candle.style.setProperty('--x', e.clientX + 'px');
-            candle.style.setProperty('--y', e.clientY + 'px');
-        });
 
-        // Sidabro dulkių animacija
+        // Funkcija koordinačių atnaujinimui
+        const moveHandler = (e) => {
+            let x, y;
+            if (e.type.includes('touch')) {
+                // Paimame pirmo piršto vietą ekrane
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else {
+                // Paimame pelės vietą
+                x = e.clientX;
+                y = e.clientY;
+            }
+            candle.style.setProperty('--x', x + 'px');
+            candle.style.setProperty('--y', y + 'px');
+        };
+
+        // Desktop: Pelės sekimas
+        document.addEventListener('mousemove', moveHandler);
+
+        // Mobile: Piršto sekimas (touchstart ir touchmove)
+        document.addEventListener('touchstart', moveHandler, { passive: false });
+        document.addEventListener('touchmove', moveHandler, { passive: false });
+
+        // Sidabro dulkių animacija (palikta originali, nieko nekeičiam)
         setInterval(() => {
             const dust = document.createElement('div');
             dust.className = 'dust';
