@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Gumbrevičius MB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wow-blue: #00d2ff;
+            --candle-warm: rgba(255, 140, 50, 0.25);
+            --silver-dust: rgba(200, 200, 200, 0.12);
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Cinzel', serif;
+            width: 100vw;
+            min-height: 100vh;
+            /* Skirtingai nei index, čia leidžiame slinkti žemyn */
+            overflow-x: hidden; 
+            overflow-y: auto;
+        }
+
+        /* ŽVAKĖ - Fiksuota, kad slenkant žemyn šviesa liktų su pele */
+        #candlelight {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle 35px at var(--x, 50%) var(--y, 50%), 
+                        var(--candle-warm) 0%, 
+                        rgba(0, 0, 0, 1) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* HEADERIS - Paspaudus grąžins į pagrindinį (index.html) */
+        header {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            z-index: 30;
+            display: flex;
+            flex-direction: row; 
+            align-items: center;
+        }
+
+        /* Linkas atgal į pradžią be jokio numatytojo pabraukimo */
+        .back-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-wow {
+            height: 80px; 
+            width: auto;
+            filter: drop-shadow(0 0 10px var(--wow-blue));
+            opacity: 0.9;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            margin-right: 25px; 
+        }
+
+        .company-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-size: 1.4rem; 
+            letter-spacing: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            white-space: nowrap; 
+            transition: all 0.6s ease;
+        }
+
+        .back-link:hover .logo-wow {
+            filter: drop-shadow(0 0 25px var(--wow-blue));
+            transform: scale(1.05);
+        }
+
+        .back-link:hover .company-name {
+            color: #fff;
+            text-shadow: 0 0 10px var(--wow-blue);
+        }
+
+        /* PORTFOLIO TINKLELIS (GRID) */
+        .portfolio-container {
+            position: relative;
+            z-index: 20;
+            width: 100%;
+            max-width: 1800px; /* Neleidžiame išsitempti per daug ant 4K */
+            margin: 0 auto;
+            padding: 200px 50px 100px 50px; /* Viršuje vietos palikta headeriui */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+        }
+
+        /* NUOTRAUKŲ ELEMENTAI - Slepiasi tamsoje */
+        .portfolio-item {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9; /* Standartinis renderių formatas */
+            background-color: #0a0a0a; /* Jei nuotrauka neužkrauna, bus tamsus fonas */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.2; /* Pasislėpę */
+            filter: grayscale(80%) blur(4px); /* Mistinis blur */
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        /* Užvedus pelę - atgyja su mėlyna ugnimi */
+        .portfolio-item:hover {
+            opacity: 1;
+            filter: grayscale(0%) blur(0px);
+            border-color: var(--wow-blue);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4), 0 0 40px rgba(0, 210, 255, 0.2);
+            transform: translateY(-10px);
+            z-index: 25;
+        }
+
+        .portfolio-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* FOOTERIS */
+        footer {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 50px;
+            z-index: 30;
+            position: relative;
+        }
+
+        .rekvizitai {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 5px;
+            color: var(--wow-blue);
+            text-transform: uppercase;
+            animation: pulse-glow 2.5s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from { opacity: 0.3; text-shadow: 0 0 10px var(--wow-blue); }
+            to { opacity: 1; text-shadow: 0 0 30px var(--wow-blue); }
+        }
+
+        .dust {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: var(--silver-dust);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="candlelight"></div>
+
+    <header>
+        <a href="index.html" class="back-link">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+            <div class="company-name">MB Gumbrevičius</div>
+        </a>
+    </header>
+
+    <div class="portfolio-container">
+        <div class="portfolio-item">
+            <img src="portfolio/img/tavo-renderis1.jpg" alt="CGI Darbas 1">
+        </div>
+        
+        <div class="portfolio-item">
+            <img src="portfolio/img/tavo-renderis2.jpg" alt="CGI Darbas 2">
+        </div>
+
+        <div class="portfolio-item">
+            <img src="portfolio/img/tavo-renderis3.jpg" alt="CGI Darbas 3">
+        </div>
+
+        </div>
+
+    <footer>
+        <div class="rekvizitai">
+            Povilas Gumbrevičius | info@gumbrevicius.lt
+        </div>
+    </footer>
+
+    <script>
+        const candle = document.getElementById('candlelight');
+        document.addEventListener('mousemove', (e) => {
+            candle.style.setProperty('--x', e.clientX + 'px');
+            candle.style.setProperty('--y', e.clientY + 'px');
+        });
+
+        // Sidabro dulkių animacija (atnaujinta, kad dulkės kristų per visą dokumento aukštį)
+        setInterval(() => {
+            const dust = document.createElement('div');
+            dust.className = 'dust';
+            dust.style.left = Math.random() * 100 + 'vw';
+            // Prisitaiko prie viso puslapio aukščio, jei slenkama
+            dust.style.top = (Math.random() * document.documentElement.scrollHeight) + 'px';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 10000);
+        }, 400);
+    </script>
+</body>
+</html>
