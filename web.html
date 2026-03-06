@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructing | MB Gumbrevičius</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wow-blue: #00d2ff;
+            --silver-bg: #b8bdc2;    
+            --silver-light: #e1e5e8; 
+            --text-main: #1a1c1f;    
+            --text-dim: rgba(26, 28, 31, 0.5);
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            background-color: var(--silver-bg);
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at center, var(--silver-light) 0%, var(--silver-bg) 100%);
+        }
+
+        /* --- Headeris --- */
+        header {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-wow {
+            height: 60px; 
+            width: auto;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
+            margin-right: 20px;
+        }
+
+        .company-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-size: 1.1rem; 
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* --- Main Content --- */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .status-container {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            letter-spacing: 15px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress
