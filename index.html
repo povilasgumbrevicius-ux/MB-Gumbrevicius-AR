@@ -8,28 +8,59 @@
     <style>
         :root {
             --wow-blue: #00d2ff;
-            --candle-warm: rgba(255, 140, 50, 0.25);
+            --candle-warm: rgba(255, 140, 50, 0.2); /* Dar šiltesnė, jaukesnė liepsna */
             --silver-dust: rgba(200, 200, 200, 0.12);
         }
 
-        /* Išvalome viską, kad užpildytų 4K ekraną be rėmų */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body, html {
-            background-color: #000;
+            margin: 0; padding: 0;
+            background-color: #010101;
             color: #fff;
+            /* Pagrindinis šriftas - Cinzel, detalėms - Montserrat */
             font-family: 'Cinzel', serif;
-            width: 100vw;
             height: 100vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* ŽVAKĖ - dabar ji dengia VISĄ plotą be apribojimų */
+        /* --- Headeris --- */
+        header {
+            z-index: 30;
+            padding-top: 50px;
+            text-align: center;
+        }
+
+        .company-name {
+            font-family: 'Montserrat', sans-serif; /* Švarus, tech stilius prie MB užrašo */
+            font-weight: 200;
+            font-size: 1rem;
+            letter-spacing: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .logo-wow {
+            max-width: 200px; /* Šiek tiek padidinau, kad tavo parašas būtų ryškesnis */
+            filter: drop-shadow(0 0 10px var(--wow-blue));
+            opacity: 0.9;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .logo-wow:hover {
+            filter: drop-shadow(0 0 25px var(--wow-blue));
+            transform: scale(1.03);
+            opacity: 1;
+        }
+
+        /* --- Candlelight (Miniatiūrinė, 35px - tikras mistikos lygis) --- */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%; height: 100%;
             background: radial-gradient(circle 35px at var(--x, 50%) var(--y, 50%), 
                         var(--candle-warm) 0%, 
                         rgba(0, 0, 0, 1) 100%);
@@ -37,87 +68,56 @@
             pointer-events: none;
         }
 
-        /* HEADERIS KAIRĖJE - Logo ir Vardas vienoje eilėje */
-        header {
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            z-index: 30;
-            display: flex;
-            flex-direction: row; /* Horizontalus išdėstymas */
-            align-items: center; /* Išlygiuoja logo ir tekstą per vidurį vertikaliai */
-        }
-
-        .logo-wow {
-            height: 80px; /* Solidus dydis desktopui */
-            width: auto;
-            filter: drop-shadow(0 0 10px var(--wow-blue));
-            margin-right: 25px; /* Tarpas iki pavadinimo */
-        }
-
-        .company-name {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 200;
-            font-size: 1.2rem;
-            letter-spacing: 8px;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-        }
-
-        /* MENIU - Centruotas visame ekrane */
+        /* --- Meniu --- */
         .nav-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             z-index: 20;
+            text-align: center;
         }
 
         .menu-item {
-            font-size: 4.5rem; /* Didelis šriftas tavo aukštai raiškai */
+            display: block;
+            font-size: 2.2rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.12);
             text-transform: uppercase;
-            letter-spacing: 25px;
+            letter-spacing: 12px;
             margin: 30px 0;
-            filter: blur(8px);
+            filter: blur(6px);
             transition: all 0.8s ease;
         }
 
         .menu-item:hover {
             filter: blur(0px);
             color: #fff;
-            text-shadow: 0 0 30px var(--wow-blue);
-            letter-spacing: 35px;
+            text-shadow: 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue);
+            transform: scale(1.05);
+            letter-spacing: 16px;
         }
 
-        /* FOOTERIS APAČIOJE */
+        /* --- Footeris --- */
         footer {
-            position: absolute;
-            bottom: 50px;
-            width: 100%;
-            text-align: center;
             z-index: 30;
+            padding-bottom: 40px;
+            text-align: center;
         }
 
         .rekvizitai {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 4px;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
             color: var(--wow-blue);
-            animation: pulse-glow 3s infinite alternate;
+            text-transform: uppercase;
+            animation: pulse-glow 2.5s infinite alternate;
         }
 
         @keyframes pulse-glow {
-            from { opacity: 0.3; }
+            from { opacity: 0.3; text-shadow: 0 0 5px var(--wow-blue); }
             to { opacity: 0.9; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
         .dust {
             position: absolute;
-            width: 2px; height: 2px;
+            width: 1.5px; height: 1.5px;
             background: var(--silver-dust);
             border-radius: 50%;
             pointer-events: none;
@@ -130,14 +130,14 @@
     <div id="candlelight"></div>
 
     <header>
-        <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
         <div class="company-name">MB Gumbrevičius</div>
+        <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
     </header>
 
     <div class="nav-container">
         <a href="#portfolio" class="menu-item">Portfolio</a>
-        <a href="#ar" class="menu-item">AR</a>
-        <a href="#web" class="menu-item">Web Design</a>
+        <a href="#ar" class="menu-item">Papildyta realybė</a>
+        <a href="#web" class="menu-item">Web dizainas</a>
     </div>
 
     <footer>
@@ -153,6 +153,7 @@
             candle.style.setProperty('--y', e.clientY + 'px');
         });
 
+        // Sidabro dulkių animacija (lėtesnė, kad jaustųsi PETG svoris)
         setInterval(() => {
             const dust = document.createElement('div');
             dust.className = 'dust';
