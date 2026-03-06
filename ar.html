@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Lab | MB Gumbrevičius</title>
+    <title>AR Realm | MB Gumbrevičius</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --wow-blue: #00d2ff;
-            --slate-bg: #121316; /* Gilus, prabangus grafitas */
-            --silver-tech: #c0c0c0; /* Rafinuotas sidabras */
-            --glass-panel: rgba(255, 255, 255, 0.03);
+            --slate-bg: #222428; /* Rafinuota pilka iš tavo renderio */
+            --darker-slate: #1a1c1f;
+            --silver-text: rgba(255, 255, 255, 0.7);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,124 +22,123 @@
             width: 100vw;
             min-height: 100vh;
             overflow-x: hidden;
-            /* Subtilus tinklelis (Grid) fone - inžinerinis prieskonis */
-            background-image: 
-                linear-gradient(rgba(0, 210, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90px, rgba(0, 210, 255, 0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
+            /* Subtilus gylis per gradientą */
+            background: radial-gradient(circle at center, var(--slate-bg) 0%, var(--darker-slate) 100%);
         }
 
-        /* --- VIRTUAL HUD HEADER --- */
+        /* --- Headeris (Vienodas su Portfolio) --- */
         header {
-            padding: 40px 50px;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            z-index: 100;
             display: flex;
-            justify-content: space-between;
+            flex-direction: row; 
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .back-btn {
+        .back-link {
+            display: flex;
+            align-items: center;
             text-decoration: none;
-            color: var(--silver-tech);
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            border: 1px solid rgba(192, 192, 192, 0.2);
-            padding: 10px 25px;
-            transition: 0.4s;
         }
 
-        .back-btn:hover {
-            color: var(--wow-blue);
-            border-color: var(--wow-blue);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        .logo-wow {
+            height: 80px; 
+            width: auto;
+            filter: drop-shadow(0 0 10px var(--wow-blue));
+            opacity: 0.9;
+            margin-right: 25px; 
+            transition: all 0.6s ease;
         }
 
-        .system-status {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            color: var(--wow-blue);
+        .company-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-size: 1.4rem; 
+            letter-spacing: 10px;
+            color: rgba(255, 255, 255, 0.6);
             text-transform: uppercase;
         }
 
-        /* --- MAIN TERMINAL BLOCK --- */
-        .ar-container {
+        .back-link:hover .logo-wow {
+            filter: drop-shadow(0 0 25px var(--wow-blue));
+            transform: scale(1.05);
+        }
+
+        /* --- AR DEMO SEKCIJA --- */
+        .ar-hero {
             max-width: 1400px;
-            margin: 80px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 200px 20px 100px 20px;
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
-            gap: 80px;
+            gap: 60px;
             align-items: center;
         }
 
         .render-view {
-            background: #1a1b1e;
+            background: #2a2d32;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            border-radius: 2px;
             overflow: hidden;
         }
 
         .render-view img {
             width: 100%;
             display: block;
-            filter: contrast(1.1); /* Kad tavo renderis būtų dar ryškesnis */
         }
 
         .tech-info h1 {
             font-family: 'Cinzel', serif;
-            font-size: 3rem;
-            letter-spacing: 8px;
-            margin-bottom: 25px;
-            color: var(--silver-tech);
+            font-size: 2.5rem;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            color: #fff;
         }
 
         .tech-info p {
             font-weight: 200;
             line-height: 1.8;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--silver-text);
             margin-bottom: 40px;
-            max-width: 500px;
         }
 
-        /* INTERAKCIJOS BLOKAS */
+        /* QR ir Mygtukas */
         .interaction-module {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .qr-module {
-            display: block;
+        .qr-wrapper {
             background: white;
-            padding: 15px;
-            width: 180px;
+            padding: 12px;
+            width: 170px;
             border-radius: 4px;
-            box-shadow: 0 0 25px rgba(0, 210, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
         }
 
-        .qr-module img { width: 100%; }
+        .qr-wrapper img { width: 100%; display: block; }
 
         .launch-btn {
-            display: none; /* Paslėpta desktop'e */
-            padding: 22px;
+            display: none; /* Tik mobiliems */
+            padding: 20px;
             border: 1px solid var(--wow-blue);
             color: var(--wow-blue);
             text-decoration: none;
             text-align: center;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             font-weight: 600;
             text-transform: uppercase;
             background: rgba(0, 210, 255, 0.05);
-            transition: 0.3s;
         }
 
-        /* --- PROJECTS GRID --- */
+        /* --- ĮGYVENDINTI PROJEKTAI --- */
         .projects-section {
             max-width: 1400px;
-            margin: 150px auto 100px;
+            margin: 50px auto 100px;
             padding: 0 20px;
         }
 
@@ -147,30 +146,30 @@
             font-family: 'Cinzel', serif;
             color: rgba(255, 255, 255, 0.2);
             font-size: 0.8rem;
-            letter-spacing: 15px;
+            letter-spacing: 12px;
             margin-bottom: 40px;
-            text-align: center;
+            text-transform: uppercase;
         }
 
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+            gap: 30px;
         }
 
         .project-card {
-            background: var(--glass-panel);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 40px;
+            padding: 35px;
             text-decoration: none;
             color: #fff;
-            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transition: 0.4s;
         }
 
         .project-card:hover {
-            background: rgba(0, 210, 255, 0.03);
             border-color: var(--wow-blue);
-            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-5px);
         }
 
         .project-card h3 {
@@ -186,66 +185,67 @@
             text-transform: uppercase;
         }
 
-        /* --- MOBILE ADAPTACIJA --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
-            .ar-container { grid-template-columns: 1fr; gap: 40px; }
-            .tech-info { text-align: center; }
-            .tech-info p { margin: 0 auto 40px; }
-            .qr-module { margin: 0 auto; }
+            .ar-hero { grid-template-columns: 1fr; padding-top: 180px; }
+            header { top: 30px; left: 30px; }
         }
 
         @media (max-width: 768px) {
-            header { padding: 30px 20px; }
-            .qr-module { display: none; } /* Slepiam QR telefone */
-            .launch-btn { display: block; } /* Rodom mygtuką telefone */
-            .tech-info h1 { font-size: 2rem; }
-            .ar-container { margin-top: 40px; }
+            header { left: 50%; transform: translateX(-50%); width: 100%; justify-content: center; }
+            .logo-wow { height: 50px; margin-right: 15px; }
+            .company-name { font-size: 0.8rem; letter-spacing: 5px; }
+            .qr-wrapper { display: none; }
+            .launch-btn { display: block; }
+            .tech-info h1 { font-size: 1.8rem; text-align: center; }
+            .tech-info p { text-align: center; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="index.html" class="back-btn">RETURN_TO_CORE</a>
-        <div class="system-status">System: Online // Realm: AR_HighTech</div>
+        <a href="index.html" class="back-link">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+            <div class="company-name">MB Gumbrevičius</div>
+        </a>
     </header>
 
-    <main class="ar-container">
+    <main class="ar-hero">
         <div class="render-view">
-            <img src="portfolio/kvepalai4.jpg" alt="AR System Preview">
+            <img src="portfolio/kvepalai4.jpg" alt="Sferų Demo Vizualizacija">
         </div>
 
         <div class="tech-info">
-            <h1>SFEROS_DEMO</h1>
+            <h1>SFERŲ DEMO</h1>
             <p>Preciziška geometrijos ir medžiagiškumo patikra. Šis modelis naudojamas kalibruoti atspindžius skaitmeninėje erdvėje prieš pradedant gamybos procesą.</p>
             
             <div class="interaction-module">
-                <div class="qr-module">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ar.gumbrevicius.lt/klientai/sferos.html" alt="Skenuok AR">
+                <div class="qr-wrapper">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ar.gumbrevicius.lt/klientai/sferos.html" alt="QR Sferos">
                 </div>
-
-                <a href="https://ar.gumbrevicius.lt/klientai/sferos.html" class="launch-btn">LAUNCH AR EXPERIENCE</a>
+                <a href="https://ar.gumbrevicius.lt/klientai/sferos.html" class="launch-btn">PALEISTI AR PATIRTĮ</a>
             </div>
         </div>
     </main>
 
     <section class="projects-section">
-        <h2 class="section-label">ACTIVE_PROJECTS</h2>
+        <h2 class="section-label">Įgyvendinti projektai</h2>
         <div class="projects-grid">
             
             <a href="https://1001legends.lt/paveikslu-nuoma/?paveikslo_kategorija=vilniaus-legendos-the-legends-of-vilnius&paveikslo_pavadinimas=Vilniaus+%C4%AFk%C5%ABrimas&dydis=100x100&pirkimas_nuoma=subscription&periodas=3&kiekis=1" class="project-card">
-                <h3>VILNIAUS_LEGENDOS</h3>
-                <span>Aktualus projektas</span>
+                <h3>VILNIAUS LEGENDOS</h3>
+                <span>Papildyta realybė paveikslams</span>
             </a>
 
-            <div class="project-card" style="opacity: 0.5;">
-                <h3>MODERN_HOUSE_DEMO</h3>
-                <span>Status: Processing...</span>
-            </div>
+            <a href="https://sferos.lt/3d-vizualizacija/" class="project-card">
+                <h3>SFEROS.LT</h3>
+                <span>3D vizualizacijos sprendimai</span>
+            </a>
 
-            <div class="project-card" style="opacity: 0.2;">
-                <h3>MBP_BOT_CORE</h3>
-                <span>Status: Encrypted</span>
+            <div class="project-card" style="opacity: 0.4;">
+                <h3>ARCHITEKTŪRINIS PROJEKTAS</h3>
+                <span>Procesas: 3D modeliavimas</span>
             </div>
 
         </div>
