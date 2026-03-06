@@ -90,4 +90,136 @@
         .menu-item:hover {
             filter: blur(0px);
             color: #fff;
-            text-shadow: 0 0 10px #fff
+            text-shadow: 0 0 10px #fff, 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue), 0 0 80px var(--wow-blue);
+            transform: scale(1.1);
+            letter-spacing: 35px;
+        }
+
+        /* --- Footeris --- */
+        footer {
+            z-index: 30;
+            padding-bottom: 60px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .rekvizitai {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 5px;
+            color: var(--wow-blue);
+            text-transform: uppercase;
+            animation: pulse-glow 2.5s infinite alternate;
+        }
+
+        /* --- MOBILIŲJŲ ĮRENGINIŲ INSTRUKCIJOS (Media Queries) --- */
+        @media (max-width: 768px) {
+            header {
+                padding: 30px 20px;
+                justify-content: center; /* Centruojame logo telefone */
+            }
+            .logo-wow {
+                height: 50px; /* Mažesnis logo */
+                margin-right: 15px;
+            }
+            .company-name {
+                font-size: 0.8rem;
+                letter-spacing: 4px;
+            }
+            .menu-item {
+                font-size: 1.5rem; /* Smarkiai sumažinam šriftą */
+                letter-spacing: 10px; /* Mažesni tarpai, kad tilptų į ekraną */
+                margin: 25px 0;
+                filter: blur(2px); /* Mažiau bluro mažame ekrane */
+                color: rgba(255, 255, 255, 0.4); /* Ryškiau telefone */
+            }
+            .menu-item:hover {
+                letter-spacing: 15px;
+                transform: scale(1.05);
+            }
+            footer {
+                padding-bottom: 30px;
+            }
+            .rekvizitai {
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+            }
+            #candlelight {
+                /* Telefone žvakė gali būti šiek tiek didesnė patogumui */
+                background: radial-gradient(circle 80px at var(--x, 50%) var(--y, 50%), 
+                            var(--candle-warm) 0%, 
+                            rgba(0, 0, 0, 1) 100%);
+            }
+        }
+
+        @keyframes pulse-glow {
+            from { opacity: 0.3; text-shadow: 0 0 10px var(--wow-blue); }
+            to { opacity: 1; text-shadow: 0 0 30px var(--wow-blue); }
+        }
+
+        .dust {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: var(--silver-dust);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="candlelight"></div>
+
+    <header>
+        <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+        <div class="company-name">MB Gumbrevičius</div>
+    </header>
+
+    <div class="nav-container">
+        <a href="portfolio.html" class="menu-item">Portfolio</a>
+        <a href="ar.html" class="menu-item">Papildyta realybė</a>
+        <a href="#web" class="menu-item">Web Design</a>
+    </div>
+
+    <footer>
+        <div class="rekvizitai">
+            Povilas Gumbrevičius | info@gumbrevicius.lt
+        </div>
+    </footer>
+
+    <script>
+        const candle = document.getElementById('candlelight');
+
+        const moveHandler = (e) => {
+            let x, y;
+            // Jei tai lietimas (touch)
+            if (e.type.includes('touch')) {
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else {
+                // Jei tai pelė
+                x = e.clientX;
+                y = e.clientY;
+            }
+            candle.style.setProperty('--x', x + 'px');
+            candle.style.setProperty('--y', y + 'px');
+        };
+
+        // Klausomės visų įmanomų judesių
+        document.addEventListener('mousemove', moveHandler);
+        document.addEventListener('touchstart', moveHandler, { passive: false });
+        document.addEventListener('touchmove', moveHandler, { passive: false });
+
+        // Sidabro dulkės
+        setInterval(() => {
+            const dust = document.createElement('div');
+            dust.className = 'dust';
+            dust.style.left = Math.random() * 100 + 'vw';
+            dust.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 10000);
+        }, 400);
+    </script>
+</body>
+</html>
