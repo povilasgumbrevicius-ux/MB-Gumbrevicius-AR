@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gumbrevičius MB | CGI & Web Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --wow-blue: #00d2ff;
-            --candle-warm: rgba(255, 160, 60, 0.15); /* Žvakės šviesos spalva */
-            --silver-dust: rgba(200, 200, 200, 0.15);
+            --candle-warm: rgba(255, 140, 50, 0.2);
+            --silver-dust: rgba(200, 200, 200, 0.12);
         }
 
         body, html {
             margin: 0; padding: 0;
-            background-color: #020202;
+            background-color: #010101;
             color: #fff;
             font-family: 'Cinzel', serif;
             height: 100vh;
@@ -21,37 +22,44 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            align-items: center;
+            align-items: center; /* Centruojame pagrindinį turinį */
         }
 
-        /* --- Headeris --- */
+        /* --- Headeris KAIRĖJE --- */
         header {
             z-index: 30;
-            padding-top: 40px;
-            text-align: center;
+            padding: 40px 0 0 50px; /* Viršus, dešinė, apačia, KAIRĖ */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Viskas kairėje */
+            box-sizing: border-box;
         }
 
         .company-name {
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
             margin-bottom: 10px;
         }
 
         .logo-wow {
-            max-width: 180px; /* Priderintas dydis tavo parašui */
+            max-width: 180px;
             filter: drop-shadow(0 0 10px var(--wow-blue));
             opacity: 0.9;
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .logo-wow:hover {
-            filter: drop-shadow(0 0 20px var(--wow-blue));
-            transform: scale(1.02);
+            filter: drop-shadow(0 0 25px var(--wow-blue));
+            transform: scale(1.03);
+            opacity: 1;
         }
 
-        /* --- Candlelight (4x Mažesnis: ~35px, Šilta spalva) --- */
+        /* --- Candlelight (35px - Mistika) --- */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
@@ -63,7 +71,7 @@
             pointer-events: none;
         }
 
-        /* --- Meniu --- */
+        /* --- Meniu (Lieka centre) --- */
         .nav-container {
             z-index: 20;
             text-align: center;
@@ -73,22 +81,23 @@
             display: block;
             font-size: 2.2rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.12);
             text-transform: uppercase;
-            letter-spacing: 10px;
-            margin: 25px 0;
-            filter: blur(5px);
-            transition: all 0.7s ease;
+            letter-spacing: 12px;
+            margin: 30px 0;
+            filter: blur(6px);
+            transition: all 0.8s ease;
         }
 
         .menu-item:hover {
             filter: blur(0px);
             color: #fff;
-            text-shadow: 0 0 15px var(--wow-blue), 0 0 30px var(--wow-blue);
+            text-shadow: 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue);
             transform: scale(1.05);
+            letter-spacing: 16px;
         }
 
-        /* --- Footeris su pulsuojančiais rekvizitais --- */
+        /* --- Footeris --- */
         footer {
             z-index: 30;
             padding-bottom: 40px;
@@ -96,22 +105,17 @@
         }
 
         .rekvizitai {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
             color: var(--wow-blue);
             text-transform: uppercase;
-            animation: pulse-glow 2s infinite alternate;
+            animation: pulse-glow 2.5s infinite alternate;
         }
 
         @keyframes pulse-glow {
-            from {
-                opacity: 0.4;
-                text-shadow: 0 0 5px var(--wow-blue);
-            }
-            to {
-                opacity: 1;
-                text-shadow: 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue);
-            }
+            from { opacity: 0.3; text-shadow: 0 0 5px var(--wow-blue); }
+            to { opacity: 0.9; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
         .dust {
@@ -129,7 +133,7 @@
     <div id="candlelight"></div>
 
     <header>
-        <div class="company-name">"Gumbrevičius" MB</div>
+        <div class="company-name">MB Gumbrevičius</div>
         <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
     </header>
 
@@ -141,7 +145,7 @@
 
     <footer>
         <div class="rekvizitai">
-            Povilas Gumbrevičius | MB Gumbrevičius | info@gumbrevicius.lt
+            Povilas Gumbrevičius | info@gumbrevicius.lt
         </div>
     </footer>
 
@@ -152,15 +156,14 @@
             candle.style.setProperty('--y', e.clientY + 'px');
         });
 
-        // Sidabro dulkių generavimas
         setInterval(() => {
             const dust = document.createElement('div');
             dust.className = 'dust';
             dust.style.left = Math.random() * 100 + 'vw';
             dust.style.top = Math.random() * 100 + 'vh';
             document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 8000);
-        }, 400);
+            setTimeout(() => dust.remove(), 10000);
+        }, 500);
     </script>
 </body>
 </html>
