@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gumbrevičius MB | CGI & Web Design</title>
+    <title>Gumbrevičius | Digital Artisan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         :root {
             --wow-blue: #00d2ff;
-            --candle-warm: rgba(255, 160, 60, 0.15); /* Žvakės šviesos spalva */
             --silver-dust: rgba(200, 200, 200, 0.15);
         }
 
         body, html {
             margin: 0; padding: 0;
-            background-color: #020202;
+            background-color: #010101;
             color: #fff;
             font-family: 'Cinzel', serif;
             height: 100vh;
@@ -24,46 +24,43 @@
             align-items: center;
         }
 
-        /* --- Headeris --- */
+        /* --- Headeris su tavo Logo --- */
         header {
             z-index: 30;
-            padding-top: 40px;
+            padding-top: 30px;
             text-align: center;
         }
 
-        .company-name {
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            margin-bottom: 10px;
+        .logo-container {
+            position: relative;
+            width: 180px;
+            transition: transform 0.5s ease;
         }
 
-        .logo-wow {
-            max-width: 180px; /* Priderintas dydis tavo parašui */
-            filter: drop-shadow(0 0 10px var(--wow-blue));
+        .logo-img {
+            width: 100%;
+            /* Invertuojame spalvą į baltą ir pridedame švytėjimą */
+            filter: invert(1) drop-shadow(0 0 8px var(--wow-blue));
             opacity: 0.9;
-            transition: all 0.5s ease;
         }
 
-        .logo-wow:hover {
-            filter: drop-shadow(0 0 20px var(--wow-blue));
-            transform: scale(1.02);
+        .logo-container:hover {
+            transform: scale(1.05) translateY(-5px);
         }
 
-        /* --- Candlelight (4x Mažesnis: ~35px, Šilta spalva) --- */
+        /* --- Candlelight (Mažesnis: 125px) --- */
         #candlelight {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: radial-gradient(circle 35px at var(--x, 50%) var(--y, 50%), 
-                        var(--candle-warm) 0%, 
+            background: radial-gradient(circle 125px at var(--x, 50%) var(--y, 50%), 
+                        rgba(255, 255, 255, 0.03) 0%, 
                         rgba(0, 0, 0, 1) 100%);
             z-index: 10;
             pointer-events: none;
         }
 
-        /* --- Meniu --- */
+        /* --- Meniu Punktai --- */
         .nav-container {
             z-index: 20;
             text-align: center;
@@ -71,49 +68,43 @@
 
         .menu-item {
             display: block;
-            font-size: 2.2rem;
+            font-size: 2rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.1);
             text-transform: uppercase;
-            letter-spacing: 10px;
-            margin: 25px 0;
-            filter: blur(5px);
-            transition: all 0.7s ease;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            filter: blur(6px);
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .menu-item:hover {
             filter: blur(0px);
             color: #fff;
             text-shadow: 0 0 15px var(--wow-blue), 0 0 30px var(--wow-blue);
-            transform: scale(1.05);
+            letter-spacing: 12px;
         }
 
-        /* --- Footeris su pulsuojančiais rekvizitais --- */
+        /* --- Footeris su pulsuojančiu el. paštu --- */
         footer {
             z-index: 30;
-            padding-bottom: 40px;
+            padding-bottom: 30px;
             text-align: center;
         }
 
         .rekvizitai {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
             color: var(--wow-blue);
-            text-transform: uppercase;
-            animation: pulse-glow 2s infinite alternate;
+            animation: pulse-glow 3s infinite alternate;
         }
 
         @keyframes pulse-glow {
-            from {
-                opacity: 0.4;
-                text-shadow: 0 0 5px var(--wow-blue);
-            }
-            to {
-                opacity: 1;
-                text-shadow: 0 0 20px var(--wow-blue), 0 0 40px var(--wow-blue);
-            }
+            from { opacity: 0.3; text-shadow: 0 0 5px var(--wow-blue); }
+            to { opacity: 1; text-shadow: 0 0 20px var(--wow-blue); }
         }
 
+        /* --- Sidabro dulkės (PETG stilius) --- */
         .dust {
             position: absolute;
             width: 1.5px; height: 1.5px;
@@ -121,6 +112,13 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 5;
+            animation: drift linear infinite;
+        }
+
+        @keyframes drift {
+            from { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 0.4; }
+            to { transform: translateY(-150px) translateX(20px); opacity: 0; }
         }
     </style>
 </head>
@@ -129,8 +127,9 @@
     <div id="candlelight"></div>
 
     <header>
-        <div class="company-name">"Gumbrevičius" MB</div>
-        <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+        <div class="logo-container">
+            <img src="bitmap.png" class="logo-img" alt="Gumbrevičius Logo">
+        </div>
     </header>
 
     <div class="nav-container">
@@ -141,7 +140,7 @@
 
     <footer>
         <div class="rekvizitai">
-            Povilas Gumbrevičius | MB Gumbrevičius | info@gumbrevicius.lt
+            povilas@gumbrevicius.lt
         </div>
     </footer>
 
@@ -153,14 +152,16 @@
         });
 
         // Sidabro dulkių generavimas
-        setInterval(() => {
+        function createDust() {
             const dust = document.createElement('div');
             dust.className = 'dust';
             dust.style.left = Math.random() * 100 + 'vw';
             dust.style.top = Math.random() * 100 + 'vh';
+            dust.style.animationDuration = (Math.random() * 8 + 4) + 's';
             document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 8000);
-        }, 400);
+            setTimeout(() => dust.remove(), 12000);
+        }
+        setInterval(createDust, 400);
     </script>
 </body>
 </html>
