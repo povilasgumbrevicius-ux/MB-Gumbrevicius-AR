@@ -138,6 +138,7 @@
             transition: all 0.3s;
         }
         .form-wrap button:hover { background: rgba(0, 210, 255, 0.1); }
+        .loading { display: none; color: var(--wow-blue); letter-spacing: 5px; font-size: 0.8rem; margin-top: 15px; }
         @media (max-width: 768px) {
             header { top: 30px; left: 0; width: 100%; justify-content: center; }
             .logo-wow { height: 50px; margin-right: 15px; }
@@ -176,25 +177,56 @@
                 <input type="hidden" id="sitetype" value="" />
 
                 <button onclick="createSession()">Kurti →</button>
+                <div class="loading" id="loading">JUNGIAMASI...</div>
             </div>
         </div>
     </main>
 
 <script>
+const API = 'http://web.gumbrevicius.lt:8888';
+
 function selectType(el, type) {
     document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
     document.getElementById('sitetype').value = type;
 }
 
-function createSession() {
-    const name = document.getElementById('name').value.trim();
+async function createSession() {
+    const name  = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
-    const type = document.getElementById('sitetype').value;
+    const desc  = document.getElementById('desc').value.trim();
+    const type  = document.getElementById('sitetype').value;
+
     if (!name || !email) { alert('Užpildykite vardą ir el. paštą!'); return; }
     if (!type) { alert('Pasirinkite tinklalapio tipą!'); return; }
-    const uuid = crypto.randomUUID();
-    window.location.href = '?session=' + uuid + '&type=' + type;
+
+    document.getElementById('loading').style.display = 'block';
+
+    try {
+        const res = await fetch(`${API}/api/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name, email,
+                description: desc,
+                site_type: type,
+                terms_accepted: true,
+                language: 'lt'
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.session_id) {
+            window.location.href = `${API}/chat/${data.session_id}`;
+        } else {
+            alert('Klaida: ' + (data.error || 'Nežinoma'));
+        }
+    } catch(e) {
+        alert('Serveris nepasiekiamas. Bandykite vėliau.');
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+    }
 }
 </script>
 
