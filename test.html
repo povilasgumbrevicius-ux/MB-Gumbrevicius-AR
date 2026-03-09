@@ -166,7 +166,6 @@
             <div class="form-wrap">
                 <input type="text" id="name" placeholder="Vardas / Įmonė" />
                 <input type="email" id="email" placeholder="El. paštas" />
-                <textarea id="desc" rows="2" placeholder="Trumpas aprašymas"></textarea>
 
                 <div class="type-grid">
                     <div class="type-btn" onclick="selectType(this, 'onepage')">🌐 One Page</div>
@@ -194,7 +193,6 @@ function selectType(el, type) {
 async function createSession() {
     const name  = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
-    const desc  = document.getElementById('desc').value.trim();
     const type  = document.getElementById('sitetype').value;
 
     if (!name || !email) { alert('Užpildykite vardą ir el. paštą!'); return; }
@@ -208,7 +206,6 @@ async function createSession() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 name, email,
-                description: desc,
                 site_type: type,
                 terms_accepted: true,
                 language: 'lt'
