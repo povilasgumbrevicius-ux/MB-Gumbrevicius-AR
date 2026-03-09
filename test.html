@@ -218,7 +218,7 @@ async function createSession() {
         const data = await res.json();
 
         if (data.session_id) {
-            window.location.href = `${API}/chat/${data.session_id}`;
+            window.location.href = `${API}/chat.html?session=${data.session_id}&type=${type}`;
         } else {
             alert('Klaida: ' + (data.error || 'Nežinoma'));
         }
