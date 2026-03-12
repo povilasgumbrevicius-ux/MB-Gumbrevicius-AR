@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
     <title>Diaro interaktyvus reklamos įrankis</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     <style>
@@ -13,6 +14,7 @@
             background: #4CAF50; color: white; padding: 15px 30px; border-radius: 50px;
             border: none; cursor: pointer; font-weight: bold; position: absolute; 
             top: 25px; right: 25px; z-index: 999; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            text-decoration: none; display: inline-block; font-size: 16px;
         }
 
         .controls {
@@ -39,16 +41,15 @@
         id="viewer"
         src="" 
         ar 
-        /* KRITINIS PAKEITIMAS: webxr pirmas, kad Samsungas naudotų tikslesnį sienų hit-testą */
-        ar-modes="webxr scene-viewer quick-look" 
+        ar-modes="scene-viewer webxr quick-look"
         ar-scale="fixed"
+        ar-placement="wall"
         camera-controls 
-        /* Ryškesnis apšvietimas Samsung ekranams */
         exposure="1.0" 
-        /* Pagalba vartotojui: rodo animaciją, kaip judinti telefoną sienai rasti */
         interaction-prompt="auto"
+        xr-environment
     >
-        <button slot="ar-button" id="ar-button">🔳 MATUOTI</button>
+        <a slot="ar-button" id="ar-button">🔳 MATUOTI</a>
     </model-viewer>
 
     <div class="controls" id="nav-ui" style="display: none;">
@@ -64,11 +65,9 @@
         const viewer = document.querySelector('#viewer');
         const modeIndicator = document.getElementById('mode-indicator');
         
-        // Nustatome režimą iškart
         viewer.setAttribute('ar-placement', mode);
         modeIndicator.innerText = "Režimas: " + (mode === 'wall' ? 'Siena' : mode === 'floor' ? 'Grindys' : 'Lubos');
 
-        // Keliai
         const folder = "../Diaro/";
         const csvPath = folder + "models.csv?v=" + new Date().getTime(); 
         let models = [];
@@ -78,7 +77,6 @@
             try {
                 const response = await fetch(csvPath);
                 const text = await response.text();
-                // Išvalome CSV nuo tuščių eilučių ir paliekame tik .glb
                 models = text.split('\n')
                              .map(l => l.trim())
                              .filter(l => l.length > 0 && l.toLowerCase().endsWith('.glb'));
