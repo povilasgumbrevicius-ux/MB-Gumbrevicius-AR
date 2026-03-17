@@ -43,7 +43,7 @@
         ar 
         ar-modes="scene-viewer webxr quick-look"
         ar-scale="fixed"
-        ar-placement="wall"
+        ar-placement="floor"
         camera-controls 
         exposure="1.0" 
         interaction-prompt="auto"
@@ -60,7 +60,7 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const mode = params.get('mode') || 'wall'; 
+        const mode = params.get('mode') || 'floor'; 
         
         const viewer = document.querySelector('#viewer');
         const modeIndicator = document.getElementById('mode-indicator');
