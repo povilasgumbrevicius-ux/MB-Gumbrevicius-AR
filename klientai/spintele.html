@@ -1,197 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="lt">
 <head>
-    <title>Spintelė</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js?v=400"></script>
-    
-    <style>
-        /* CSS Stiliai */
-        body { margin: 0; padding: 0; height: 100vh; background-color: #f4f4f4; }
-        .container { position: relative; width: 100%; height: 100vh; }
-        model-viewer { 
-            width: 100%; height: 100%; background-color: #ffffff; --camera-controls-touch-radius: 10px; --camera-controls-move-speed: 2;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AR Spintelė – spausk stalčius kameroje</title>
 
-        /* Mygtukų stiliai */
-        #controls-overlay {
-            position: absolute; top: 40px; right: 10px; z-index: 2500;
-        }
-        .drawer-button {
-            padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background-color 0.2s;
-        }
-        .drawer-button.open { background-color: #28a745; }
-        .drawer-button:hover { background-color: #0056b3; }
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; overflow:hidden; font-family: system-ui, -apple-system, sans-serif; }
         
-        #ar-custom-button {
-            z-index: 3000; position: absolute; bottom: 40px; right: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; transition: background-color 0.3s;
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+            background: rgba(0,0,0,0.9); color: white; padding: 14px 20px;
+            text-align: center; font-size: 15px; line-height: 1.4;
         }
-        #status-message { 
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #333; padding: 10px 20px; border-radius: 5px; z-index: 9999; font-weight: bold; display: none; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        .ar-instruction { color: #00ffaa; font-weight: 700; }
+
+        .controls {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; background: rgba(0,0,0,0.92); color: white;
+            padding: 14px 20px; border-radius: 18px; display: flex; flex-wrap: wrap;
+            gap: 10px; max-width: 92%; box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+        }
+        .controls button {
+            background: #00d4ff; color: #000; border: none; padding: 13px 20px;
+            border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0,212,255,0.4); transition: all 0.2s;
+            min-width: 70px;
+        }
+        .controls button:active {
+            transform: scale(0.94); background: #00b8e0;
+        }
+        .controls button.open {
+            background: #00ff88;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        
-        <div id="controls-overlay">
-            <button id="toggle-spintele-animation" class="drawer-button" data-animation-name="spinteleAction" data-is-open="false">
-                Atidaryti stalčius
-            </button>
-        </div>
 
-        <model-viewer 
-            id="spintele-model" 
-            src="../modeliai/baldai/spintele.glb" 
-            alt="Spintelė" 
-            camera-controls 
-            interaction-prompt="none"
-            shadow-intensity="1.0"
-            exposure="1.0"
-            ar ar-modes="webxr scene-viewer quick-look"
-        >
-            <button slot="ar-button" id="ar-custom-button">
-                 ▶️ Rodyti AR
-            </button>
-        </model-viewer>
-        
-        <div id="status-message"></div>
+    <div class="header">
+        <strong>Atidarykite šį puslapį <span class="ar-instruction">tiesiog Google Chrome</span><br>
+        (ne per WhatsApp, Gmail, Messenger ar kitą programėlę!)</strong>
     </div>
 
+    <a-scene arjs="sourceType: webcam" embedded vr-mode-ui="enabled: false">
+
+        <a-camera position="0 0 0">
+            <a-cursor 
+                raycaster="objects: .interactive; far: 10;" 
+                fuse="false" 
+                color="#00ffaa" 
+                events="click"></a-cursor>
+        </a-camera>
+
+        <a-entity 
+            id="spinta"
+            gltf-model="https://ar.gumbrevicius.lt/modeliai/baldai/spintele.glb"
+            position="0 0 -2.8"
+            scale="1 1 1"
+            class="interactive"
+            tap-handler>
+        </a-entity>
+
+        <div class="controls">
+            <button id="btn1" onclick="toggleStalcius(1)">1 stalčius</button>
+            <button id="btn2" onclick="toggleStalcius(2)">2 stalčius</button>
+            <button id="btn3" onclick="toggleStalcius(3)">3 stalčius</button>
+            <button id="btn4" onclick="toggleStalcius(4)">4 stalčius</button>
+            <button id="btn5" onclick="toggleStalcius(5)">5 stalčius</button>
+            <button id="btn6" onclick="toggleStalcius(6)">6 stalčius</button>
+        </div>
+
+    </a-scene>
+
     <script>
-        const modelViewer = document.getElementById('spintele-model');
-        const statusMessage = document.getElementById('status-message');
-        const toggleButton = document.getElementById('toggle-spintele-animation');
-        
-        // Animacijos nustatymai:
-        const ANIMATION_NAME = 'spinteleAction'; 
-        const FPS = 24.0; 
-        const OPEN_FRAMES = 72.0; 
-        const CLOSE_FRAMES = 72.0; 
-        
-        const OPEN_DURATION = OPEN_FRAMES / FPS; // 3.0 s
-        const TOTAL_DURATION = (OPEN_FRAMES + CLOSE_FRAMES) / FPS; // 6.0 s
-        
-        // Laiko konstantos (Pataisymas)
-        const OPEN_START_TIME = 0.0;
-        const CLOSE_START_TIME = OPEN_DURATION; // 3.0s
-        const CLOSE_END_TIME = TOTAL_DURATION; // 6.0s
-        
-        const TIME_EPSILON = 0.01; // Tolerancija plaukiojančio kablelio klaidoms
-        
-        let isAnimating = false;
-        let animationMonitorId = null;
-        let targetTime = 0; 
-        let isOpening = false; 
+        // Kiekvieno stalčiaus būsena: false = uždarytas, true = atidarytas
+        const drawerState = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
 
-        // Svarbiausia funkcija: Stebi animacijos eigą ir sustabdo ją tiksliai
-        function checkAnimation() {
-            if (!isAnimating) {
-                cancelAnimationFrame(animationMonitorId);
-                return;
-            }
+        function toggleStalcius(nr) {
+            const spinta = document.getElementById('spinta');
+            const btn = document.getElementById('btn' + nr);
+            if (!spinta) return;
 
-            const currentTime = modelViewer.currentTime; 
-            
-            if (isOpening) {
-                // Atidarymas (Tikslas: 3.0 s)
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = targetTime; 
-                    isAnimating = false; 
-                    cancelAnimationFrame(animationMonitorId);
-                    return;
-                }
-            } else {
-                // Uždarymas (Tikslas: 6.0 s)
-                if (currentTime >= targetTime - TIME_EPSILON) {
-                    modelViewer.pause();
-                    modelViewer.currentTime = OPEN_START_TIME; // RESETINAME į 0.0s (uždaryta)
-                    isAnimating = false; 
-                    cancelAnimationFrame(animationMonitorId);
-                    return;
-                }
-            }
+            const isOpen = drawerState[nr];
+            const timeScale = isOpen ? -1 : 1;
 
-            animationMonitorId = requestAnimationFrame(checkAnimation);
+            spinta.setAttribute('animation-mixer', `clip: open_drawer${nr}; loop: once; timeScale: ${timeScale};`);
+
+            drawerState[nr] = !isOpen;
+
+            // Mygtuko spalva: žalia = atidarytas
+            btn.classList.toggle('open', drawerState[nr]);
         }
 
-        function toggleAnimation(event) {
-            if (isAnimating) return; 
-            
-            const button = event.currentTarget; 
-            const animationName = button.getAttribute('data-animation-name');
-            let isOpen = button.getAttribute('data-is-open') === 'true';
+        // Raycast – paspaudus ant stalčiaus tiesiog kameroje
+        AFRAME.registerComponent('tap-handler', {
+            init: function() {
+                this.el.addEventListener('click', (evt) => {
+                    if (!evt.detail.intersection) return;
 
-            if (!animationName) return;
-            
-            let startTime, endTime;
+                    const meshName = (evt.detail.intersection.object.name || '').toLowerCase();
+                    console.log('Paspausta ant:', meshName);
 
-            if (!isOpen) {
-                // ATIDARYMAS: 0.0s iki 3.0s
-                startTime = OPEN_START_TIME; 
-                endTime = OPEN_DURATION; 
-                modelViewer.currentTime = startTime; 
-                targetTime = endTime; // Tikslas: 3.0s
-                isOpening = true;
-                
-            } else {
-                // UŽDARYMAS: 3.0s iki 6.0s
-                startTime = CLOSE_START_TIME; 
-                endTime = CLOSE_END_TIME; 
-                modelViewer.currentTime = startTime; // Pradeda nuo 3.0s
-                targetTime = endTime; // Tikslas: 6.0s
-                isOpening = false;
-            }
-            
-            try {
-                isAnimating = true; // Blokuojame kitus paspaudimus
-                
-                modelViewer.play({ 
-                    animationName: animationName, 
-                    timeRange: [startTime, endTime],
-                    duration: (endTime - startTime), 
-                    repetitions: 1,
-                    direction: 'forwards' 
+                    for (let nr = 1; nr <= 6; nr++) {
+                        if (meshName.includes('drawer' + nr)) {
+                            toggleStalcius(nr);
+                            break;
+                        }
+                    }
                 });
-                
-                animationMonitorId = requestAnimationFrame(checkAnimation);
-                
-                button.setAttribute('data-is-open', (!isOpen).toString());
-                button.textContent = isOpen ? `Atidaryti stalčius` : `Uždaryti stalčius`;
-                button.classList.toggle('open', !isOpen);
-
-            } catch (e) {
-                 console.error("Animacijos klaida:", e);
-                 statusMessage.innerHTML = `❌ KLAIDA: Nepavyko paleisti animacijos. Patikrinkite animacijos pavadinimą.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 statusMessage.style.display = 'block';
-                 isAnimating = false; 
             }
-        }
-        
-        if (toggleButton) {
-            toggleButton.addEventListener('click', toggleAnimation);
-        }
-
-        // Pradinis modelio nustatymas: Uždaryta pozicija
-        modelViewer.addEventListener('model-visibility', () => {
-             const animationName = toggleButton.getAttribute('data-animation-name');
-             const availableAnimations = modelViewer.availableAnimations || [];
-
-             if (availableAnimations.includes(animationName)) {
-                 modelViewer.animationName = animationName;
-                 modelViewer.currentTime = OPEN_START_TIME; // 0.0s
-                 modelViewer.pause();
-             } else {
-                 statusMessage.innerHTML = `❌ Animacija '${animationName}' nerasta. Galimi pavadinimai: ${availableAnimations.join(', ')}.`;
-                 statusMessage.style.backgroundColor = '#f44336';
-                 statusMessage.style.display = 'block';
-             }
         });
-        
     </script>
 </body>
 </html>
