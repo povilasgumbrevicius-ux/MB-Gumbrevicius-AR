@@ -123,9 +123,6 @@
         // --- Konfigūracija ---
         const MODEL_URL = '../modeliai/baldai/spintele.glb';  // TAVO KELIAS
         
-        // Animacijų pavadinimai
-        const DRAWER_NAMES = ['Drawer1', 'Drawer2', 'Drawer3', 'Drawer4', 'Drawer5', 'Drawer6'];
-        
         // Laiko nustatymai (72 kadrai prie 24 fps = 3 sekundes)
         const OPEN_DURATION = 3.0;   // 3 sekundės
         const CLOSE_DURATION = 3.0;  // 3 sekundės
@@ -163,7 +160,6 @@
             camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
             
             // ========== ĮKĖLIMAS SU DRACO PALAIKYMU ==========
-            // Sukuriame DRACOLoader (net jei GLB ne Draco, nieko blogo neatsitiks)
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
             
@@ -180,51 +176,54 @@
                     // Sukuriame AnimationMixer
                     mixer = new THREE.AnimationMixer(model);
                     
-                    // IEŠKOME ANIMACIJŲ PAGAL PAVADINIMUS
-                    // Tikriname, kokios animacijos išvis yra GLB faile
                     console.log('Rastos animacijos:', gltf.animations.map(a => a.name));
+                    console.log('Objektai modelyje:');
+                    model.traverse((node) => {
+                        if (node.isMesh && node.name.includes('Drawer')) {
+                            console.log('  -', node.name);
+                        }
+                    });
                     
-                    // Kiekvienam stalčiui bandome rasti animaciją
-                    for (let i = 0; i < DRAWER_NAMES.length; i++) {
-                        const drawerName = DRAWER_NAMES[i];
-                        // Bandome atpažinti animacijos pavadinimą (gali būti open_drawer1, Drawer1, openDrawer1...)
-                        let foundClip = null;
+                    // KIEKVIENAI ANIMACIJAI PRISKIRIAME KONKRETŲ OBJEKTĄ
+                    gltf.animations.forEach((clip) => {
+                        const animName = clip.name; // "Drawer1", "Drawer2"...
                         
-                        // 1. Bandome standartinį open_drawer1 formatą
-                        foundClip = THREE.AnimationClip.findByName(gltf.animations, `open_drawer${i+1}`);
+                        // Ieškome objekto tokiu pačiu pavadinimu
+                        let targetObject = model.getObjectByName(animName);
                         
-                        // 2. Jei nerado, bandome tiesiog Drawer1
-                        if (!foundClip) {
-                            foundClip = THREE.AnimationClip.findByName(gltf.animations, drawerName);
+                        // Jei nerado, bandome su tašku (Drawer3. -> Drawer3.)
+                        if (!targetObject && animName.includes('Drawer')) {
+                            targetObject = model.getObjectByName(`${animName}.`);
                         }
                         
-                        // 3. Jei dar nerado, bandome bet kurią animaciją, kurios pavadinime yra drawer
-                        if (!foundClip) {
-                            foundClip = gltf.animations.find(clip => clip.name && clip.name.toLowerCase().includes('drawer') && clip.name.includes(`${i+1}`));
+                        // Jei nerado, bandome su .001
+                        if (!targetObject) {
+                            targetObject = model.getObjectByName(`${animName}.001`);
                         }
                         
-                        if (foundClip) {
-                            const action = mixer.clipAction(foundClip);
+                        if (targetObject && mixer) {
+                            // PRISKIRIAME ANIMACIJĄ KONKRETIAM OBJEKTUI
+                            const action = mixer.clipAction(clip, targetObject);
                             action.play();
                             action.paused = true;
-                            action.time = 0;
-                            activeActions.set(drawerName, action);
-                            drawerStates.set(drawerName, false);
-                            console.log(`✅ Stalčiui ${drawerName} priskirta animacija: ${foundClip.name}`);
+                            action.time = 0; // uždaryta būsena
+                            
+                            const drawerKey = targetObject.name;
+                            activeActions.set(drawerKey, action);
+                            drawerStates.set(drawerKey, false);
+                            console.log(`✅ ${clip.name} -> ${targetObject.name}`);
                         } else {
-                            console.warn(`❌ Animacija stalčiui ${drawerName} nerasta`);
+                            console.warn(`❌ Nerastas objektas animacijai: ${clip.name}`);
                         }
-                    }
+                    });
                     
                     if (activeActions.size === 0) {
-                        document.getElementById('status').innerHTML = '⚠️ Nerasta animacijų. Galimi pavadinimai: ' + gltf.animations.map(a => a.name).join(', ');
+                        document.getElementById('status').innerHTML = '⚠️ Nerasta animacijų.';
                     } else {
                         document.getElementById('status').innerHTML = `✅ Įkelta. Rasta ${activeActions.size} stalčių animacijų.`;
                     }
                 },
-                (xhr) => {
-                    // progresas
-                },
+                null,
                 (error) => {
                     console.error('Klaida kraunant modelį:', error);
                     document.getElementById('status').innerHTML = `❌ Klaida: modelis neįkeltas. Tikrink kelią: ${MODEL_URL}`;
@@ -270,7 +269,15 @@
         }
         
         function toggleDrawer(drawerName, buttonElement) {
-            const action = activeActions.get(drawerName);
+            // drawerName ateina kaip "Drawer1", bet activeActions raktai gali būti "Drawer1" arba "Drawer1." arba "Drawer1.001"
+            let action = activeActions.get(drawerName);
+            if (!action) {
+                action = activeActions.get(`${drawerName}.`);
+            }
+            if (!action) {
+                action = activeActions.get(`${drawerName}.001`);
+            }
+            
             if (!action || !mixer) {
                 document.getElementById('status').innerHTML = `❌ Stalčius ${drawerName} neturi animacijos`;
                 return;
