@@ -117,39 +117,34 @@
     <script type="module">
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
         import { ARButton } from 'three/addons/webxr/ARButton.js';
 
         // --- Konfigūracija ---
-        // !!! PAKEISTI Į SAVO GLB FAILO KELIĄ !!!
-        const MODEL_URL = '../modeliai/baldai/spintele.glb';  // TAVO MODELIS
+        const MODEL_URL = '../modeliai/baldai/spintele.glb';  // TAVO KELIAS
         
-        // Animacijų pavadinimai (pagal GLB failą)
+        // Animacijų pavadinimai
         const DRAWER_NAMES = ['Drawer1', 'Drawer2', 'Drawer3', 'Drawer4', 'Drawer5', 'Drawer6'];
-        const ANIM_PREFIX = 'open_drawer'; // open_drawer1, open_drawer2, ...
         
         // Laiko nustatymai (72 kadrai prie 24 fps = 3 sekundes)
-        const FPS = 24;
-        const OPEN_FRAMES = 72;
-        const CLOSE_FRAMES = 72;
-        const OPEN_DURATION = OPEN_FRAMES / FPS;   // 3.0 s
-        const CLOSE_DURATION = CLOSE_FRAMES / FPS; // 3.0 s
+        const OPEN_DURATION = 3.0;   // 3 sekundės
+        const CLOSE_DURATION = 3.0;  // 3 sekundės
         
         // --- Būsenos kintamieji ---
         let scene, camera, renderer;
         let model = null;
         let mixer = null;
         let clock = new THREE.Clock();
-        let activeActions = new Map(); // saugo animacijas kiekvienam stalčiui
-        let drawerStates = new Map();   // true = atidaryta, false = uždaryta
-        
+        let activeActions = new Map();
+        let drawerStates = new Map();
         let isARMode = false;
         
-        // --- Inicijuojame sceną (be kameros, ji bus iš AR) ---
+        // --- Inicijuojame sceną ---
         function initScene() {
             scene = new THREE.Scene();
-            scene.background = null; // skaidrus fonas AR režime
+            scene.background = null;
             
-            // Šviesos – būtinos, kad modelis būtų matomas
+            // Šviesos
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             const dirLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -167,8 +162,14 @@
             
             camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
             
-            // Įkeliame GLB modelį
+            // ========== ĮKĖLIMAS SU DRACO PALAIKYMU ==========
+            // Sukuriame DRACOLoader (net jei GLB ne Draco, nieko blogo neatsitiks)
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
+            
             const loader = new GLTFLoader();
+            loader.setDRACOLoader(dracoLoader);
+            
             loader.load(MODEL_URL, 
                 (gltf) => {
                     model = gltf.scene;
@@ -179,38 +180,54 @@
                     // Sukuriame AnimationMixer
                     mixer = new THREE.AnimationMixer(model);
                     
-                    // Kiekvienam stalčiui randame atitinkamą animaciją
+                    // IEŠKOME ANIMACIJŲ PAGAL PAVADINIMUS
+                    // Tikriname, kokios animacijos išvis yra GLB faile
+                    console.log('Rastos animacijos:', gltf.animations.map(a => a.name));
+                    
+                    // Kiekvienam stalčiui bandome rasti animaciją
                     for (let i = 0; i < DRAWER_NAMES.length; i++) {
                         const drawerName = DRAWER_NAMES[i];
-                        const animName = `${ANIM_PREFIX}${i+1}`; // open_drawer1, open_drawer2, ...
+                        // Bandome atpažinti animacijos pavadinimą (gali būti open_drawer1, Drawer1, openDrawer1...)
+                        let foundClip = null;
                         
-                        const clip = THREE.AnimationClip.findByName(gltf.animations, animName);
-                        if (clip) {
-                            const action = mixer.clipAction(clip);
-                            // Nustatome, kad animacija nevaidintų automatiškai, laikytų pirmą kadrą
+                        // 1. Bandome standartinį open_drawer1 formatą
+                        foundClip = THREE.AnimationClip.findByName(gltf.animations, `open_drawer${i+1}`);
+                        
+                        // 2. Jei nerado, bandome tiesiog Drawer1
+                        if (!foundClip) {
+                            foundClip = THREE.AnimationClip.findByName(gltf.animations, drawerName);
+                        }
+                        
+                        // 3. Jei dar nerado, bandome bet kurią animaciją, kurios pavadinime yra drawer
+                        if (!foundClip) {
+                            foundClip = gltf.animations.find(clip => clip.name && clip.name.toLowerCase().includes('drawer') && clip.name.includes(`${i+1}`));
+                        }
+                        
+                        if (foundClip) {
+                            const action = mixer.clipAction(foundClip);
                             action.play();
                             action.paused = true;
-                            action.time = 0; // pradžioje uždaryta
+                            action.time = 0;
                             activeActions.set(drawerName, action);
                             drawerStates.set(drawerName, false);
+                            console.log(`✅ Stalčiui ${drawerName} priskirta animacija: ${foundClip.name}`);
                         } else {
-                            console.warn(`Animacija ${animName} nerasta GLB faile`);
+                            console.warn(`❌ Animacija stalčiui ${drawerName} nerasta`);
                         }
                     }
                     
-                    // Patikriname ar radome bent vieną animaciją
                     if (activeActions.size === 0) {
-                        document.getElementById('status').innerHTML = '⚠️ Nerasta jokių animacijų GLB faile. Patikrinkite pavadinimus: open_drawer1...open_drawer6';
+                        document.getElementById('status').innerHTML = '⚠️ Nerasta animacijų. Galimi pavadinimai: ' + gltf.animations.map(a => a.name).join(', ');
                     } else {
-                        document.getElementById('status').innerHTML = `✅ Modelis įkeltas. Rasta ${activeActions.size} stalčių animacijų. Spausk "Įjungti AR".`;
+                        document.getElementById('status').innerHTML = `✅ Įkelta. Rasta ${activeActions.size} stalčių animacijų.`;
                     }
                 },
                 (xhr) => {
-                    // kraunama
+                    // progresas
                 },
                 (error) => {
                     console.error('Klaida kraunant modelį:', error);
-                    document.getElementById('status').innerHTML = `❌ Klaida: modelis neįkeltas. Patikrinkite kelią: ${MODEL_URL}`;
+                    document.getElementById('status').innerHTML = `❌ Klaida: modelis neįkeltas. Tikrink kelią: ${MODEL_URL}`;
                 }
             );
             
@@ -226,26 +243,24 @@
                 arButton.style.cssText = origBtn.style.cssText;
             }
             
-            // Sekame AR sesijos pradžią/pabaigą
             renderer.xr.addEventListener('sessionstart', () => {
                 isARMode = true;
-                document.getElementById('status').innerHTML = '🔘 AR režimas aktyvus. Spausk stalčių mygtukus!';
-                // Koreguojame modelio padėtį AR
+                document.getElementById('status').innerHTML = '🔘 AR režimas. Spausk stalčius!';
                 if (model) {
                     model.position.set(0, -0.2, -0.6);
                     model.scale.set(0.5, 0.5, 0.5);
                 }
             });
+            
             renderer.xr.addEventListener('sessionend', () => {
                 isARMode = false;
-                document.getElementById('status').innerHTML = '✅ AR režimas baigtas. Spausk "Įjungti AR" vėl.';
+                document.getElementById('status').innerHTML = '✅ AR baigtas. Spausk mygtuką vėl.';
                 if (model) {
                     model.position.set(0, 0, -0.8);
                     model.scale.set(0.6, 0.6, 0.6);
                 }
             });
             
-            // Mygtukų stalčiams event'ai
             document.querySelectorAll('.drawer-btn').forEach(btn => {
                 const drawerId = btn.getAttribute('data-drawer');
                 btn.addEventListener('click', () => toggleDrawer(drawerId, btn));
@@ -254,29 +269,29 @@
             startAnimationLoop();
         }
         
-        // Stalčiaus atidarymas/uždarymas su reverse
         function toggleDrawer(drawerName, buttonElement) {
             const action = activeActions.get(drawerName);
             if (!action || !mixer) {
-                console.warn(`Stalčius ${drawerName} neturi animacijos`);
+                document.getElementById('status').innerHTML = `❌ Stalčius ${drawerName} neturi animacijos`;
                 return;
             }
             
             const isOpen = drawerStates.get(drawerName) || false;
             
+            // Sustabdome dabartinę animaciją
+            action.paused = false;
+            action.reset();
+            
             if (!isOpen) {
-                // ATIDARYTI: nuo 0 iki OPEN_DURATION (3s)
-                action.paused = false;
-                action.timeScale = 1 / OPEN_DURATION; // normalize: 0..1 per 3s
+                // ATIDARYTI: nuo 0 iki 1
                 action.time = 0;
-                action.reset();
+                action.timeScale = 1 / OPEN_DURATION;
                 action.play();
                 
-                // Po OPEN_DURATION sustabdome ir palaikome atidarytą
                 setTimeout(() => {
                     if (action) {
                         action.paused = true;
-                        action.time = 1; // pabaiga (atidaryta)
+                        action.time = 1;
                     }
                 }, OPEN_DURATION * 1000);
                 
@@ -287,15 +302,14 @@
                 }
             } else {
                 // UŽDARYTI (reverse): nuo 1 iki 0
-                action.paused = false;
-                action.timeScale = -1 / CLOSE_DURATION; // juda atgal per 3s
                 action.time = 1;
+                action.timeScale = -1 / CLOSE_DURATION;
                 action.play();
                 
                 setTimeout(() => {
                     if (action) {
                         action.paused = true;
-                        action.time = 0; // uždaryta
+                        action.time = 0;
                     }
                 }, CLOSE_DURATION * 1000);
                 
@@ -306,14 +320,11 @@
                 }
             }
             
-            // Statuso pranešimas
             const stateText = !isOpen ? 'atsidaro' : 'užsidaro';
             document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} ${stateText}...`;
             setTimeout(() => {
                 if (isARMode) {
-                    document.getElementById('status').innerHTML = `🔘 AR režimas. Spausk stalčių mygtukus.`;
-                } else {
-                    document.getElementById('status').innerHTML = `✅ Pasiruošęs. Spausk "Įjungti AR" kameroje.`;
+                    document.getElementById('status').innerHTML = `🔘 AR režimas. Spausk stalčius.`;
                 }
             }, 2000);
         }
@@ -337,7 +348,6 @@
             }
         });
         
-        // Start
         initScene();
     </script>
 </body>
