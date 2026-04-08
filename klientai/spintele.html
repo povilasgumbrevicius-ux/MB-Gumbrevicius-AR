@@ -3,33 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Spintelė AR su stalčių animacijomis</title>
+    <title>Spintelė AR - Babylon.js</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        }
-        #ar-button {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #007aff;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: 600;
-            z-index: 100;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.2s, background 0.2s;
-        }
-        #ar-button:active {
-            transform: translateX(-50%) scale(0.96);
-            background: #0051a8;
+            font-family: system-ui;
         }
         #controls {
             position: absolute;
@@ -43,12 +22,8 @@
             padding: 12px 20px;
             border-radius: 60px;
             backdrop-filter: blur(10px);
-            flex-wrap: wrap;
-            justify-content: center;
-            pointer-events: none;
         }
         .drawer-btn {
-            pointer-events: auto;
             background: #ff9500;
             border: none;
             color: white;
@@ -58,14 +33,10 @@
             font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             min-width: 60px;
         }
         .drawer-btn.open {
             background: #34c759;
-        }
-        .drawer-btn.close {
-            background: #ff3b30;
         }
         .drawer-btn:active {
             transform: scale(0.94);
@@ -83,13 +54,22 @@
             text-align: center;
             z-index: 100;
             backdrop-filter: blur(8px);
-            font-weight: 500;
             pointer-events: none;
         }
-        @media (max-width: 600px) {
-            .drawer-btn { padding: 8px 12px; font-size: 12px; min-width: 50px; }
-            #controls { gap: 8px; padding: 10px 16px; bottom: 90px; }
-            #ar-button { padding: 12px 24px; font-size: 16px; bottom: 25px; }
+        #ar-button {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -105,247 +85,123 @@
     </div>
     <button id="ar-button">🔘 Įjungti AR (kamera)</button>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
-            }
-        }
-    </script>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/xr/babylon.xr.js"></script>
 
-    <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-        import { ARButton } from 'three/addons/webxr/ARButton.js';
-
-        // --- Konfigūracija ---
+    <script>
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        document.body.appendChild(canvas);
+        
+        const engine = new BABYLON.Engine(canvas, true);
+        const scene = new BABYLON.Scene(engine);
+        
+        // Kamera (ne AR)
+        const camera = new BABYLON.ArcRotateCamera('camera', -Math.PI/2, Math.PI/3, 2, BABYLON.Vector3.Zero(), scene);
+        camera.attachControl(canvas, true);
+        
+        // Šviesa
+        const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+        light.intensity = 0.8;
+        
         const MODEL_URL = '../modeliai/baldai/spintele.glb';
+        let drawerGroups = new Map();
         
-        const OPEN_DURATION = 3.0;
-        const CLOSE_DURATION = 3.0;
-        
-        let scene, camera, renderer;
-        let model = null;
-        let mixer = null;
-        let clock = new THREE.Clock();
-        let activeActions = new Map();
-        let drawerStates = new Map();
-        let isARMode = false;
-        
-        function initScene() {
-            scene = new THREE.Scene();
-            scene.background = null;
+        // Įkelti GLB
+        BABYLON.SceneLoader.LoadAssetContainerAsync(MODEL_URL, scene, (container) => {
+            container.addAllToScene();
             
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-            dirLight.position.set(1, 2, 1);
-            scene.add(dirLight);
-            const fillLight = new THREE.DirectionalLight(0x88aaff, 0.4);
-            fillLight.position.set(-0.5, 1, 0.8);
-            scene.add(fillLight);
-            
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.xr.enabled = true;
-            document.body.appendChild(renderer.domElement);
-            
-            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
-            
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
-            
-            const loader = new GLTFLoader();
-            loader.setDRACOLoader(dracoLoader);
-            
-            loader.load(MODEL_URL, 
-                (gltf) => {
-                    model = gltf.scene;
-                    scene.add(model);
-                    model.position.set(0, 0, -0.8);
-                    model.scale.set(0.6, 0.6, 0.6);
-                    
-                    mixer = new THREE.AnimationMixer(model);
-                    
-                    console.log('Rastos animacijos:', gltf.animations.map(a => a.name));
-                    
-                    // Sukuriame objektų žemėlapį
-                    const objectMap = new Map();
-                    model.traverse((node) => {
-                        if (node.isMesh && node.name.includes('Drawer')) {
-                            objectMap.set(node.name, node);
-                            console.log('Objektas:', node.name);
-                        }
-                    });
-                    
-                    // Priskiriame animacijas prie objektų
-                    gltf.animations.forEach((clip) => {
-                        let targetObject = null;
-                        
-                        // Tiesioginė paieška
-                        targetObject = objectMap.get(clip.name);
-                        
-                        // Su tašku gale
-                        if (!targetObject) {
-                            targetObject = objectMap.get(`${clip.name}.`);
-                        }
-                        
-                        // Be skaičiaus (jei reikia)
-                        if (!targetObject && clip.name.match(/Drawer\d/)) {
-                            const baseName = clip.name;
-                            targetObject = objectMap.get(baseName);
-                        }
-                        
-                        if (targetObject && mixer) {
-                            const action = mixer.clipAction(clip, targetObject);
-                            action.play();
-                            action.paused = true;
-                            action.time = 0;
-                            
-                            activeActions.set(targetObject.name, action);
-                            drawerStates.set(targetObject.name, false);
-                            console.log(`✅ ${clip.name} -> ${targetObject.name}`);
-                        } else {
-                            console.warn(`❌ Nerastas objektas: ${clip.name}`);
-                        }
-                    });
-                    
-                    document.getElementById('status').innerHTML = activeActions.size > 0 
-                        ? `✅ Įkelta. Rasta ${activeActions.size} stalčių animacijų.`
-                        : '⚠️ Nerasta animacijų.';
-                },
-                null,
-                (error) => {
-                    console.error('Klaida:', error);
-                    document.getElementById('status').innerHTML = `❌ Klaida: ${error.message}`;
+            // Rasti animacijų grupes
+            container.animationGroups.forEach(group => {
+                const name = group.name;
+                if (name && name.includes('Drawer')) {
+                    group.stop();
+                    group.reset();
+                    drawerGroups.set(name, group);
+                    console.log('✅ Animacija:', name);
                 }
-            );
-            
-            const arButton = ARButton.createButton(renderer, {
-                requiredFeatures: ['local-floor'],
-                optionalFeatures: ['dom-overlay']
             });
-            const origBtn = document.getElementById('ar-button');
-            if (origBtn && arButton) {
-                origBtn.parentNode.replaceChild(arButton, origBtn);
-                arButton.id = 'ar-button';
-                arButton.style.cssText = origBtn.style.cssText;
-            }
             
-            renderer.xr.addEventListener('sessionstart', () => {
-                isARMode = true;
+            // Patikrinti ar objektai yra
+            scene.meshes.forEach(mesh => {
+                if (mesh.name && mesh.name.includes('Drawer')) {
+                    console.log('Objektas:', mesh.name);
+                }
+            });
+            
+            document.getElementById('status').innerHTML = `✅ Įkelta. Rasta ${drawerGroups.size} animacijų.`;
+        });
+        
+        // AR mygtukas
+        const arButton = document.getElementById('ar-button');
+        let xrHelper = null;
+        
+        arButton.addEventListener('click', async () => {
+            if (!xrHelper) {
+                const xr = await scene.createDefaultXRExperienceAsync({
+                    uiOptions: {
+                        sessionMode: 'immersive-ar',
+                        referenceSpaceType: 'local-floor'
+                    }
+                });
+                xrHelper = xr;
+                arButton.textContent = '🔘 AR aktyvus';
+                arButton.style.background = '#34c759';
                 document.getElementById('status').innerHTML = '🔘 AR režimas. Spausk stalčius!';
-                if (model) {
-                    model.position.set(0, -0.2, -0.6);
-                    model.scale.set(0.5, 0.5, 0.5);
-                }
-            });
-            
-            renderer.xr.addEventListener('sessionend', () => {
-                isARMode = false;
-                document.getElementById('status').innerHTML = '✅ AR baigtas. Spausk mygtuką vėl.';
-                if (model) {
-                    model.position.set(0, 0, -0.8);
-                    model.scale.set(0.6, 0.6, 0.6);
-                }
-            });
-            
-            document.querySelectorAll('.drawer-btn').forEach(btn => {
-                const drawerId = btn.getAttribute('data-drawer');
-                btn.addEventListener('click', () => toggleDrawer(drawerId, btn));
-            });
-            
-            startAnimationLoop();
-        }
-        
-        function toggleDrawer(drawerName, buttonElement) {
-            // drawerName yra "Drawer1", o activeActions raktai yra objektų pavadinimai
-            let action = activeActions.get(drawerName);
-            if (!action) {
-                action = activeActions.get(`${drawerName}.`);
-            }
-            if (!action) {
-                action = activeActions.get(`${drawerName}.001`);
-            }
-            
-            if (!action) {
-                document.getElementById('status').innerHTML = `❌ Stalčius ${drawerName} neturi animacijos`;
-                return;
-            }
-            
-            const isOpen = drawerStates.get(drawerName) || false;
-            
-            // Nutraukiame einamąją animaciją
-            action.stop();
-            
-            if (!isOpen) {
-                // ATIDARYTI
-                action.time = 0;
-                action.setEffectiveTimeScale(1 / OPEN_DURATION);
-                action.setEffectiveWeight(1);
-                action.play();
                 
-                setTimeout(() => {
-                    if (action) {
-                        action.stop();
-                        action.time = 1;
-                    }
-                }, OPEN_DURATION * 1000);
-                
-                drawerStates.set(drawerName, true);
-                buttonElement?.classList.add('open');
-                buttonElement?.classList.remove('close');
+                // Pritaikyti modelio padėtį AR
+                if (scene.meshes.length > 0) {
+                    scene.meshes.forEach(mesh => {
+                        if (mesh.name === 'Spintele' || mesh.name.includes('Drawer')) {
+                            mesh.position.y = -0.3;
+                        }
+                    });
+                }
             } else {
-                // UŽDARYTI
-                action.time = 1;
-                action.setEffectiveTimeScale(-1 / CLOSE_DURATION);
-                action.setEffectiveWeight(1);
-                action.play();
-                
-                setTimeout(() => {
-                    if (action) {
-                        action.stop();
-                        action.time = 0;
-                    }
-                }, CLOSE_DURATION * 1000);
-                
-                drawerStates.set(drawerName, false);
-                buttonElement?.classList.remove('open');
-                buttonElement?.classList.add('close');
-            }
-            
-            const stateText = !isOpen ? 'atsidaro' : 'užsidaro';
-            document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} ${stateText}...`;
-            setTimeout(() => {
-                if (isARMode) {
-                    document.getElementById('status').innerHTML = '🔘 AR režimas. Spausk stalčius.';
-                }
-            }, 2000);
-        }
-        
-        function startAnimationLoop() {
-            function animate() {
-                const delta = clock.getDelta();
-                if (mixer) {
-                    mixer.update(delta);
-                }
-                renderer.render(scene, camera);
-            }
-            renderer.setAnimationLoop(animate);
-        }
-        
-        window.addEventListener('resize', () => {
-            if (camera) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
+                // Jei jau aktyvuota
+                document.getElementById('status').innerHTML = '🔘 AR jau aktyvus. Spausk stalčius!';
             }
         });
         
-        initScene();
+        // Mygtukai
+        document.querySelectorAll('.drawer-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const drawerName = btn.getAttribute('data-drawer');
+                const group = drawerGroups.get(drawerName);
+                
+                if (!group) {
+                    document.getElementById('status').innerHTML = `❌ Stalčius ${drawerName} neturi animacijos`;
+                    return;
+                }
+                
+                if (btn.classList.contains('open')) {
+                    // Uždaryti
+                    group.stop();
+                    group.reset();
+                    btn.classList.remove('open');
+                    document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} užsidaro...`;
+                } else {
+                    // Atidaryti
+                    group.start(true);
+                    btn.classList.add('open');
+                    document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} atsidaro...`;
+                }
+                
+                setTimeout(() => {
+                    if (document.getElementById('status').innerHTML.includes(drawerName)) {
+                        document.getElementById('status').innerHTML = '🔘 Spausk stalčius arba AR.';
+                    }
+                }, 2500);
+            });
+        });
+        
+        engine.runRenderLoop(() => scene.render());
+        window.addEventListener('resize', () => engine.resize());
     </script>
 </body>
 </html>
