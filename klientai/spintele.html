@@ -3,205 +3,248 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Spintelė AR - Babylon.js</title>
+    <title>Spintelė AR</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: system-ui;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #000; font-family: system-ui; }
+
+        #video {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
         }
-        #controls {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            z-index: 100;
-            background: rgba(0,0,0,0.6);
-            padding: 12px 20px;
-            border-radius: 60px;
-            backdrop-filter: blur(10px);
+
+        #canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
-        .drawer-btn {
-            background: #ff9500;
-            border: none;
-            color: white;
-            font-weight: bold;
-            padding: 10px 16px;
-            border-radius: 40px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-width: 60px;
-        }
-        .drawer-btn.open {
-            background: #34c759;
-        }
-        .drawer-btn:active {
-            transform: scale(0.94);
-        }
+
         #status {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
+            position: fixed;
+            top: 20px; left: 20px; right: 20px;
+            background: rgba(0,0,0,0.65);
             color: #ffcc00;
             padding: 10px 16px;
             border-radius: 30px;
             font-size: 14px;
             text-align: center;
-            z-index: 100;
+            z-index: 10;
             backdrop-filter: blur(8px);
             pointer-events: none;
         }
-        #ar-button {
-            position: absolute;
-            bottom: 30px;
+
+        #controls {
+            position: fixed;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            padding: 12px 18px;
+            border-radius: 60px;
+            backdrop-filter: blur(12px);
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 92vw;
+        }
+
+        .drawer-btn {
+            background: #ff9500;
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 12px 18px;
+            border-radius: 40px;
+            font-size: 15px;
+            cursor: pointer;
+            min-width: 52px;
+            transition: background 0.2s;
+        }
+
+        .drawer-btn.open { background: #34c759; }
+        .drawer-btn:active { transform: scale(0.92); }
+
+        #start-btn {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
             background: #007aff;
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: 600;
-            z-index: 100;
+            padding: 18px 36px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: 700;
+            z-index: 20;
             cursor: pointer;
+            box-shadow: 0 4px 24px rgba(0,122,255,0.5);
         }
     </style>
 </head>
 <body>
-    <div id="status">✅ Pasiruošęs. Spausk "Įjungti AR"</div>
-    <div id="controls">
-        <button class="drawer-btn" data-drawer="Drawer1">📦 1</button>
-        <button class="drawer-btn" data-drawer="Drawer2">📦 2</button>
-        <button class="drawer-btn" data-drawer="Drawer3">📦 3</button>
-        <button class="drawer-btn" data-drawer="Drawer4">📦 4</button>
-        <button class="drawer-btn" data-drawer="Drawer5">📦 5</button>
-        <button class="drawer-btn" data-drawer="Drawer6">📦 6</button>
-    </div>
-    <button id="ar-button">🔘 Įjungti AR (kamera)</button>
 
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-    <script src="https://cdn.babylonjs.com/xr/babylon.xr.js"></script>
+<video id="video" autoplay playsinline muted></video>
+<canvas id="canvas"></canvas>
+<div id="status">⏳ Spausk "Įjungti AR"</div>
 
-    <script>
-        const canvas = document.createElement('canvas');
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        document.body.appendChild(canvas);
-        
-        const engine = new BABYLON.Engine(canvas, true);
-        const scene = new BABYLON.Scene(engine);
-        
-        // Kamera (ne AR)
-        const camera = new BABYLON.ArcRotateCamera('camera', -Math.PI/2, Math.PI/3, 2, BABYLON.Vector3.Zero(), scene);
-        camera.attachControl(canvas, true);
-        
-        // Šviesa
-        const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
-        light.intensity = 0.8;
-        
-        const MODEL_URL = '../modeliai/baldai/spintele.glb';
-        let drawerGroups = new Map();
-        
-        // Įkelti GLB
-        BABYLON.SceneLoader.LoadAssetContainerAsync(MODEL_URL, scene, (container) => {
-            container.addAllToScene();
-            
-            // Rasti animacijų grupes
-            container.animationGroups.forEach(group => {
-                const name = group.name;
-                if (name && name.includes('Drawer')) {
-                    group.stop();
-                    group.reset();
-                    drawerGroups.set(name, group);
-                    console.log('✅ Animacija:', name);
-                }
-            });
-            
-            // Patikrinti ar objektai yra
-            scene.meshes.forEach(mesh => {
-                if (mesh.name && mesh.name.includes('Drawer')) {
-                    console.log('Objektas:', mesh.name);
-                }
-            });
-            
-            document.getElementById('status').innerHTML = `✅ Įkelta. Rasta ${drawerGroups.size} animacijų.`;
+<div id="controls">
+    <button class="drawer-btn" data-anim="Drawer1">1</button>
+    <button class="drawer-btn" data-anim="Drawer2">2</button>
+    <button class="drawer-btn" data-anim="Drawer3">3</button>
+    <button class="drawer-btn" data-anim="Drawer4">4</button>
+    <button class="drawer-btn" data-anim="Drawer5">5</button>
+    <button class="drawer-btn" data-anim="Drawer6">6</button>
+</div>
+
+<button id="start-btn">📷 Įjungti AR</button>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const MODEL_PATH = '../modeliai/baldai/spintele.glb';
+
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const status = document.getElementById('status');
+const startBtn = document.getElementById('start-btn');
+
+// Three.js setup
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
+camera.position.set(0, 0.5, 1.5);
+camera.lookAt(0, 0.3, 0);
+
+// Šviesa
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+dirLight.position.set(2, 4, 2);
+scene.add(dirLight);
+
+// Animacijos
+let mixer = null;
+let actions = {};
+let drawerState = {};
+let clock = new THREE.Clock();
+
+// Įkelti GLB
+const loader = new GLTFLoader();
+loader.load(
+    MODEL_PATH,
+    (gltf) => {
+        const model = gltf.scene;
+        model.position.set(0, -0.3, 0);
+        model.scale.set(1, 1, 1);
+        scene.add(model);
+
+        mixer = new THREE.AnimationMixer(model);
+
+        gltf.animations.forEach(clip => {
+            const action = mixer.clipAction(clip);
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+            actions[clip.name] = action;
+            drawerState[clip.name] = false;
+            console.log('✅ Animacija:', clip.name);
         });
-        
-        // AR mygtukas
-        const arButton = document.getElementById('ar-button');
-        let xrHelper = null;
-        
-        arButton.addEventListener('click', async () => {
-            if (!xrHelper) {
-                const xr = await scene.createDefaultXRExperienceAsync({
-                    uiOptions: {
-                        sessionMode: 'immersive-ar',
-                        referenceSpaceType: 'local-floor'
-                    }
-                });
-                xrHelper = xr;
-                arButton.textContent = '🔘 AR aktyvus';
-                arButton.style.background = '#34c759';
-                document.getElementById('status').innerHTML = '🔘 AR režimas. Spausk stalčius!';
-                
-                // Pritaikyti modelio padėtį AR
-                if (scene.meshes.length > 0) {
-                    scene.meshes.forEach(mesh => {
-                        if (mesh.name === 'Spintele' || mesh.name.includes('Drawer')) {
-                            mesh.position.y = -0.3;
-                        }
-                    });
-                }
-            } else {
-                // Jei jau aktyvuota
-                document.getElementById('status').innerHTML = '🔘 AR jau aktyvus. Spausk stalčius!';
-            }
+
+        const count = Object.keys(actions).length;
+        status.textContent = `✅ Įkelta. ${count} animacijos. Spausk stalčių numerį!`;
+    },
+    (xhr) => {
+        const pct = Math.round(xhr.loaded / xhr.total * 100);
+        status.textContent = `⏳ Įkeliama... ${pct}%`;
+    },
+    (err) => {
+        status.textContent = '❌ Klaida: ' + err.message;
+        console.error(err);
+    }
+);
+
+// Kamera
+startBtn.addEventListener('click', async () => {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment' },
+            audio: false
         });
-        
-        // Mygtukai
-        document.querySelectorAll('.drawer-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const drawerName = btn.getAttribute('data-drawer');
-                const group = drawerGroups.get(drawerName);
-                
-                if (!group) {
-                    document.getElementById('status').innerHTML = `❌ Stalčius ${drawerName} neturi animacijos`;
-                    return;
-                }
-                
-                if (btn.classList.contains('open')) {
-                    // Uždaryti
-                    group.stop();
-                    group.reset();
-                    btn.classList.remove('open');
-                    document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} užsidaro...`;
-                } else {
-                    // Atidaryti
-                    group.start(true);
-                    btn.classList.add('open');
-                    document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} atsidaro...`;
-                }
-                
-                setTimeout(() => {
-                    if (document.getElementById('status').innerHTML.includes(drawerName)) {
-                        document.getElementById('status').innerHTML = '🔘 Spausk stalčius arba AR.';
-                    }
-                }, 2500);
-            });
-        });
-        
-        engine.runRenderLoop(() => scene.render());
-        window.addEventListener('resize', () => engine.resize());
-    </script>
+        video.srcObject = stream;
+        startBtn.style.display = 'none';
+        status.textContent = '📷 AR aktyvus. Spausk stalčių numerį!';
+    } catch (e) {
+        status.textContent = '❌ Kamera neprieinama: ' + e.message;
+    }
+});
+
+// Stalčių mygtukai
+document.querySelectorAll('.drawer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const animName = btn.getAttribute('data-anim');
+        const action = actions[animName];
+
+        if (!action) {
+            status.textContent = `❌ "${animName}" nerasta. Turimos: ${Object.keys(actions).join(', ')}`;
+            return;
+        }
+
+        const isOpen = drawerState[animName];
+
+        if (!isOpen) {
+            // Atidaryti
+            action.timeScale = 1;
+            action.reset();
+            action.play();
+            drawerState[animName] = true;
+            btn.classList.add('open');
+            status.textContent = `🟢 Stalčius ${animName} atsidarė`;
+        } else {
+            // Uždaryti - animacija atgal
+            action.timeScale = -1;
+            action.paused = false;
+            drawerState[animName] = false;
+            btn.classList.remove('open');
+            status.textContent = `🔴 Stalčius ${animName} užsidaro`;
+        }
+    });
+});
+
+// Resize
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Render loop
+function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    if (mixer) mixer.update(delta);
+    renderer.render(scene, camera);
+}
+animate();
+</script>
 </body>
 </html>
