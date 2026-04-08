@@ -44,15 +44,15 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 6px;
             z-index: 10;
             background: rgba(0,0,0,0.6);
-            padding: 12px 18px;
+            padding: 8px 12px;
             border-radius: 60px;
             backdrop-filter: blur(12px);
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: center;
-            max-width: 92vw;
+            
         }
 
         .drawer-btn {
@@ -60,11 +60,11 @@
             border: none;
             color: white;
             font-weight: 700;
-            padding: 12px 18px;
+            padding: 8px 12px;
             border-radius: 40px;
-            font-size: 15px;
+            font-size: 13px;
             cursor: pointer;
-            min-width: 52px;
+            min-width: 38px;
             transition: background 0.2s;
         }
 
@@ -72,19 +72,15 @@
         .drawer-btn:active { transform: scale(0.92); }
 
         #start-btn {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
             background: #007aff;
             color: white;
             border: none;
-            padding: 18px 36px;
-            border-radius: 50px;
-            font-size: 20px;
+            padding: 8px 12px;
+            border-radius: 40px;
+            font-size: 13px;
             font-weight: 700;
-            z-index: 20;
             cursor: pointer;
-            box-shadow: 0 4px 24px rgba(0,122,255,0.5);
+            min-width: 38px;
         }
     </style>
 </head>
@@ -95,6 +91,7 @@
 <div id="status">⏳ Spausk "Įjungti AR"</div>
 
 <div id="controls">
+    <button id="start-btn">📷 AR</button>
     <button class="drawer-btn" data-anim="Drawer1">1</button>
     <button class="drawer-btn" data-anim="Drawer2">2</button>
     <button class="drawer-btn" data-anim="Drawer3">3</button>
@@ -102,8 +99,6 @@
     <button class="drawer-btn" data-anim="Drawer5">5</button>
     <button class="drawer-btn" data-anim="Drawer6">6</button>
 </div>
-
-<button id="start-btn">📷 Įjungti AR</button>
 
 <script type="importmap">
 {
