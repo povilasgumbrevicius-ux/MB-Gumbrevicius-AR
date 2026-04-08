@@ -1,118 +1,344 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AR Spintelė – spausk stalčius kameroje</title>
-
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.min.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Spintelė AR su stalčių animacijomis</title>
     <style>
-        body { margin:0; padding:0; overflow:hidden; font-family: system-ui, -apple-system, sans-serif; }
-        
-        .header {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-            background: rgba(0,0,0,0.9); color: white; padding: 14px 20px;
-            text-align: center; font-size: 15px; line-height: 1.4;
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-        .ar-instruction { color: #00ffaa; font-weight: 700; }
-
-        .controls {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            z-index: 9999; background: rgba(0,0,0,0.92); color: white;
-            padding: 14px 20px; border-radius: 18px; display: flex; flex-wrap: wrap;
-            gap: 10px; max-width: 92%; box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+        #ar-button {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.2s, background 0.2s;
         }
-        .controls button {
-            background: #00d4ff; color: #000; border: none; padding: 13px 20px;
-            border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer;
-            box-shadow: 0 3px 12px rgba(0,212,255,0.4); transition: all 0.2s;
-            min-width: 70px;
+        #ar-button:active {
+            transform: translateX(-50%) scale(0.96);
+            background: #0051a8;
         }
-        .controls button:active {
-            transform: scale(0.94); background: #00b8e0;
+        #controls {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            background: rgba(0,0,0,0.6);
+            padding: 12px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+            justify-content: center;
+            pointer-events: none;
         }
-        .controls button.open {
-            background: #00ff88;
+        .drawer-btn {
+            pointer-events: auto;
+            background: #ff9500;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            min-width: 60px;
+        }
+        .drawer-btn.open {
+            background: #34c759;
+        }
+        .drawer-btn.close {
+            background: #ff3b30;
+        }
+        .drawer-btn:active {
+            transform: scale(0.94);
+        }
+        #status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: #ffcc00;
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            text-align: center;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            font-weight: 500;
+            pointer-events: none;
+        }
+        @media (max-width: 600px) {
+            .drawer-btn { padding: 8px 12px; font-size: 12px; min-width: 50px; }
+            #controls { gap: 8px; padding: 10px 16px; bottom: 90px; }
+            #ar-button { padding: 12px 24px; font-size: 16px; bottom: 25px; }
         }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <strong>Atidarykite šį puslapį <span class="ar-instruction">tiesiog Google Chrome</span><br>
-        (ne per WhatsApp, Gmail, Messenger ar kitą programėlę!)</strong>
+    <div id="status">✅ Pasiruošęs. Spausk "Įjungti AR"</div>
+    <div id="controls">
+        <button class="drawer-btn" data-drawer="Drawer1">📦 1</button>
+        <button class="drawer-btn" data-drawer="Drawer2">📦 2</button>
+        <button class="drawer-btn" data-drawer="Drawer3">📦 3</button>
+        <button class="drawer-btn" data-drawer="Drawer4">📦 4</button>
+        <button class="drawer-btn" data-drawer="Drawer5">📦 5</button>
+        <button class="drawer-btn" data-drawer="Drawer6">📦 6</button>
     </div>
+    <button id="ar-button">🔘 Įjungti AR (kamera)</button>
 
-    <a-scene arjs="sourceType: webcam" embedded vr-mode-ui="enabled: false">
-
-        <a-camera position="0 0 0">
-            <a-cursor 
-                raycaster="objects: .interactive; far: 10;" 
-                fuse="false" 
-                color="#00ffaa" 
-                events="click"></a-cursor>
-        </a-camera>
-
-        <a-entity 
-            id="spinta"
-            gltf-model="https://ar.gumbrevicius.lt/modeliai/baldai/spintele.glb"
-            position="0 0 -2.8"
-            scale="1 1 1"
-            class="interactive"
-            tap-handler>
-        </a-entity>
-
-        <div class="controls">
-            <button id="btn1" onclick="toggleStalcius(1)">1 stalčius</button>
-            <button id="btn2" onclick="toggleStalcius(2)">2 stalčius</button>
-            <button id="btn3" onclick="toggleStalcius(3)">3 stalčius</button>
-            <button id="btn4" onclick="toggleStalcius(4)">4 stalčius</button>
-            <button id="btn5" onclick="toggleStalcius(5)">5 stalčius</button>
-            <button id="btn6" onclick="toggleStalcius(6)">6 stalčius</button>
-        </div>
-
-    </a-scene>
-
-    <script>
-        // Kiekvieno stalčiaus būsena: false = uždarytas, true = atidarytas
-        const drawerState = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
-
-        function toggleStalcius(nr) {
-            const spinta = document.getElementById('spinta');
-            const btn = document.getElementById('btn' + nr);
-            if (!spinta) return;
-
-            const isOpen = drawerState[nr];
-            const timeScale = isOpen ? -1 : 1;
-
-            spinta.setAttribute('animation-mixer', `clip: open_drawer${nr}; loop: once; timeScale: ${timeScale};`);
-
-            drawerState[nr] = !isOpen;
-
-            // Mygtuko spalva: žalia = atidarytas
-            btn.classList.toggle('open', drawerState[nr]);
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
         }
+    </script>
 
-        // Raycast – paspaudus ant stalčiaus tiesiog kameroje
-        AFRAME.registerComponent('tap-handler', {
-            init: function() {
-                this.el.addEventListener('click', (evt) => {
-                    if (!evt.detail.intersection) return;
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { ARButton } from 'three/addons/webxr/ARButton.js';
 
-                    const meshName = (evt.detail.intersection.object.name || '').toLowerCase();
-                    console.log('Paspausta ant:', meshName);
-
-                    for (let nr = 1; nr <= 6; nr++) {
-                        if (meshName.includes('drawer' + nr)) {
-                            toggleStalcius(nr);
-                            break;
+        // --- Konfigūracija ---
+        // !!! PAKEISTI Į SAVO GLB FAILO KELIĄ !!!
+        const MODEL_URL = '../modeliai/baldai/spintele.glb';  // TAVO MODELIS
+        
+        // Animacijų pavadinimai (pagal GLB failą)
+        const DRAWER_NAMES = ['Drawer1', 'Drawer2', 'Drawer3', 'Drawer4', 'Drawer5', 'Drawer6'];
+        const ANIM_PREFIX = 'open_drawer'; // open_drawer1, open_drawer2, ...
+        
+        // Laiko nustatymai (72 kadrai prie 24 fps = 3 sekundes)
+        const FPS = 24;
+        const OPEN_FRAMES = 72;
+        const CLOSE_FRAMES = 72;
+        const OPEN_DURATION = OPEN_FRAMES / FPS;   // 3.0 s
+        const CLOSE_DURATION = CLOSE_FRAMES / FPS; // 3.0 s
+        
+        // --- Būsenos kintamieji ---
+        let scene, camera, renderer;
+        let model = null;
+        let mixer = null;
+        let clock = new THREE.Clock();
+        let activeActions = new Map(); // saugo animacijas kiekvienam stalčiui
+        let drawerStates = new Map();   // true = atidaryta, false = uždaryta
+        
+        let isARMode = false;
+        
+        // --- Inicijuojame sceną (be kameros, ji bus iš AR) ---
+        function initScene() {
+            scene = new THREE.Scene();
+            scene.background = null; // skaidrus fonas AR režime
+            
+            // Šviesos – būtinos, kad modelis būtų matomas
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(1, 2, 1);
+            scene.add(dirLight);
+            const fillLight = new THREE.DirectionalLight(0x88aaff, 0.4);
+            fillLight.position.set(-0.5, 1, 0.8);
+            scene.add(fillLight);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.xr.enabled = true;
+            document.body.appendChild(renderer.domElement);
+            
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+            
+            // Įkeliame GLB modelį
+            const loader = new GLTFLoader();
+            loader.load(MODEL_URL, 
+                (gltf) => {
+                    model = gltf.scene;
+                    scene.add(model);
+                    model.position.set(0, 0, -0.8);
+                    model.scale.set(0.6, 0.6, 0.6);
+                    
+                    // Sukuriame AnimationMixer
+                    mixer = new THREE.AnimationMixer(model);
+                    
+                    // Kiekvienam stalčiui randame atitinkamą animaciją
+                    for (let i = 0; i < DRAWER_NAMES.length; i++) {
+                        const drawerName = DRAWER_NAMES[i];
+                        const animName = `${ANIM_PREFIX}${i+1}`; // open_drawer1, open_drawer2, ...
+                        
+                        const clip = THREE.AnimationClip.findByName(gltf.animations, animName);
+                        if (clip) {
+                            const action = mixer.clipAction(clip);
+                            // Nustatome, kad animacija nevaidintų automatiškai, laikytų pirmą kadrą
+                            action.play();
+                            action.paused = true;
+                            action.time = 0; // pradžioje uždaryta
+                            activeActions.set(drawerName, action);
+                            drawerStates.set(drawerName, false);
+                        } else {
+                            console.warn(`Animacija ${animName} nerasta GLB faile`);
                         }
                     }
-                });
+                    
+                    // Patikriname ar radome bent vieną animaciją
+                    if (activeActions.size === 0) {
+                        document.getElementById('status').innerHTML = '⚠️ Nerasta jokių animacijų GLB faile. Patikrinkite pavadinimus: open_drawer1...open_drawer6';
+                    } else {
+                        document.getElementById('status').innerHTML = `✅ Modelis įkeltas. Rasta ${activeActions.size} stalčių animacijų. Spausk "Įjungti AR".`;
+                    }
+                },
+                (xhr) => {
+                    // kraunama
+                },
+                (error) => {
+                    console.error('Klaida kraunant modelį:', error);
+                    document.getElementById('status').innerHTML = `❌ Klaida: modelis neįkeltas. Patikrinkite kelią: ${MODEL_URL}`;
+                }
+            );
+            
+            // AR mygtukas
+            const arButton = ARButton.createButton(renderer, {
+                requiredFeatures: ['local-floor'],
+                optionalFeatures: ['dom-overlay']
+            });
+            const origBtn = document.getElementById('ar-button');
+            if (origBtn && arButton) {
+                origBtn.parentNode.replaceChild(arButton, origBtn);
+                arButton.id = 'ar-button';
+                arButton.style.cssText = origBtn.style.cssText;
+            }
+            
+            // Sekame AR sesijos pradžią/pabaigą
+            renderer.xr.addEventListener('sessionstart', () => {
+                isARMode = true;
+                document.getElementById('status').innerHTML = '🔘 AR režimas aktyvus. Spausk stalčių mygtukus!';
+                // Koreguojame modelio padėtį AR
+                if (model) {
+                    model.position.set(0, -0.2, -0.6);
+                    model.scale.set(0.5, 0.5, 0.5);
+                }
+            });
+            renderer.xr.addEventListener('sessionend', () => {
+                isARMode = false;
+                document.getElementById('status').innerHTML = '✅ AR režimas baigtas. Spausk "Įjungti AR" vėl.';
+                if (model) {
+                    model.position.set(0, 0, -0.8);
+                    model.scale.set(0.6, 0.6, 0.6);
+                }
+            });
+            
+            // Mygtukų stalčiams event'ai
+            document.querySelectorAll('.drawer-btn').forEach(btn => {
+                const drawerId = btn.getAttribute('data-drawer');
+                btn.addEventListener('click', () => toggleDrawer(drawerId, btn));
+            });
+            
+            startAnimationLoop();
+        }
+        
+        // Stalčiaus atidarymas/uždarymas su reverse
+        function toggleDrawer(drawerName, buttonElement) {
+            const action = activeActions.get(drawerName);
+            if (!action || !mixer) {
+                console.warn(`Stalčius ${drawerName} neturi animacijos`);
+                return;
+            }
+            
+            const isOpen = drawerStates.get(drawerName) || false;
+            
+            if (!isOpen) {
+                // ATIDARYTI: nuo 0 iki OPEN_DURATION (3s)
+                action.paused = false;
+                action.timeScale = 1 / OPEN_DURATION; // normalize: 0..1 per 3s
+                action.time = 0;
+                action.reset();
+                action.play();
+                
+                // Po OPEN_DURATION sustabdome ir palaikome atidarytą
+                setTimeout(() => {
+                    if (action) {
+                        action.paused = true;
+                        action.time = 1; // pabaiga (atidaryta)
+                    }
+                }, OPEN_DURATION * 1000);
+                
+                drawerStates.set(drawerName, true);
+                if (buttonElement) {
+                    buttonElement.classList.add('open');
+                    buttonElement.classList.remove('close');
+                }
+            } else {
+                // UŽDARYTI (reverse): nuo 1 iki 0
+                action.paused = false;
+                action.timeScale = -1 / CLOSE_DURATION; // juda atgal per 3s
+                action.time = 1;
+                action.play();
+                
+                setTimeout(() => {
+                    if (action) {
+                        action.paused = true;
+                        action.time = 0; // uždaryta
+                    }
+                }, CLOSE_DURATION * 1000);
+                
+                drawerStates.set(drawerName, false);
+                if (buttonElement) {
+                    buttonElement.classList.remove('open');
+                    buttonElement.classList.add('close');
+                }
+            }
+            
+            // Statuso pranešimas
+            const stateText = !isOpen ? 'atsidaro' : 'užsidaro';
+            document.getElementById('status').innerHTML = `🚪 Stalčius ${drawerName} ${stateText}...`;
+            setTimeout(() => {
+                if (isARMode) {
+                    document.getElementById('status').innerHTML = `🔘 AR režimas. Spausk stalčių mygtukus.`;
+                } else {
+                    document.getElementById('status').innerHTML = `✅ Pasiruošęs. Spausk "Įjungti AR" kameroje.`;
+                }
+            }, 2000);
+        }
+        
+        function startAnimationLoop() {
+            function animate() {
+                const delta = clock.getDelta();
+                if (mixer) {
+                    mixer.update(delta);
+                }
+                renderer.render(scene, camera);
+            }
+            renderer.setAnimationLoop(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            if (camera) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
             }
         });
+        
+        // Start
+        initScene();
     </script>
 </body>
 </html>
