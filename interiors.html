@@ -9,16 +9,13 @@
     <style>
         :root {
             --accent: #c8a96e;
-            --accent-cold: #7eb8c9;
             --bg: #080808;
-            --surface: #0f0f0f;
             --text: #e8e2d8;
             --text-dim: rgba(232, 226, 216, 0.35);
             --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -40,8 +37,7 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-            mix-blend-mode: normal;
+            transition: transform 0.1s ease;
         }
         .cursor-ring {
             position: fixed;
@@ -52,51 +48,6 @@
             z-index: 9998;
             transform: translate(-50%, -50%);
             transition: all 0.45s var(--ease-luxury);
-        }
-        body:hover .cursor { opacity: 1; }
-        .gallery-item:hover ~ * .cursor,
-        a:hover .cursor { transform: translate(-50%, -50%) scale(2.5); }
-
-        /* ── LOADER ── */
-        #loader {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            z-index: 500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 32px;
-            transition: opacity 1.2s var(--ease-luxury);
-        }
-        #loader.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .loader-word {
-            font-family: 'Cinzel', serif;
-            font-size: 0.65rem;
-            letter-spacing: 12px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-        .loader-bar {
-            width: 180px;
-            height: 1px;
-            background: rgba(255,255,255,0.06);
-            overflow: hidden;
-        }
-        .loader-progress {
-            height: 100%;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            width: 0%;
-            transition: width 0.4s ease;
-            animation: loader-sweep 1.8s ease infinite;
-        }
-        @keyframes loader-sweep {
-            0%   { transform: translateX(-100%); width: 60%; }
-            100% { transform: translateX(200%);  width: 60%; }
         }
 
         /* ── HEADER ── */
@@ -109,14 +60,9 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            transition: padding 0.6s ease, background 0.6s ease;
-        }
-        header.scrolled {
-            padding: 20px 56px;
-            background: rgba(8,8,8,0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            background: linear-gradient(to bottom, rgba(8,8,8,0.9), transparent);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         .back-link {
             display: flex;
@@ -125,27 +71,14 @@
             color: var(--text);
             gap: 20px;
         }
-        .logo-wow {
-            height: 52px;
-            width: auto;
-            filter: brightness(1);
-            transition: transform 0.6s var(--ease-luxury), filter 0.4s ease;
-        }
-        .back-link:hover .logo-wow { transform: scale(1.04); filter: brightness(1.15); }
+        .logo-wow { height: 52px; transition: transform 0.6s var(--ease-luxury); }
+        .back-link:hover .logo-wow { transform: scale(1.04); }
         .company-name {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 200;
             font-size: 0.7rem;
             letter-spacing: 8px;
             text-transform: uppercase;
             color: var(--text-dim);
-        }
-        .header-right {
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            letter-spacing: 6px;
-            color: var(--text-dim);
-            text-transform: uppercase;
         }
 
         /* ── HERO ── */
@@ -154,32 +87,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            align-items: flex-start;
             padding: 0 56px 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            right: -10%;
-            width: 70vw;
-            height: 70vw;
-            border-radius: 50%;
-            border: 1px solid rgba(200, 169, 110, 0.04);
-            pointer-events: none;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            right: -20%;
-            width: 90vw;
-            height: 90vw;
-            border-radius: 50%;
-            border: 1px solid rgba(200, 169, 110, 0.025);
-            pointer-events: none;
         }
         .hero-eyebrow {
             font-family: 'Cinzel', serif;
@@ -188,8 +96,6 @@
             color: var(--accent);
             text-transform: uppercase;
             margin-bottom: 28px;
-            opacity: 0;
-            animation: reveal-up 1.2s var(--ease-luxury) 0.3s forwards;
         }
         .hero h1 {
             font-family: 'Cinzel', serif;
@@ -198,53 +104,13 @@
             letter-spacing: clamp(20px, 4vw, 55px);
             text-transform: uppercase;
             line-height: 0.9;
-            color: var(--text);
-            opacity: 0;
-            animation: reveal-up 1.4s var(--ease-luxury) 0.5s forwards;
         }
         .hero-sub {
             margin-top: 40px;
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-weight: 200;
             font-size: 1.2rem;
-            letter-spacing: 3px;
             color: var(--text-dim);
-            opacity: 0;
-            animation: reveal-up 1.4s var(--ease-luxury) 0.8s forwards;
-        }
-        .hero-scroll-hint {
-            position: absolute;
-            bottom: 80px;
-            right: 56px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            animation: reveal-up 1s var(--ease-luxury) 1.4s forwards;
-        }
-        .hero-scroll-hint span {
-            font-size: 0.55rem;
-            letter-spacing: 8px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            writing-mode: vertical-rl;
-        }
-        .scroll-line {
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--accent), transparent);
-            animation: scroll-pulse 2.4s ease infinite;
-        }
-        @keyframes scroll-pulse {
-            0%, 100% { opacity: 0.3; transform: scaleY(1); }
-            50%       { opacity: 1;   transform: scaleY(1.15); }
-        }
-
-        @keyframes reveal-up {
-            from { opacity: 0; transform: translateY(30px); }
-            to   { opacity: 1; transform: translateY(0); }
         }
 
         /* ── MANIFESTO ── */
@@ -255,7 +121,6 @@
             gap: 80px;
             max-width: 1500px;
             margin: 0 auto;
-            align-items: start;
         }
         .manifesto-label {
             font-family: 'Cinzel', serif;
@@ -263,130 +128,49 @@
             letter-spacing: 8px;
             color: var(--accent);
             text-transform: uppercase;
-            padding-top: 8px;
         }
         .manifesto-text {
             font-family: 'Cormorant Garamond', serif;
-            font-weight: 200;
             font-size: clamp(1.4rem, 2.5vw, 2rem);
             line-height: 2;
             color: rgba(232, 226, 216, 0.85);
-            letter-spacing: 1px;
-        }
-        .manifesto-text em {
-            color: var(--text);
-            font-style: italic;
         }
 
         /* ── GALLERY ── */
-        .gallery-wrap {
-            width: 100%;
-        }
+        .gallery-wrap { width: 100%; }
 
-        /* Subtle section divider */
-        .gallery-divider {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            padding: 60px 56px 40px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1.2s var(--ease-luxury);
-        }
-        .gallery-divider.visible {
-            opacity: 1;
-            transform: none;
-        }
-        .gallery-divider-line {
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, transparent, rgba(200,169,110,0.2), transparent);
-        }
-        .gallery-divider-text {
-            font-family: 'Cinzel', serif;
-            font-size: 0.55rem;
-            letter-spacing: 8px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        /* Gallery items */
         .gallery-item {
             width: 100%;
+            margin-bottom: 120px;
             overflow: hidden;
             opacity: 0;
             transform: translateY(60px);
-            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
+            transition: all 1.8s var(--ease-luxury);
             position: relative;
-            background: #0a0a0a;
         }
-        .gallery-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .gallery-item.visible { opacity: 1; transform: translateY(0); }
+        
         .gallery-item img {
             width: 100%;
             height: auto;
             display: block;
             transition: transform 6s var(--ease-luxury);
         }
-        .gallery-item:hover img {
-            transform: scale(1.03);
-        }
+        .gallery-item:hover img { transform: scale(1.03); }
 
-        /* Image counter overlay */
-        .gallery-item-num {
-            position: absolute;
-            bottom: 24px;
-            right: 32px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.55rem;
-            letter-spacing: 6px;
-            color: rgba(255,255,255,0.18);
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        .gallery-item:hover .gallery-item-num {
-            opacity: 0;
-        }
-
-        /* Alternating layout: odd items full width, even items indented */
-        .gallery-item:nth-child(odd) {
-            padding: 0;
-        }
-        .gallery-item:nth-child(even) {
-            width: calc(100% - 10vw);
-            margin-left: 10vw;
-        }
+        .gallery-item:nth-child(odd) { padding: 0; }
+        .gallery-item:nth-child(even) { width: calc(100% - 10vw); margin-left: 10vw; }
 
         /* ── FOOTER ── */
         footer {
-            margin-top: 160px;
+            margin-top: 100px;
             padding: 100px 56px 80px;
             border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        .footer-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 80px;
-        }
-        .footer-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 5vw, 4.5rem);
-            font-weight: 300;
-            letter-spacing: 20px;
-            color: rgba(232,226,216,0.08);
-            text-transform: uppercase;
         }
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            width: 100%;
             gap: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255,255,255,0.06);
         }
         .contact-box h3 {
             font-family: 'Cinzel', serif;
@@ -396,108 +180,89 @@
             letter-spacing: 6px;
             text-transform: uppercase;
         }
-        .contact-box p {
-            font-size: 0.85rem;
-            font-weight: 200;
-            letter-spacing: 3px;
-            color: var(--text-dim);
-            line-height: 1.8;
-        }
-        .contact-box a {
-            color: var(--text-dim);
-            text-decoration: none;
-            transition: color 0.4s ease;
-        }
-        .contact-box a:hover { color: var(--accent); }
-        .footer-copy {
-            margin-top: 60px;
-            font-size: 0.55rem;
-            letter-spacing: 4px;
-            color: rgba(255,255,255,0.1);
-            text-transform: uppercase;
-        }
+        .contact-box p { font-size: 0.85rem; letter-spacing: 3px; color: var(--text-dim); }
+        .contact-box a { color: var(--text-dim); text-decoration: none; }
 
-        /* ── ERROR STATE ── */
-        .gallery-error {
-            padding: 80px 56px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 8px;
-            color: var(--text-dim);
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        /* ── MOBILE ── */
         @media (max-width: 768px) {
-            header        { padding: 24px 24px; }
-            header.scrolled { padding: 16px 24px; }
-            .logo-wow     { height: 36px; }
+            header { padding: 24px; }
             .company-name { display: none; }
-            .hero         { padding: 0 24px 60px; }
-            .hero-scroll-hint { right: 24px; bottom: 60px; }
-            .manifesto-wrap {
-                padding: 80px 24px;
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-            .gallery-item:nth-child(even) {
-                width: 100%;
-                margin-left: 0;
-            }
-            .gallery-divider { padding: 40px 24px 24px; }
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-            footer { padding: 80px 24px 60px; }
-            .footer-top { flex-direction: column; gap: 24px; }
+            .manifesto-wrap { grid-template-columns: 1fr; padding: 80px 24px; }
+            .hero { padding: 0 24px 60px; }
+            .gallery-item:nth-child(even) { width: 100%; margin-left: 0; }
+            .contact-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Custom cursor -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
 
-    <!-- Loader -->
-    <div id="loader">
-        <div class="loader-word">Collecting Archive</div>
-        <div class="loader-bar"><div class="loader-progress"></div></div>
-    </div>
-
     <header id="site-header">
         <a href="index.html" class="back-link">
-            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="MB Gumbrevičius Logo">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
             <div class="company-name">MB Gumbrevičius</div>
         </a>
-        <div class="header-right">CGI Artist</div>
+        <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem;">CGI Artist</div>
     </header>
 
     <section class="hero">
-        <div class="hero-eyebrow">CGI Visualization · Art Direction</div>
+        <div class="hero-eyebrow">Art Direction · Photorealistic CGI</div>
         <h1>Interiors</h1>
-        <p class="hero-sub">Natural light. Photometric precision. Living imagery.</p>
-        <div class="hero-scroll-hint">
-            <span>Scroll</span>
-            <div class="scroll-line"></div>
-        </div>
+        <p class="hero-sub">Physical accuracy. Wabi-sabi lighting. Atmospheric depth.</p>
     </section>
 
     <section class="manifesto-wrap">
-        <div class="manifesto-label">Wabi-Sabi CGI<br>Philosophy</div>
+        <div class="manifesto-label">Philosophy</div>
         <div class="manifesto-text">
             Dirbu tik su <em>natūraliu apšvietimu</em> ir fotometrinėmis šviesomis. Nedarau sterilaus techninio renderio — darau gyvą, kvėpuojantį jaukumą, kur akis neatskiria nuotraukos nuo vizualizacijos. Tikrasis fotorealizmas gimsta ne samples kiekyje, o <em>šešėlių dramoje.</em>
         </div>
     </section>
 
-    <main class="gallery-wrap" id="gallery-root"></main>
+    <main class="gallery-wrap">
+        <div class="gallery-item"><img src="portfolio/interior/1.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/2.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/3.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/4.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/5.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/6.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/7.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/8.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/9.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Ajeru1.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Ajeru2.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas1.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas2.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas3.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas4.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas5.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas6.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas7.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas8.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas9.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas11.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas12.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas13.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas14.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis1.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis2.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis3.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v1.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v2.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v3.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v4.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v5.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v6.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v7.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v8.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v9.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z1.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z2.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z3.webp" loading="lazy"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z4.webp" loading="lazy"></div>
+    </main>
 
     <footer>
-        <div class="footer-top">
-            <div class="footer-title">Contact</div>
-        </div>
         <div class="contact-grid">
             <div class="contact-box">
                 <h3>Email</h3>
@@ -509,168 +274,40 @@
             </div>
             <div class="contact-box">
                 <h3>Location</h3>
-                <p>Lithuania<br>Worldwide</p>
+                <p>Lithuania · Worldwide</p>
             </div>
         </div>
         <div class="footer-copy">&copy; MB Gumbrevičius — All rights reserved</div>
     </footer>
 
     <script>
-        // ── CURSOR ──
-        const cursor     = document.getElementById('cursor');
+        // Cursor Logic
+        const cursor = document.getElementById('cursor');
         const cursorRing = document.getElementById('cursor-ring');
         let mx = -100, my = -100, rx = -100, ry = -100;
-
         document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
         function animateCursor() {
-            cursor.style.left     = mx + 'px';
-            cursor.style.top      = my + 'px';
+            cursor.style.left = mx + 'px';
+            cursor.style.top = my + 'px';
             rx += (mx - rx) * 0.12;
             ry += (my - ry) * 0.12;
             cursorRing.style.left = rx + 'px';
-            cursorRing.style.top  = ry + 'px';
+            cursorRing.style.top = ry + 'px';
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
 
-        document.querySelectorAll('a, img').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.style.transform = 'translate(-50%,-50%) scale(2.5)');
-            el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
-        });
-
-        // ── HEADER scroll ──
-        const siteHeader = document.getElementById('site-header');
-        window.addEventListener('scroll', () => {
-            siteHeader.classList.toggle('scrolled', window.scrollY > 80);
-        }, { passive: true });
-
-        // ── INTERSECTION OBSERVER ──
+        // Appearance Observer
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+        }, { threshold: 0.1 });
 
-        // ── GALLERY ──
-
-        /**
-         * CONFIGURATION
-         * ─────────────
-         * GITHUB_USER  → tavo GitHub vartotojo vardas
-         * REPO_NAME    → repozitorijos pavadinimas
-         * BRANCH       → šaka (default: main)
-         * FOLDER_PATH  → kelias iki aplanko REPOZITORIJOJE (be leading slash)
-         *
-         * Failas interiors.html yra repozitorijos šaknyje.
-         * Nuotraukos yra  /portfolio/interiors/
-         * Todėl FOLDER_PATH = 'portfolio/interiors'
-         */
-        const GITHUB_USER  = 'povilasgumbrevicius-ux';
-        const REPO_NAME    = '/MB-Gumbrevicius-AR';
-        const BRANCH       = 'main';
-        const FOLDER_PATH  = 'portfolio/interior';
-
-        const galleryRoot = document.getElementById('gallery-root');
-        const loader      = document.getElementById('loader');
-
-        function hideLoader() {
-            loader.classList.add('fade-out');
-            setTimeout(() => loader.remove(), 1400);
-        }
-
-        function showError(msg) {
-            hideLoader();
-            galleryRoot.innerHTML = `<div class="gallery-error">${msg}</div>`;
-        }
-
-        async function fetchImages() {
-            const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER_PATH}?ref=${BRANCH}`;
-
-            let data;
-            try {
-                const res = await fetch(url, {
-                    headers: { 'Accept': 'application/vnd.github.v3+json' }
-                });
-
-                if (res.status === 404) {
-                    showError('Archive path not found — check FOLDER_PATH configuration');
-                    return;
-                }
-                if (res.status === 403) {
-                    showError('GitHub API rate limit reached — try again in a moment');
-                    return;
-                }
-                if (!res.ok) {
-                    showError(`API error ${res.status}`);
-                    return;
-                }
-
-                data = await res.json();
-            } catch (err) {
-                showError('Network error — unable to reach archive');
-                console.error(err);
-                return;
-            }
-
-            if (!Array.isArray(data)) {
-                showError('Unexpected API response — folder may not exist');
-                return;
-            }
-
-            // Filter images only, sort A-Z (natural order keeps numbered filenames correct)
-            const images = data
-                .filter(f => /\.(webp|jpg|jpeg|png|avif)$/i.test(f.name))
-                .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-
-            if (images.length === 0) {
-                showError('No images found in archive');
-                return;
-            }
-
-            // Build gallery
-            const fragment = document.createDocumentFragment();
-
-            // Subtle section label
-            const divider = document.createElement('div');
-            divider.className = 'gallery-divider';
-            divider.innerHTML = `
-                <div class="gallery-divider-line"></div>
-                <div class="gallery-divider-text">${images.length} works</div>
-                <div class="gallery-divider-line"></div>
-            `;
-            fragment.appendChild(divider);
-            observer.observe(divider);
-
-            images.forEach((imgData, i) => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-
-                const img = document.createElement('img');
-                // Use download_url — direct raw content URL, always correct
-                img.src     = imgData.download_url;
-                img.alt     = `MB Gumbrevičius · Interior CGI · ${imgData.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ')}`;
-                img.loading = 'lazy';
-                img.decoding = 'async';
-
-                const num = document.createElement('div');
-                num.className   = 'gallery-item-num';
-                num.textContent = String(i + 1).padStart(2, '0');
-
-                item.appendChild(img);
-                item.appendChild(num);
-                fragment.appendChild(item);
-                observer.observe(item);
-            });
-
-            galleryRoot.appendChild(fragment);
-            hideLoader();
-        }
-
-        fetchImages();
+        document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
     </script>
 </body>
 </html>
