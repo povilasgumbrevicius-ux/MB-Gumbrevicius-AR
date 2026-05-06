@@ -9,22 +9,20 @@
         :root {
             --accent: #00d2ff;
             --bg: #000000;
-            --text-main: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.4);
-            --transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+            --transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg);
-            color: var(--text-main);
+            color: #fff;
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- NAVIGATION --- */
+        /* --- LUXURY HEADER (Logo išlaikytas) --- */
         header {
             position: fixed;
             top: 0;
@@ -34,30 +32,30 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            mix-blend-mode: difference; /* Užtikrina matomumą virš bet kokio renderio */
+            mix-blend-mode: difference; /* Logo visada bus matomas virš bet kokio renderio */
         }
 
-        .nav-logo {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 8px;
-            font-size: 1.2rem;
+        .back-link {
+            display: flex;
+            align-items: center;
             text-decoration: none;
             color: #fff;
-            font-weight: 700;
         }
 
-        .nav-back {
-            text-decoration: none;
-            color: #fff;
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+        .logo-wow {
+            height: 70px;
+            width: auto;
+            margin-right: 25px;
+            transition: transform 0.6s ease;
+        }
+
+        .company-name {
+            font-family: 'Montserrat', sans-serif;
             font-weight: 300;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            transition: var(--transition);
+            font-size: 1.2rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
         }
-
-        .nav-back:hover { border-color: var(--accent); color: var(--accent); }
 
         /* --- HERO SECTION --- */
         .hero {
@@ -67,27 +65,42 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 20px;
         }
 
         .hero h1 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 8vw, 5rem);
-            letter-spacing: 25px;
+            font-size: clamp(2.5rem, 10vw, 7rem);
+            letter-spacing: clamp(15px, 5vw, 40px);
             text-transform: uppercase;
-            margin-bottom: 20px;
             font-weight: 400;
         }
 
-        .hero .subtitle {
-            font-size: 1rem;
-            letter-spacing: 12px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            font-weight: 100;
+        /* --- MANIFESTO --- */
+        .manifesto {
+            max-width: 1100px;
+            margin: 0 auto 150px;
+            padding: 0 40px;
+            text-align: center;
         }
 
-        /* --- ART DIRECT GALLERY --- */
+        .manifesto h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 10px;
+            color: var(--accent);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .manifesto p {
+            font-weight: 100;
+            font-size: 1.6rem;
+            line-height: 2.2;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* --- DYNAMIC FULL-WIDTH GALLERY --- */
         .gallery {
             width: 100%;
             display: flex;
@@ -96,46 +109,37 @@
 
         .gallery-item {
             width: 100vw;
-            margin-bottom: 0; /* Vaizdai liečiasi kurdami vientisą drobę */
-            position: relative;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 2s var(--transition);
+            margin-bottom: 0;
+            line-height: 0;
+        }
+
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .gallery-item img {
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 2s var(--transition);
+            transition: transform 4s var(--transition);
         }
 
-        /* Subtilus priartėjimas skrolinant - prabangos pojūtis */
         .gallery-item:hover img {
             transform: scale(1.05);
         }
 
-        /* --- ABOUT PLACEHOLDER (COMING SOON) --- */
-        .about-teaser {
-            padding: 200px 60px;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .about-teaser h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
-            letter-spacing: 10px;
-            margin-bottom: 40px;
-        }
-
         /* --- CONTACT FOOTER --- */
         footer {
-            padding: 100px 60px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 150px 60px;
+            background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 40px;
         }
 
         .contact-grid {
@@ -143,120 +147,141 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             width: 100%;
             max-width: 1400px;
-            gap: 60px;
+            gap: 100px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 60px;
         }
 
         .contact-box h3 {
             font-family: 'Cinzel', serif;
-            letter-spacing: 5px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-bottom: 15px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 25px;
+            letter-spacing: 6px;
             text-transform: uppercase;
         }
 
-        .contact-box p {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            font-weight: 300;
-        }
-
-        .contact-box a {
-            color: #fff;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
+        .contact-box p { font-size: 1.3rem; font-weight: 100; letter-spacing: 3px; }
+        .contact-box a { color: #fff; text-decoration: none; transition: 0.3s; }
         .contact-box a:hover { color: var(--accent); }
 
-        .copyright {
-            margin-top: 60px;
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            color: var(--text-dim);
-            text-transform: uppercase;
+        #loader {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel';
+            letter-spacing: 10px;
+            color: #fff;
+            z-index: 200;
         }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            header { padding: 20px; }
+            header { padding: 30px 20px; }
+            .logo-wow { height: 40px; margin-right: 15px; }
+            .company-name { font-size: 0.7rem; letter-spacing: 4px; }
+            .manifesto p { font-size: 1.1rem; }
             .hero h1 { letter-spacing: 10px; }
-            .about-teaser { padding: 100px 20px; }
         }
     </style>
 </head>
 <body>
 
+    <div id="loader">COLLECTING ARCHIVE</div>
+
     <header>
-        <a href="index.html" class="nav-logo">GUMBREVIČIUS</a>
-        <a href="index.html" class="nav-back">Back to menu</a>
+        <a href="index.html" class="back-link">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+            <div class="company-name">MB Gumbrevičius</div>
+        </a>
+        <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.7rem;">CGI ARTIST</div>
     </header>
 
     <section class="hero">
         <h1>INTERIORS</h1>
-        <p class="subtitle">Art Direction / Wabi-Sabi CGI</p>
     </section>
 
-    <main class="gallery">
-        <div class="gallery-item"><img src="portfolio/interjeras/01.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/02.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/03.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/04.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/05.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/06.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/07.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/08.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/09.webp" alt="Interior Visualization"></div>
-        <div class="gallery-item"><img src="portfolio/interjeras/10.webp" alt="Interior Visualization"></div>
+    <section class="manifesto">
+        <h2>Wabi-Sabi CGI Philosophy</h2>
+        <p>Dirbu tik su natūraliu apšvietimu ir fotometrinėmis šviesomis. Nedarau sterilaus techninio renderio – darau gyvą, kvėpuojantį jaukumą, kur akis neatskiria nuotraukos nuo vizualizacijos. Tikrasis fotorealizmas gimsta ne samples kiekyje, o šešėlių dramoje.</p>
+    </section>
+
+    <main class="gallery" id="gallery-root">
         </main>
-
-    <section class="about-teaser">
-        <h2>MANIFESTO</h2>
-        <p style="font-weight: 100; font-size: 1.5rem; line-height: 2; color: rgba(255,255,255,0.8);">
-            [Vieta jūsų būsimam stipriam aprašymui. Čia tekstas bus pateiktas su dideliais tarpais, pabrėžiant jūsų unikalų Workflow ir SketchUp sinergiją.]
-        </p>
-    </section>
 
     <footer>
         <div class="contact-grid">
-            <div class="contact-box">
-                <h3>Location</h3>
-                <p>Lithuania / Remote</p>
-            </div>
             <div class="contact-box">
                 <h3>Contact</h3>
                 <p><a href="mailto:info@gumbrevicius.lt">info@gumbrevicius.lt</a></p>
             </div>
             <div class="contact-box">
-                <h3>Social</h3>
-                <p><a href="#">Instagram</a> / <a href="#">Behance</a></p>
+                <h3>Craft</h3>
+                <p>Interior Visualization / Art Direction</p>
             </div>
-        </div>
-        <div class="copyright">
-            © 2026 MB Gumbrevičius. All rights reserved.
+            <div class="contact-box">
+                <h3>Location</h3>
+                <p>Lithuania / Worldwide</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        // Sklandus vaizdų atsiradimas (Optional - inžinerinis užbaigtumas)
-        document.addEventListener('DOMContentLoaded', () => {
-            const items = document.querySelectorAll('.gallery-item');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = "1";
-                        entry.target.style.transform = "translateY(0)";
-                    }
-                });
-            }, { threshold: 0.1 });
+        /**
+         * GITHUB CONFIGURATION
+         */
+        const GITHUB_USER = 'gumbrevicius'; 
+        const REPO_NAME = 'ar.gumbrevicius.lt'; 
+        const FOLDER_PATH = 'portfolio/interjeras'; 
 
-            items.forEach(item => {
-                item.style.opacity = "0";
-                item.style.transform = "translateY(50px)";
-                item.style.transition = "all 1.5s cubic-bezier(0.19, 1, 0.22, 1)";
-                observer.observe(item);
+        const galleryRoot = document.getElementById('gallery-root');
+        const loader = document.getElementById('loader');
+
+        async function fetchImages() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER_PATH}`);
+                const data = await response.json();
+
+                if (!Array.isArray(data)) throw new Error("Folder not found");
+
+                // Filtruojame paveiksliukus ir rūšiuojame A-Z
+                const images = data
+                    .filter(file => /\.(webp|jpg|jpeg|png)$/i.test(file.name))
+                    .sort((a, b) => a.name.localeCompare(b.name));
+
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 1000);
+
+                images.forEach(imgData => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = imgData.download_url;
+                    img.alt = "MB Gumbrevičius Interior CGI";
+                    img.loading = "lazy";
+
+                    item.appendChild(img);
+                    galleryRoot.appendChild(item);
+                    
+                    observer.observe(item);
+                });
+
+            } catch (err) {
+                console.error("Inžinerinė klaida:", err);
+                loader.innerText = "LINK FAILED";
+            }
+        }
+
+        // Elegantiškas atsiradimas skrolinant
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
             });
-        });
+        }, { threshold: 0.1 });
+
+        fetchImages();
     </script>
 </body>
 </html>
