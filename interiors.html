@@ -60,7 +60,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: linear-gradient(to bottom, rgba(8,8,8,0.9), transparent);
+            background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
@@ -71,8 +71,9 @@
             color: var(--text);
             gap: 20px;
         }
-        .logo-wow { height: 52px; transition: transform 0.6s var(--ease-luxury); }
-        .back-link:hover .logo-wow { transform: scale(1.04); }
+        .logo-wow { height: 52px; width: auto; transition: transform 0.6s var(--ease-luxury); }
+        .back-link:hover .logo-wow { transform: scale(1.05); }
+        
         .company-name {
             font-family: 'Montserrat', sans-serif;
             font-size: 0.7rem;
@@ -86,110 +87,110 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 0 56px 80px;
-        }
-        .hero-eyebrow {
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            letter-spacing: 10px;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 28px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 56px;
         }
         .hero h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(3.5rem, 11vw, 9rem);
             font-weight: 300;
-            letter-spacing: clamp(20px, 4vw, 55px);
+            letter-spacing: clamp(15px, 4vw, 50px);
             text-transform: uppercase;
-            line-height: 0.9;
+            line-height: 1;
+            margin-bottom: 20px;
         }
         .hero-sub {
-            margin-top: 40px;
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            letter-spacing: 4px;
             color: var(--text-dim);
         }
 
         /* ── MANIFESTO ── */
         .manifesto-wrap {
             padding: 160px 56px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 80px;
-            max-width: 1500px;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-        .manifesto-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            letter-spacing: 8px;
-            color: var(--accent);
-            text-transform: uppercase;
+            text-align: center;
         }
         .manifesto-text {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.4rem, 2.5vw, 2rem);
-            line-height: 2;
-            color: rgba(232, 226, 216, 0.85);
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            line-height: 1.8;
+            color: rgba(232, 226, 216, 0.9);
         }
 
         /* ── GALLERY ── */
-        .gallery-wrap { width: 100%; }
+        .gallery-wrap {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centruoja visą turinį */
+            gap: 80px; /* Tarpas tarp nuotraukų */
+            padding-bottom: 100px;
+        }
 
         .gallery-item {
-            width: 100%;
-            margin-bottom: 120px;
+            width: 90vw; /* Dinamiškai prisitaiko prie ekrano */
+            max-width: 1600px; /* Neleidžia per daug išsiplėsti milžiniškuose ekranuose */
+            margin: 0 auto; /* Užtikrina centravimą */
             overflow: hidden;
             opacity: 0;
-            transform: translateY(60px);
-            transition: all 1.8s var(--ease-luxury);
-            position: relative;
+            transform: translateY(50px);
+            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
         }
-        .gallery-item.visible { opacity: 1; transform: translateY(0); }
         
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .gallery-item img {
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 6s var(--ease-luxury);
+            transition: transform 1.5s var(--ease-luxury); /* Didėjimo greitis */
         }
-        .gallery-item:hover img { transform: scale(1.03); }
 
-        .gallery-item:nth-child(odd) { padding: 0; }
-        .gallery-item:nth-child(even) { width: calc(100% - 10vw); margin-left: 10vw; }
+        /* Padidinimo funkcija užvedus pelę */
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
 
         /* ── FOOTER ── */
         footer {
-            margin-top: 100px;
-            padding: 100px 56px 80px;
+            padding: 120px 56px 80px;
             border-top: 1px solid rgba(255,255,255,0.05);
+            background: #050505;
         }
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            max-width: 1400px;
+            margin: 0 auto;
             gap: 60px;
         }
         .contact-box h3 {
             font-family: 'Cinzel', serif;
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             color: var(--accent);
             margin-bottom: 20px;
             letter-spacing: 6px;
             text-transform: uppercase;
         }
-        .contact-box p { font-size: 0.85rem; letter-spacing: 3px; color: var(--text-dim); }
-        .contact-box a { color: var(--text-dim); text-decoration: none; }
+        .contact-box p { font-size: 0.9rem; letter-spacing: 2px; color: var(--text-dim); }
+        .contact-box a { color: var(--text-dim); text-decoration: none; transition: 0.3s; }
+        .contact-box a:hover { color: var(--accent); }
 
         @media (max-width: 768px) {
             header { padding: 24px; }
             .company-name { display: none; }
-            .manifesto-wrap { grid-template-columns: 1fr; padding: 80px 24px; }
-            .hero { padding: 0 24px 60px; }
-            .gallery-item:nth-child(even) { width: 100%; margin-left: 0; }
-            .contact-grid { grid-template-columns: 1fr; }
+            .hero h1 { letter-spacing: 10px; }
+            .gallery-item { width: 95vw; }
+            .contact-grid { grid-template-columns: 1fr; gap: 40px; }
         }
     </style>
 </head>
@@ -198,24 +199,22 @@
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
 
-    <header id="site-header">
+    <header>
         <a href="index.html" class="back-link">
             <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
             <div class="company-name">MB Gumbrevičius</div>
         </a>
-        <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem;">CGI Artist</div>
+        <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.65rem;">CGI ARTIST</div>
     </header>
 
     <section class="hero">
-        <div class="hero-eyebrow">Art Direction · Photorealistic CGI</div>
         <h1>Interiors</h1>
-        <p class="hero-sub">Physical accuracy. Wabi-sabi lighting. Atmospheric depth.</p>
+        <p class="hero-sub">Photometric accuracy & Wabi-sabi aesthetics</p>
     </section>
 
     <section class="manifesto-wrap">
-        <div class="manifesto-label">Philosophy</div>
         <div class="manifesto-text">
-            Dirbu tik su <em>natūraliu apšvietimu</em> ir fotometrinėmis šviesomis. Nedarau sterilaus techninio renderio — darau gyvą, kvėpuojantį jaukumą, kur akis neatskiria nuotraukos nuo vizualizacijos. Tikrasis fotorealizmas gimsta ne samples kiekyje, o <em>šešėlių dramoje.</em>
+            Dirbu tik su <em>natūraliu apšvietimu</em> ir fotometrinėmis šviesomis. Nedarau sterilaus techninio renderio — darau gyvą, kvėpuojantį jaukumą, kur akis neatskiria nuotraukos nuo vizualizacijos.
         </div>
     </section>
 
@@ -265,23 +264,22 @@
     <footer>
         <div class="contact-grid">
             <div class="contact-box">
-                <h3>Email</h3>
+                <h3>Contact</h3>
                 <p><a href="mailto:info@gumbrevicius.lt">info@gumbrevicius.lt</a></p>
             </div>
             <div class="contact-box">
-                <h3>Craft</h3>
+                <h3>Specialization</h3>
                 <p>Interior Visualization<br>Art Direction</p>
             </div>
             <div class="contact-box">
                 <h3>Location</h3>
-                <p>Lithuania · Worldwide</p>
+                <p>Lithuania / Worldwide</p>
             </div>
         </div>
-        <div class="footer-copy">&copy; MB Gumbrevičius — All rights reserved</div>
     </footer>
 
     <script>
-        // Cursor Logic
+        // Cursor
         const cursor = document.getElementById('cursor');
         const cursorRing = document.getElementById('cursor-ring');
         let mx = -100, my = -100, rx = -100, ry = -100;
@@ -290,15 +288,15 @@
         function animateCursor() {
             cursor.style.left = mx + 'px';
             cursor.style.top = my + 'px';
-            rx += (mx - rx) * 0.12;
-            ry += (my - ry) * 0.12;
+            rx += (mx - rx) * 0.1;
+            ry += (my - ry) * 0.1;
             cursorRing.style.left = rx + 'px';
             cursorRing.style.top = ry + 'px';
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
 
-        // Appearance Observer
+        // Scroll Reveal
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
