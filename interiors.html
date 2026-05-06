@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INTERIORS | MB GUMBREVIČIUS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Montserrat:wght@100;200;300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #c8a96e;
             --bg: #080808;
             --text: #e8e2d8;
-            --text-dim: rgba(232, 226, 216, 0.35);
+            --text-dim: rgba(232, 226, 216, 0.5); /* Padidintas matomumas nuo 0.35 */
             --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
         }
 
@@ -22,7 +22,7 @@
             background-color: var(--bg);
             color: var(--text);
             font-family: 'Montserrat', sans-serif;
-            font-weight: 100;
+            font-weight: 300; /* Padidintas bazinis svoris skaitomumui */
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             cursor: none;
@@ -80,6 +80,7 @@
             letter-spacing: 8px;
             text-transform: uppercase;
             color: var(--text-dim);
+            font-weight: 400;
         }
 
         /* ── HERO ── */
@@ -95,7 +96,7 @@
         .hero h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(3.5rem, 11vw, 9rem);
-            font-weight: 300;
+            font-weight: 400; /* Ryškesnis h1 */
             letter-spacing: clamp(15px, 4vw, 50px);
             text-transform: uppercase;
             line-height: 1;
@@ -104,7 +105,7 @@
         .hero-sub {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             letter-spacing: 4px;
             color: var(--text-dim);
         }
@@ -112,9 +113,63 @@
         /* ── MANIFESTO ── */
         .manifesto-wrap {
             padding: 160px 56px;
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             text-align: center;
+        }
+
+        .manifesto-title-sm {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 12px;
+            color: var(--accent);
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .manifesto-main-text {
+            margin-bottom: 100px;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            line-height: 1.3;
+            font-weight: 300;
+        }
+
+        .manifesto-philosophy {
+            max-width: 1000px;
+            margin: 0 auto 120px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem; /* Padidinta */
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* PILLARS GRID */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 100px;
+            text-align: left;
+            margin-top: 80px;
+        }
+
+        .pillar h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem; /* Padidinta */
+            letter-spacing: 6px;
+            color: var(--accent);
+            margin-bottom: 28px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .pillar p {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 1.1rem; /* Padidinta nuo 0.95 skaitomumui */
+            line-height: 1.8;
+            color: var(--text-dim);
         }
 
         /* ── GALLERY ── */
@@ -174,17 +229,17 @@
             letter-spacing: 6px;
             text-transform: uppercase;
         }
-        .contact-box p { font-size: 0.9rem; letter-spacing: 2px; color: var(--text-dim); }
+        .contact-box p { font-size: 0.95rem; letter-spacing: 2px; color: var(--text-dim); }
         .contact-box a { color: var(--text-dim); text-decoration: none; transition: 0.3s; }
         .contact-box a:hover { color: var(--accent); }
 
-        /* Media Queries */
         @media (max-width: 768px) {
             header { padding: 24px; }
             .company-name, .desktop-only { display: none; }
             .hero h1 { letter-spacing: 10px; }
             .gallery-item { width: 95vw; }
             .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+            .pillars-grid { gap: 60px; }
         }
     </style>
 </head>
@@ -200,7 +255,7 @@
         </a>
         <div style="display: flex; align-items: center; gap: 30px;">
             <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem; color: var(--text-dim);" class="desktop-only">CGI ARTIST</div>
-            <a href="mailto:info@gumbrevicius.lt" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';">
+            <a href="mailto:info@gumbrevicius.lt" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s; font-weight: 400;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';">
                 Start Project
             </a>
         </div>
@@ -212,43 +267,43 @@
     </section>
 
     <section class="manifesto-wrap">
-        <div class="manifesto-text" style="text-align: center;">
-            <h2 style="font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 12px; color: var(--accent); margin-bottom: 60px; text-transform: uppercase;">Manifesto</h2>
+        <div class="manifesto-text">
+            <h2 class="manifesto-title-sm">Manifesto</h2>
             
-            <p style="margin-bottom: 100px; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.4;">
+            <p class="manifesto-main-text">
                 Dauguma vizualizacijų specialistų siekia sterilaus idealumo. <br>
-                <span style="color: #fff; border-bottom: 1px solid var(--accent);">Aš siekiu purvinos tiesos.</span>
+                <span style="color: #fff; font-weight: 400; border-bottom: 2px solid var(--accent);">Aš siekiu purvinos tiesos.</span>
             </p>
 
-            <p style="max-width: 900px; margin: 0 auto 120px; font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--text-dim); font-style: italic;">
+            <p class="manifesto-philosophy">
                 Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
             </p>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 80px; text-align: left; margin-top: 60px;">
+            <div class="pillars-grid">
                 <div class="pillar">
-                    <h3 style="font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 6px; color: var(--accent); margin-bottom: 24px; text-transform: uppercase;">Chaoso priėmimas</h3>
-                    <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.95rem; line-height: 1.8; color: var(--text-dim);">
+                    <h3>Chaoso priėmimas</h3>
+                    <p>
                         Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas“ apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.
                     </p>
                 </div>
 
                 <div class="pillar">
-                    <h3 style="font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 6px; color: var(--accent); margin-bottom: 24px; text-transform: uppercase;">10 metų juostos</h3>
-                    <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.95rem; line-height: 1.8; color: var(--text-dim);">
+                    <h3>10 metų juostos</h3>
+                    <p>
                         Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake“ užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.
                     </p>
                 </div>
 
                 <div class="pillar">
-                    <h3 style="font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 6px; color: var(--accent); margin-bottom: 24px; text-transform: uppercase;">Tekstūrinis gylis</h3>
-                    <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.95rem; line-height: 1.8; color: var(--text-dim);">
+                    <h3>Tekstūrinis gylis</h3>
+                    <p>
                         4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas“: mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.
                     </p>
                 </div>
 
                 <div class="pillar">
-                    <h3 style="font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 6px; color: var(--accent); margin-bottom: 24px; text-transform: uppercase;">Dizainerio partneris</h3>
-                    <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.95rem; line-height: 1.8; color: var(--text-dim);">
+                    <h3>Dizainerio partneris</h3>
+                    <p>
                         Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru, kurį pamatęs klientas pasąmoningai pajunta ramybę.
                     </p>
                 </div>
@@ -300,10 +355,10 @@
             <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 3rem); letter-spacing: 15px; text-transform: uppercase; margin-bottom: 40px; color: var(--text);">
                 Kuriame atmosferą kartu?
             </h2>
-            <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-style: italic; color: var(--text-dim); margin-bottom: 60px; line-height: 1.6;">
+            <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-style: italic; color: var(--text); margin-bottom: 60px; line-height: 1.6;">
                 Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.
             </p>
-            <a href="mailto:info@gumbrevicius.lt" style="display: inline-block; padding: 20px 50px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); position: relative; overflow: hidden;" 
+            <a href="mailto:info@gumbrevicius.lt" style="display: inline-block; padding: 22px 55px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); font-weight: 400;" 
                onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
                onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';">
                 Pradėti projektą
@@ -312,7 +367,7 @@
     </section>
 
     <section style="padding: 60px 56px; text-align: center; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.03);">
-        <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.7rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 800px; margin: 0 auto; line-height: 1.8; opacity: 0.6;">
+        <p style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 900px; margin: 0 auto; line-height: 1.8;">
             Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. <br>
             MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.
         </p>
@@ -336,7 +391,7 @@
     </footer>
 
     <script>
-        // Cursor
+        // Cursor logic
         const cursor = document.getElementById('cursor');
         const cursorRing = document.getElementById('cursor-ring');
         let mx = -100, my = -100, rx = -100, ry = -100;
@@ -345,15 +400,15 @@
         function animateCursor() {
             cursor.style.left = mx + 'px';
             cursor.style.top = my + 'px';
-            rx += (mx - rx) * 0.1;
-            ry += (my - ry) * 0.1;
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
             cursorRing.style.left = rx + 'px';
             cursorRing.style.top = ry + 'px';
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
 
-        // Scroll Reveal
+        // Intersection Observer for scroll-reveal
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
