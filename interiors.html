@@ -4,282 +4,671 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INTERIORS | MB GUMBREVIČIUS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Montserrat:wght@100;200;300&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #00d2ff;
-            --bg: #000000;
-            --transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            --accent: #c8a96e;
+            --accent-cold: #7eb8c9;
+            --bg: #080808;
+            --surface: #0f0f0f;
+            --text: #e8e2d8;
+            --text-dim: rgba(232, 226, 216, 0.35);
+            --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             background-color: var(--bg);
-            color: #fff;
+            color: var(--text);
             font-family: 'Montserrat', sans-serif;
+            font-weight: 100;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            cursor: none;
         }
 
-        /* --- LUXURY HEADER (Logo išlaikytas) --- */
+        /* ── CUSTOM CURSOR ── */
+        .cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+            mix-blend-mode: normal;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 36px; height: 36px;
+            border: 1px solid rgba(200, 169, 110, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: all 0.45s var(--ease-luxury);
+        }
+        body:hover .cursor { opacity: 1; }
+        .gallery-item:hover ~ * .cursor,
+        a:hover .cursor { transform: translate(-50%, -50%) scale(2.5); }
+
+        /* ── LOADER ── */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            transition: opacity 1.2s var(--ease-luxury);
+        }
+        #loader.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-word {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        .loader-bar {
+            width: 180px;
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            overflow: hidden;
+        }
+        .loader-progress {
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            width: 0%;
+            transition: width 0.4s ease;
+            animation: loader-sweep 1.8s ease infinite;
+        }
+        @keyframes loader-sweep {
+            0%   { transform: translateX(-100%); width: 60%; }
+            100% { transform: translateX(200%);  width: 60%; }
+        }
+
+        /* ── HEADER ── */
         header {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 40px 60px;
+            padding: 32px 56px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            mix-blend-mode: difference; /* Logo visada bus matomas virš bet kokio renderio */
+            transition: padding 0.6s ease, background 0.6s ease;
         }
-
+        header.scrolled {
+            padding: 20px 56px;
+            background: rgba(8,8,8,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
         .back-link {
             display: flex;
             align-items: center;
             text-decoration: none;
-            color: #fff;
+            color: var(--text);
+            gap: 20px;
         }
-
         .logo-wow {
-            height: 70px;
+            height: 52px;
             width: auto;
-            margin-right: 25px;
-            transition: transform 0.6s ease;
+            filter: brightness(1);
+            transition: transform 0.6s var(--ease-luxury), filter 0.4s ease;
         }
-
+        .back-link:hover .logo-wow { transform: scale(1.04); filter: brightness(1.15); }
         .company-name {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 1.2rem;
-            letter-spacing: 10px;
+            font-weight: 200;
+            font-size: 0.7rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+        .header-right {
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            letter-spacing: 6px;
+            color: var(--text-dim);
             text-transform: uppercase;
         }
 
-        /* --- HERO SECTION --- */
+        /* ── HERO ── */
         .hero {
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 0 56px 80px;
+            position: relative;
+            overflow: hidden;
         }
-
-        .hero h1 {
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 70vw;
+            height: 70vw;
+            border-radius: 50%;
+            border: 1px solid rgba(200, 169, 110, 0.04);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -20%;
+            width: 90vw;
+            height: 90vw;
+            border-radius: 50%;
+            border: 1px solid rgba(200, 169, 110, 0.025);
+            pointer-events: none;
+        }
+        .hero-eyebrow {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2.5rem, 10vw, 7rem);
-            letter-spacing: clamp(15px, 5vw, 40px);
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        /* --- MANIFESTO --- */
-        .manifesto {
-            max-width: 1100px;
-            margin: 0 auto 150px;
-            padding: 0 40px;
-            text-align: center;
-        }
-
-        .manifesto h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
+            font-size: 0.6rem;
             letter-spacing: 10px;
             color: var(--accent);
-            margin-bottom: 40px;
             text-transform: uppercase;
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: reveal-up 1.2s var(--ease-luxury) 0.3s forwards;
         }
-
-        .manifesto p {
-            font-weight: 100;
-            font-size: 1.6rem;
-            line-height: 2.2;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.9);
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3.5rem, 11vw, 9rem);
+            font-weight: 300;
+            letter-spacing: clamp(20px, 4vw, 55px);
+            text-transform: uppercase;
+            line-height: 0.9;
+            color: var(--text);
+            opacity: 0;
+            animation: reveal-up 1.4s var(--ease-luxury) 0.5s forwards;
         }
-
-        /* --- DYNAMIC FULL-WIDTH GALLERY --- */
-        .gallery {
-            width: 100%;
+        .hero-sub {
+            margin-top: 40px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 200;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            opacity: 0;
+            animation: reveal-up 1.4s var(--ease-luxury) 0.8s forwards;
+        }
+        .hero-scroll-hint {
+            position: absolute;
+            bottom: 80px;
+            right: 56px;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: reveal-up 1s var(--ease-luxury) 1.4s forwards;
+        }
+        .hero-scroll-hint span {
+            font-size: 0.55rem;
+            letter-spacing: 8px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+        }
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            animation: scroll-pulse 2.4s ease infinite;
+        }
+        @keyframes scroll-pulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50%       { opacity: 1;   transform: scaleY(1.15); }
         }
 
+        @keyframes reveal-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── MANIFESTO ── */
+        .manifesto-wrap {
+            padding: 160px 56px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 80px;
+            max-width: 1500px;
+            margin: 0 auto;
+            align-items: start;
+        }
+        .manifesto-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            letter-spacing: 8px;
+            color: var(--accent);
+            text-transform: uppercase;
+            padding-top: 8px;
+        }
+        .manifesto-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 200;
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            line-height: 2;
+            color: rgba(232, 226, 216, 0.85);
+            letter-spacing: 1px;
+        }
+        .manifesto-text em {
+            color: var(--text);
+            font-style: italic;
+        }
+
+        /* ── GALLERY ── */
+        .gallery-wrap {
+            width: 100%;
+        }
+
+        /* Subtle section divider */
+        .gallery-divider {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 60px 56px 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s var(--ease-luxury);
+        }
+        .gallery-divider.visible {
+            opacity: 1;
+            transform: none;
+        }
+        .gallery-divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(200,169,110,0.2), transparent);
+        }
+        .gallery-divider-text {
+            font-family: 'Cinzel', serif;
+            font-size: 0.55rem;
+            letter-spacing: 8px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* Gallery items */
         .gallery-item {
-            width: 100vw;
+            width: 100%;
             overflow: hidden;
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 2s var(--transition);
-            margin-bottom: 0;
-            line-height: 0;
+            transform: translateY(60px);
+            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
+            position: relative;
+            background: #0a0a0a;
         }
-
         .gallery-item.visible {
             opacity: 1;
             transform: translateY(0);
         }
-
         .gallery-item img {
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 4s var(--transition);
+            transition: transform 6s var(--ease-luxury);
         }
-
         .gallery-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
-        /* --- CONTACT FOOTER --- */
+        /* Image counter overlay */
+        .gallery-item-num {
+            position: absolute;
+            bottom: 24px;
+            right: 32px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.55rem;
+            letter-spacing: 6px;
+            color: rgba(255,255,255,0.18);
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .gallery-item:hover .gallery-item-num {
+            opacity: 0;
+        }
+
+        /* Alternating layout: odd items full width, even items indented */
+        .gallery-item:nth-child(odd) {
+            padding: 0;
+        }
+        .gallery-item:nth-child(even) {
+            width: calc(100% - 10vw);
+            margin-left: 10vw;
+        }
+
+        /* ── FOOTER ── */
         footer {
-            padding: 150px 60px;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin-top: 160px;
+            padding: 100px 56px 80px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
-
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 80px;
+        }
+        .footer-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            font-weight: 300;
+            letter-spacing: 20px;
+            color: rgba(232,226,216,0.08);
+            text-transform: uppercase;
+        }
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             width: 100%;
-            max-width: 1400px;
-            gap: 100px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 60px;
+            gap: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
-
         .contact-box h3 {
             font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.3);
-            margin-bottom: 25px;
+            font-size: 0.55rem;
+            color: var(--accent);
+            margin-bottom: 20px;
             letter-spacing: 6px;
             text-transform: uppercase;
         }
-
-        .contact-box p { font-size: 1.3rem; font-weight: 100; letter-spacing: 3px; }
-        .contact-box a { color: #fff; text-decoration: none; transition: 0.3s; }
+        .contact-box p {
+            font-size: 0.85rem;
+            font-weight: 200;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+        .contact-box a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.4s ease;
+        }
         .contact-box a:hover { color: var(--accent); }
-
-        #loader {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Cinzel';
-            letter-spacing: 10px;
-            color: #fff;
-            z-index: 200;
+        .footer-copy {
+            margin-top: 60px;
+            font-size: 0.55rem;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.1);
+            text-transform: uppercase;
         }
 
+        /* ── ERROR STATE ── */
+        .gallery-error {
+            padding: 80px 56px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 8px;
+            color: var(--text-dim);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* ── MOBILE ── */
         @media (max-width: 768px) {
-            header { padding: 30px 20px; }
-            .logo-wow { height: 40px; margin-right: 15px; }
-            .company-name { font-size: 0.7rem; letter-spacing: 4px; }
-            .manifesto p { font-size: 1.1rem; }
-            .hero h1 { letter-spacing: 10px; }
+            header        { padding: 24px 24px; }
+            header.scrolled { padding: 16px 24px; }
+            .logo-wow     { height: 36px; }
+            .company-name { display: none; }
+            .hero         { padding: 0 24px 60px; }
+            .hero-scroll-hint { right: 24px; bottom: 60px; }
+            .manifesto-wrap {
+                padding: 80px 24px;
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .gallery-item:nth-child(even) {
+                width: 100%;
+                margin-left: 0;
+            }
+            .gallery-divider { padding: 40px 24px 24px; }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            footer { padding: 80px 24px 60px; }
+            .footer-top { flex-direction: column; gap: 24px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="loader">COLLECTING ARCHIVE</div>
+    <!-- Custom cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
 
-    <header>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-word">Collecting Archive</div>
+        <div class="loader-bar"><div class="loader-progress"></div></div>
+    </div>
+
+    <header id="site-header">
         <a href="index.html" class="back-link">
-            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="MB Gumbrevičius Logo">
             <div class="company-name">MB Gumbrevičius</div>
         </a>
-        <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.7rem;">CGI ARTIST</div>
+        <div class="header-right">CGI Artist</div>
     </header>
 
     <section class="hero">
-        <h1>INTERIORS</h1>
+        <div class="hero-eyebrow">CGI Visualization · Art Direction</div>
+        <h1>Interiors</h1>
+        <p class="hero-sub">Natural light. Photometric precision. Living imagery.</p>
+        <div class="hero-scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
     </section>
 
-    <section class="manifesto">
-        <h2>Wabi-Sabi CGI Philosophy</h2>
-        <p>Dirbu tik su natūraliu apšvietimu ir fotometrinėmis šviesomis. Nedarau sterilaus techninio renderio – darau gyvą, kvėpuojantį jaukumą, kur akis neatskiria nuotraukos nuo vizualizacijos. Tikrasis fotorealizmas gimsta ne samples kiekyje, o šešėlių dramoje.</p>
+    <section class="manifesto-wrap">
+        <div class="manifesto-label">Wabi-Sabi CGI<br>Philosophy</div>
+        <div class="manifesto-text">
+            Dirbu tik su <em>natūraliu apšvietimu</em> ir fotometrinėmis šviesomis. Nedarau sterilaus techninio renderio — darau gyvą, kvėpuojantį jaukumą, kur akis neatskiria nuotraukos nuo vizualizacijos. Tikrasis fotorealizmas gimsta ne samples kiekyje, o <em>šešėlių dramoje.</em>
+        </div>
     </section>
 
-    <main class="gallery" id="gallery-root">
-        </main>
+    <main class="gallery-wrap" id="gallery-root"></main>
 
     <footer>
+        <div class="footer-top">
+            <div class="footer-title">Contact</div>
+        </div>
         <div class="contact-grid">
             <div class="contact-box">
-                <h3>Contact</h3>
+                <h3>Email</h3>
                 <p><a href="mailto:info@gumbrevicius.lt">info@gumbrevicius.lt</a></p>
             </div>
             <div class="contact-box">
                 <h3>Craft</h3>
-                <p>Interior Visualization / Art Direction</p>
+                <p>Interior Visualization<br>Art Direction</p>
             </div>
             <div class="contact-box">
                 <h3>Location</h3>
-                <p>Lithuania / Worldwide</p>
+                <p>Lithuania<br>Worldwide</p>
             </div>
         </div>
+        <div class="footer-copy">&copy; MB Gumbrevičius — All rights reserved</div>
     </footer>
 
     <script>
-        /**
-         * GITHUB CONFIGURATION
-         */
-        const GITHUB_USER = 'gumbrevicius'; 
-        const REPO_NAME = 'ar.gumbrevicius.lt'; 
-        const FOLDER_PATH = '../portfolio/interjeras'; 
+        // ── CURSOR ──
+        const cursor     = document.getElementById('cursor');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mx = -100, my = -100, rx = -100, ry = -100;
 
-        const galleryRoot = document.getElementById('gallery-root');
-        const loader = document.getElementById('loader');
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-        async function fetchImages() {
-            try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER_PATH}`);
-                const data = await response.json();
-
-                if (!Array.isArray(data)) throw new Error("Folder not found");
-
-                // Filtruojame paveiksliukus ir rūšiuojame A-Z
-                const images = data
-                    .filter(file => /\.(webp|jpg|jpeg|png)$/i.test(file.name))
-                    .sort((a, b) => a.name.localeCompare(b.name));
-
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 1000);
-
-                images.forEach(imgData => {
-                    const item = document.createElement('div');
-                    item.className = 'gallery-item';
-                    
-                    const img = document.createElement('img');
-                    img.src = imgData.download_url;
-                    img.alt = "MB Gumbrevičius Interior CGI";
-                    img.loading = "lazy";
-
-                    item.appendChild(img);
-                    galleryRoot.appendChild(item);
-                    
-                    observer.observe(item);
-                });
-
-            } catch (err) {
-                console.error("Inžinerinė klaida:", err);
-                loader.innerText = "LINK FAILED";
-            }
+        function animateCursor() {
+            cursor.style.left     = mx + 'px';
+            cursor.style.top      = my + 'px';
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            cursorRing.style.left = rx + 'px';
+            cursorRing.style.top  = ry + 'px';
+            requestAnimationFrame(animateCursor);
         }
+        animateCursor();
 
-        // Elegantiškas atsiradimas skrolinant
-        const observer = new IntersectionObserver((entries) => {
+        document.querySelectorAll('a, img').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform = 'translate(-50%,-50%) scale(2.5)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
+        });
+
+        // ── HEADER scroll ──
+        const siteHeader = document.getElementById('site-header');
+        window.addEventListener('scroll', () => {
+            siteHeader.classList.toggle('scrolled', window.scrollY > 80);
+        }, { passive: true });
+
+        // ── INTERSECTION OBSERVER ──
+        const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+        // ── GALLERY ──
+
+        /**
+         * CONFIGURATION
+         * ─────────────
+         * GITHUB_USER  → tavo GitHub vartotojo vardas
+         * REPO_NAME    → repozitorijos pavadinimas
+         * BRANCH       → šaka (default: main)
+         * FOLDER_PATH  → kelias iki aplanko REPOZITORIJOJE (be leading slash)
+         *
+         * Failas interiors.html yra repozitorijos šaknyje.
+         * Nuotraukos yra  /portfolio/interiors/
+         * Todėl FOLDER_PATH = 'portfolio/interiors'
+         */
+        const GITHUB_USER  = 'povilasgumbrevicius-ux';
+        const REPO_NAME    = 'ar.gumbrevicius.lt';
+        const BRANCH       = 'main';
+        const FOLDER_PATH  = 'portfolio/interiors';
+
+        const galleryRoot = document.getElementById('gallery-root');
+        const loader      = document.getElementById('loader');
+
+        function hideLoader() {
+            loader.classList.add('fade-out');
+            setTimeout(() => loader.remove(), 1400);
+        }
+
+        function showError(msg) {
+            hideLoader();
+            galleryRoot.innerHTML = `<div class="gallery-error">${msg}</div>`;
+        }
+
+        async function fetchImages() {
+            const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER_PATH}?ref=${BRANCH}`;
+
+            let data;
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                });
+
+                if (res.status === 404) {
+                    showError('Archive path not found — check FOLDER_PATH configuration');
+                    return;
+                }
+                if (res.status === 403) {
+                    showError('GitHub API rate limit reached — try again in a moment');
+                    return;
+                }
+                if (!res.ok) {
+                    showError(`API error ${res.status}`);
+                    return;
+                }
+
+                data = await res.json();
+            } catch (err) {
+                showError('Network error — unable to reach archive');
+                console.error(err);
+                return;
+            }
+
+            if (!Array.isArray(data)) {
+                showError('Unexpected API response — folder may not exist');
+                return;
+            }
+
+            // Filter images only, sort A-Z (natural order keeps numbered filenames correct)
+            const images = data
+                .filter(f => /\.(webp|jpg|jpeg|png|avif)$/i.test(f.name))
+                .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+            if (images.length === 0) {
+                showError('No images found in archive');
+                return;
+            }
+
+            // Build gallery
+            const fragment = document.createDocumentFragment();
+
+            // Subtle section label
+            const divider = document.createElement('div');
+            divider.className = 'gallery-divider';
+            divider.innerHTML = `
+                <div class="gallery-divider-line"></div>
+                <div class="gallery-divider-text">${images.length} works</div>
+                <div class="gallery-divider-line"></div>
+            `;
+            fragment.appendChild(divider);
+            observer.observe(divider);
+
+            images.forEach((imgData, i) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+
+                const img = document.createElement('img');
+                // Use download_url — direct raw content URL, always correct
+                img.src     = imgData.download_url;
+                img.alt     = `MB Gumbrevičius · Interior CGI · ${imgData.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ')}`;
+                img.loading = 'lazy';
+                img.decoding = 'async';
+
+                const num = document.createElement('div');
+                num.className   = 'gallery-item-num';
+                num.textContent = String(i + 1).padStart(2, '0');
+
+                item.appendChild(img);
+                item.appendChild(num);
+                fragment.appendChild(item);
+                observer.observe(item);
+            });
+
+            galleryRoot.appendChild(fragment);
+            hideLoader();
+        }
 
         fetchImages();
     </script>
