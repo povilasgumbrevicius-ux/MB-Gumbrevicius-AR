@@ -112,15 +112,9 @@
         /* ── MANIFESTO ── */
         .manifesto-wrap {
             padding: 160px 56px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             text-align: center;
-        }
-        .manifesto-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.5rem, 3vw, 2.2rem);
-            line-height: 1.8;
-            color: rgba(232, 226, 216, 0.9);
         }
 
         /* ── GALLERY ── */
@@ -128,15 +122,15 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centruoja visą turinį */
-            gap: 80px; /* Tarpas tarp nuotraukų */
+            align-items: center;
+            gap: 80px;
             padding-bottom: 100px;
         }
 
         .gallery-item {
-            width: 90vw; /* Dinamiškai prisitaiko prie ekrano */
-            max-width: 1600px; /* Neleidžia per daug išsiplėsti milžiniškuose ekranuose */
-            margin: 0 auto; /* Užtikrina centravimą */
+            width: 90vw;
+            max-width: 1600px;
+            margin: 0 auto;
             overflow: hidden;
             opacity: 0;
             transform: translateY(50px);
@@ -152,10 +146,9 @@
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 1.5s var(--ease-luxury); /* Didėjimo greitis */
+            transition: transform 1.5s var(--ease-luxury);
         }
 
-        /* Padidinimo funkcija užvedus pelę */
         .gallery-item:hover img {
             transform: scale(1.05);
         }
@@ -185,9 +178,10 @@
         .contact-box a { color: var(--text-dim); text-decoration: none; transition: 0.3s; }
         .contact-box a:hover { color: var(--accent); }
 
+        /* Media Queries */
         @media (max-width: 768px) {
             header { padding: 24px; }
-            .company-name { display: none; }
+            .company-name, .desktop-only { display: none; }
             .hero h1 { letter-spacing: 10px; }
             .gallery-item { width: 95vw; }
             .contact-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -199,12 +193,17 @@
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
 
-    <header>
+    <header id="site-header">
         <a href="index.html" class="back-link">
             <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
             <div class="company-name">MB Gumbrevičius</div>
         </a>
-        <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.65rem;">CGI ARTIST</div>
+        <div style="display: flex; align-items: center; gap: 30px;">
+            <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem; color: var(--text-dim);" class="desktop-only">CGI ARTIST</div>
+            <a href="mailto:info@gumbrevicius.lt" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';">
+                Start Project
+            </a>
+        </div>
     </header>
 
     <section class="hero">
@@ -212,7 +211,7 @@
         <p class="hero-sub">Photometric accuracy & Wabi-sabi aesthetics</p>
     </section>
 
-   <section class="manifesto-wrap" style="grid-template-columns: 1fr; max-width: 1400px;">
+    <section class="manifesto-wrap">
         <div class="manifesto-text" style="text-align: center;">
             <h2 style="font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 12px; color: var(--accent); margin-bottom: 60px; text-transform: uppercase;">Manifesto</h2>
             
@@ -299,31 +298,30 @@
         <div class="gallery-item"><img src="portfolio/interior/z3.webp" loading="lazy"></div>
         <div class="gallery-item"><img src="portfolio/interior/z4.webp" loading="lazy"></div>
     </main>
-    
-<section style="padding: 160px 56px; text-align: center; background: linear-gradient(to bottom, var(--bg), #0a0a0a);">
-    <div style="max-width: 1000px; margin: 0 auto;">
-        <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 3rem); letter-spacing: 15px; text-transform: uppercase; margin-bottom: 40px; color: var(--text);">
-            Kuriame atmosferą kartu?
-        </h2>
-        <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-style: italic; color: var(--text-dim); margin-bottom: 60px; line-height: 1.6;">
-            Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.
-        </p>
-        
-        <a href="mailto:info@gumbrevicius.lt" style="display: inline-block; padding: 20px 50px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); position: relative; overflow: hidden;" 
-           onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
-           onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';">
-            Pradėti projektą
-        </a>
-    </div>
-</section>
 
-<section style="padding: 60px 56px; text-align: center; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.03);">
-    <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.7rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 800px; margin: 0 auto; line-height: 1.8; opacity: 0.6;">
-        Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. <br>
-        MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.
-    </p>
-</section>
-    
+    <section style="padding: 160px 56px; text-align: center; background: linear-gradient(to bottom, var(--bg), #0a0a0a);">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 3rem); letter-spacing: 15px; text-transform: uppercase; margin-bottom: 40px; color: var(--text);">
+                Kuriame atmosferą kartu?
+            </h2>
+            <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-style: italic; color: var(--text-dim); margin-bottom: 60px; line-height: 1.6;">
+                Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.
+            </p>
+            <a href="mailto:info@gumbrevicius.lt" style="display: inline-block; padding: 20px 50px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); position: relative; overflow: hidden;" 
+               onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
+               onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';">
+                Pradėti projektą
+            </a>
+        </div>
+    </section>
+
+    <section style="padding: 60px 56px; text-align: center; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.03);">
+        <p style="font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 0.7rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 800px; margin: 0 auto; line-height: 1.8; opacity: 0.6;">
+            Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. <br>
+            MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.
+        </p>
+    </section>
+
     <footer>
         <div class="contact-grid">
             <div class="contact-box">
