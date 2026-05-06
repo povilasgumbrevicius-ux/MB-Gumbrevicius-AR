@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERIORS | MB GUMBREVIČIUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@100;300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00d2ff;
+            --bg: #000000;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference; /* Užtikrina matomumą virš bet kokio renderio */
+        }
+
+        .nav-logo {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 8px;
+            font-size: 1.2rem;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .nav-back {
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 300;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            transition: var(--transition);
+        }
+
+        .nav-back:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 8vw, 5rem);
+            letter-spacing: 25px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .hero .subtitle {
+            font-size: 1rem;
+            letter-spacing: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-weight: 100;
+        }
+
+        /* --- ART DIRECT GALLERY --- */
+        .gallery {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gallery-item {
+            width: 100vw;
+            margin-bottom: 0; /* Vaizdai liečiasi kurdami vientisą drobę */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 2s var(--transition);
+        }
+
+        /* Subtilus priartėjimas skrolinant - prabangos pojūtis */
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* --- ABOUT PLACEHOLDER (COMING SOON) --- */
+        .about-teaser {
+            padding: 200px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .about-teaser h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            letter-spacing: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* --- CONTACT FOOTER --- */
+        footer {
+            padding: 100px 60px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            width: 100%;
+            max-width: 1400px;
+            gap: 60px;
+        }
+
+        .contact-box h3 {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .contact-box p {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .contact-box a {
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .contact-box a:hover { color: var(--accent); }
+
+        .copyright {
+            margin-top: 60px;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header { padding: 20px; }
+            .hero h1 { letter-spacing: 10px; }
+            .about-teaser { padding: 100px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="nav-logo">GUMBREVIČIUS</a>
+        <a href="index.html" class="nav-back">Back to menu</a>
+    </header>
+
+    <section class="hero">
+        <h1>INTERIORS</h1>
+        <p class="subtitle">Art Direction / Wabi-Sabi CGI</p>
+    </section>
+
+    <main class="gallery">
+        <div class="gallery-item"><img src="portfolio/interjeras/01.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/02.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/03.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/04.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/05.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/06.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/07.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/08.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/09.webp" alt="Interior Visualization"></div>
+        <div class="gallery-item"><img src="portfolio/interjeras/10.webp" alt="Interior Visualization"></div>
+        </main>
+
+    <section class="about-teaser">
+        <h2>MANIFESTO</h2>
+        <p style="font-weight: 100; font-size: 1.5rem; line-height: 2; color: rgba(255,255,255,0.8);">
+            [Vieta jūsų būsimam stipriam aprašymui. Čia tekstas bus pateiktas su dideliais tarpais, pabrėžiant jūsų unikalų Workflow ir SketchUp sinergiją.]
+        </p>
+    </section>
+
+    <footer>
+        <div class="contact-grid">
+            <div class="contact-box">
+                <h3>Location</h3>
+                <p>Lithuania / Remote</p>
+            </div>
+            <div class="contact-box">
+                <h3>Contact</h3>
+                <p><a href="mailto:info@gumbrevicius.lt">info@gumbrevicius.lt</a></p>
+            </div>
+            <div class="contact-box">
+                <h3>Social</h3>
+                <p><a href="#">Instagram</a> / <a href="#">Behance</a></p>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 MB Gumbrevičius. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Sklandus vaizdų atsiradimas (Optional - inžinerinis užbaigtumas)
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = document.querySelectorAll('.gallery-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            items.forEach(item => {
+                item.style.opacity = "0";
+                item.style.transform = "translateY(50px)";
+                item.style.transition = "all 1.5s cubic-bezier(0.19, 1, 0.22, 1)";
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>
