@@ -130,7 +130,6 @@
 
         .manifesto-main-text {
             margin-bottom: 100px;
-            /* SUMAŽINTA: Buvo 3.2rem, dabar max 2.2rem */
             font-size: clamp(1.5rem, 3.5vw, 2.2rem); 
             line-height: 1.5;
             font-weight: 300;
@@ -195,21 +194,9 @@
             transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
         }
         
-        .gallery-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 1.5s var(--ease-luxury);
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
+        .gallery-item.visible { opacity: 1; transform: translateY(0); }
+        .gallery-item img { width: 100%; height: auto; display: block; transition: transform 1.5s var(--ease-luxury); }
+        .gallery-item:hover img { transform: scale(1.05); }
 
         /* ── FOOTER ── */
         footer {
@@ -258,7 +245,9 @@
         </a>
         <div style="display: flex; align-items: center; gap: 30px;">
             <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem; color: var(--text-dim);" class="desktop-only">CGI ARTISTAS</div>
-            <a href="mailto:info@gumbrevicius.lt" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s; font-weight: 400;" onmouseover="this.style.borderColor='var(--accent)';" onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';">
+            <a href="contact.html" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s; font-weight: 400;" 
+               onmouseover="this.style.borderColor='var(--accent)';" 
+               onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';" class="cta-button">
                 Pradėti projektą
             </a>
         </div>
@@ -272,12 +261,10 @@
     <section class="manifesto-wrap">
         <div class="manifesto-text">
             <h2 class="manifesto-title-sm">Manifestas</h2>
-            
             <p class="manifesto-main-text">
                 Dauguma vizualizacijų specialistų siekia sterilaus idealumo. <br>
                 <span style="color: #fff; font-weight: 400; border-bottom: 2px solid var(--accent);">Aš siekiu purvinos tiesos.</span>
             </p>
-
             <p class="manifesto-philosophy">
                 Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
             </p>
@@ -285,30 +272,19 @@
             <div class="pillars-grid">
                 <div class="pillar">
                     <h3>Chaoso priėmimas</h3>
-                    <p>
-                        Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas“ apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.
-                    </p>
+                    <p>Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas“ apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
                 </div>
-
                 <div class="pillar">
                     <h3>10 metų juostos</h3>
-                    <p>
-                        Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake“ užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.
-                    </p>
+                    <p>Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake“ užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
                 </div>
-
                 <div class="pillar">
                     <h3>Tekstūrinis gylis</h3>
-                    <p>
-                        4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas“: mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.
-                    </p>
+                    <p>4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas“: mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
                 </div>
-
                 <div class="pillar">
                     <h3>Dizainerio partneris</h3>
-                    <p>
-                        Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru, kurį pamatęs klientas pasąmoningai pajunta ramybę.
-                    </p>
+                    <p>Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru, kurį pamatęs klientas pasąmoningai pajunta ramybę.</p>
                 </div>
             </div>
         </div>
@@ -361,9 +337,9 @@
             <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-style: italic; color: var(--text); margin-bottom: 60px; line-height: 1.6;">
                 Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.
             </p>
-            <a href="mailto:info@gumbrevicius.lt" style="display: inline-block; padding: 22px 55px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); font-weight: 400;" 
+            <a href="contact.html" style="display: inline-block; padding: 22px 55px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); font-weight: 400;" 
                onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
-               onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';">
+               onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';" class="cta-button">
                 Pradėti projektą
             </a>
         </div>
@@ -380,7 +356,7 @@
         <div class="contact-grid">
             <div class="contact-box">
                 <h3>Kontaktai</h3>
-                <p><a href="mailto:info@gumbrevicius.lt">info@gumbrevicius.lt</a></p>
+                <p><a href="contact.html">Susisiekti</a></p>
             </div>
             <div class="contact-box">
                 <h3>Specializacija</h3>
@@ -400,22 +376,16 @@
         document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
         function animateCursor() {
-            cursor.style.left = mx + 'px';
-            cursor.style.top = my + 'px';
-            rx += (mx - rx) * 0.12;
-            ry += (my - ry) * 0.12;
-            cursorRing.style.left = rx + 'px';
-            cursorRing.style.top = ry + 'px';
+            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
 
         const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { entry.target.classList.add('visible'); }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
     </script>
 </body>
