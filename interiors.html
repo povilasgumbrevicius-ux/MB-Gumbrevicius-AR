@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INTERJERAI | MB GUMBREVIČIUS</title>
+    <title>INTERJERO VIZUALIZACIJOS | MB GUMBREVIČIUS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
     <style>
@@ -95,12 +95,13 @@
         }
         .hero h1 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(3.5rem, 11vw, 9rem);
+            /* Sumažintas šrifto dydis ir tarpai ilgesniam pavadinimui */
+            font-size: clamp(2.2rem, 6.5vw, 5.2rem); 
             font-weight: 400;
-            letter-spacing: clamp(15px, 4vw, 50px);
+            letter-spacing: clamp(8px, 2vw, 25px);
             text-transform: uppercase;
-            line-height: 1;
-            margin-bottom: 20px;
+            line-height: 1.1;
+            margin-bottom: 30px;
         }
         .hero-sub {
             font-family: 'Cormorant Garamond', serif;
@@ -145,7 +146,6 @@
             line-height: 1.6;
         }
 
-        /* PILLARS GRID */
         .pillars-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -236,7 +236,7 @@
         @media (max-width: 768px) {
             header { padding: 24px; }
             .company-name, .desktop-only { display: none; }
-            .hero h1 { letter-spacing: 10px; }
+            .hero h1 { letter-spacing: 5px; font-size: 2.2rem; }
             .gallery-item { width: 95vw; }
             .contact-grid { grid-template-columns: 1fr; gap: 40px; }
             .pillars-grid { gap: 60px; }
@@ -262,7 +262,7 @@
     </header>
 
     <section class="hero">
-        <h1>Interjerai</h1>
+        <h1>Interjero vizualizacijos</h1>
         <p class="hero-sub">Fotometrinis tikslumas ir Wabi-sabi estetika</p>
     </section>
 
