@@ -95,7 +95,6 @@
         }
         .hero h1 {
             font-family: 'Cinzel', serif;
-            /* Sumažintas šrifto dydis ir tarpai ilgesniam pavadinimui */
             font-size: clamp(2.2rem, 6.5vw, 5.2rem); 
             font-weight: 400;
             letter-spacing: clamp(8px, 2vw, 25px);
@@ -121,12 +120,14 @@
 
         .manifesto-title-sm {
             font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            letter-spacing: 12px;
+            /* Padidintas dydis, kad nebūtų "juokinga" */
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem); 
+            letter-spacing: clamp(10px, 1.5vw, 20px);
             color: var(--accent);
-            margin-bottom: 60px;
+            margin-bottom: 80px;
             text-transform: uppercase;
             font-weight: 400;
+            opacity: 0.9;
         }
 
         .manifesto-main-text {
