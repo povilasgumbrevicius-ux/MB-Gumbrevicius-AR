@@ -13,10 +13,13 @@
             --text: #e8e2d8;
             --text-dim: rgba(232, 226, 216, 0.5);
             --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
+            /* Dinaminiai kintamieji tarpams */
+            --space-unit: clamp(1rem, 2vw, 3rem);
+            --section-pad: clamp(5rem, 10vw, 12rem);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; font-size: 16px; }
 
         body {
             background-color: var(--bg);
@@ -29,33 +32,15 @@
         }
 
         /* ── CUSTOM CURSOR ── */
-        .cursor {
-            position: fixed;
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease;
-        }
-        .cursor-ring {
-            position: fixed;
-            width: 36px; height: 36px;
-            border: 1px solid rgba(200, 169, 110, 0.4);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: all 0.45s var(--ease-luxury);
-        }
+        .cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease; }
+        .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(200, 169, 110, 0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: all 0.45s var(--ease-luxury); }
 
-        /* ── HEADER ── */
+        /* ── DINAMINIS HEADER ── */
         header {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 32px 56px;
+            padding: var(--space-unit) clamp(1.5rem, 5vw, 4rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -64,26 +49,11 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
-        .back-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text);
-            gap: 20px;
-        }
-        .logo-wow { height: 52px; width: auto; transition: transform 0.6s var(--ease-luxury); }
-        .back-link:hover .logo-wow { transform: scale(1.05); }
-        
-        .company-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
+        .back-link { display: flex; align-items: center; text-decoration: none; color: var(--text); gap: 20px; }
+        .logo-wow { height: clamp(40px, 4vw, 52px); width: auto; transition: transform 0.6s var(--ease-luxury); }
+        .company-name { font-family: 'Montserrat'; font-size: 0.7rem; letter-spacing: 6px; text-transform: uppercase; color: var(--text-dim); }
 
-        /* ── HERO ── */
+        /* ── HERO SEKCIJA ── */
         .hero {
             height: 100vh;
             display: flex;
@@ -91,69 +61,67 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 56px;
+            padding: 0 5vw;
         }
         .hero h1 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2.2rem, 6.5vw, 5.2rem); 
+            font-size: clamp(2rem, 7vw, 6rem); 
             font-weight: 400;
-            letter-spacing: clamp(8px, 2vw, 25px);
+            letter-spacing: clamp(10px, 3vw, 40px);
             text-transform: uppercase;
             line-height: 1.1;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
         .hero-sub {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 1.6rem;
+            font-size: clamp(1.1rem, 2vw, 1.6rem);
             letter-spacing: 4px;
             color: var(--text-dim);
         }
 
-        /* ── MANIFESTO ── */
+        /* ── MANIFESTO DINAMIKA ── */
         .manifesto-wrap {
-            padding: 160px 56px;
-            max-width: 1500px;
+            padding: var(--section-pad) 5vw;
+            max-width: 1600px;
             margin: 0 auto;
             text-align: center;
         }
 
         .manifesto-title-sm {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem); 
+            font-size: clamp(1.1rem, 2.2vw, 1.7rem); /* Subalansuotas dydis */
             letter-spacing: clamp(10px, 1.5vw, 20px);
             color: var(--accent);
-            margin-bottom: 80px;
+            margin-bottom: clamp(3rem, 6vw, 5rem);
             text-transform: uppercase;
             font-weight: 400;
         }
 
         .manifesto-main-text {
-            margin-bottom: 100px;
-            font-size: clamp(1.5rem, 3.5vw, 2.2rem); 
+            margin: 0 auto clamp(4rem, 8vw, 6rem);
+            font-size: clamp(1.4rem, 3.8vw, 2.3rem); /* Nebe "rėkiantis", bet stiprus */
             line-height: 1.5;
             font-weight: 300;
             max-width: 1100px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .manifesto-philosophy {
-            max-width: 1000px;
-            margin: 0 auto 120px;
+            max-width: clamp(600px, 75vw, 1000px);
+            margin: 0 auto var(--section-pad);
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.9rem;
+            font-size: clamp(1.3rem, 2.2vw, 1.9rem);
             color: var(--text);
             font-style: italic;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
+        /* GRID LOGIKA */
         .pillars-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 100px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(3rem, 6vw, 8rem);
             text-align: left;
-            margin-top: 80px;
         }
 
         .pillar h3 {
@@ -161,75 +129,60 @@
             font-size: 0.8rem;
             letter-spacing: 6px;
             color: var(--accent);
-            margin-bottom: 28px;
+            margin-bottom: 1.5rem;
             text-transform: uppercase;
-            font-weight: 400;
         }
 
         .pillar p {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 1.1rem;
+            font-size: clamp(0.95rem, 1.1vw, 1.1rem);
             line-height: 1.8;
             color: var(--text-dim);
         }
 
-        /* ── GALLERY ── */
+        /* ── GALERIJA ── */
         .gallery-wrap {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 80px;
-            padding-bottom: 100px;
+            gap: clamp(50px, 8vw, 120px);
+            padding-bottom: var(--section-pad);
         }
 
         .gallery-item {
             width: 90vw;
             max-width: 1600px;
-            margin: 0 auto;
             overflow: hidden;
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
+            transform: translateY(40px);
+            transition: opacity 1.6s var(--ease-luxury), transform 1.6s var(--ease-luxury);
         }
         
         .gallery-item.visible { opacity: 1; transform: translateY(0); }
         .gallery-item img { width: 100%; height: auto; display: block; transition: transform 1.5s var(--ease-luxury); }
-        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item:hover img { transform: scale(1.03); }
 
-        /* ── FOOTER ── */
+        /* ── FOOTER & CTA ── */
+        .cta-section { padding: var(--section-pad) 5vw; text-align: center; background: linear-gradient(to bottom, var(--bg), #0a0a0a); }
+        
         footer {
-            padding: 120px 56px 80px;
+            padding: clamp(4rem, 8vw, 8rem) 5vw;
             border-top: 1px solid rgba(255,255,255,0.05);
             background: #050505;
         }
+
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             max-width: 1400px;
             margin: 0 auto;
-            gap: 60px;
+            gap: 4rem;
         }
-        .contact-box h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-        }
-        .contact-box p { font-size: 0.95rem; letter-spacing: 2px; color: var(--text-dim); }
-        .contact-box a { color: var(--text-dim); text-decoration: none; transition: 0.3s; }
-        .contact-box a:hover { color: var(--accent); }
 
         @media (max-width: 768px) {
-            header { padding: 24px; }
             .company-name, .desktop-only { display: none; }
-            .hero h1 { letter-spacing: 5px; font-size: 2.2rem; }
-            .gallery-item { width: 95vw; }
-            .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-            .pillars-grid { gap: 60px; }
+            .hero h1 { letter-spacing: 5px; }
+            header { padding: 20px; }
         }
     </style>
 </head>
@@ -243,9 +196,9 @@
             <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
             <div class="company-name">MB Gumbrevičius</div>
         </a>
-        <div style="display: flex; align-items: center; gap: 30px;">
+        <div style="display: flex; align-items: center; gap: clamp(15px, 3vw, 35px);">
             <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem; color: var(--text-dim);" class="desktop-only">CGI ARTISTAS</div>
-            <a href="contact.html" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s; font-weight: 400;" 
+            <a href="contact.html" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 12px 25px; transition: 0.4s; font-weight: 400;" 
                onmouseover="this.style.borderColor='var(--accent)';" 
                onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';" class="cta-button">
                 Pradėti projektą
@@ -259,33 +212,31 @@
     </section>
 
     <section class="manifesto-wrap">
-        <div class="manifesto-text">
-            <h2 class="manifesto-title-sm">Manifestas</h2>
-            <p class="manifesto-main-text">
-                Dauguma vizualizacijų specialistų siekia sterilaus idealumo. <br>
-                <span style="color: #fff; font-weight: 400; border-bottom: 2px solid var(--accent);">Aš siekiu "purvinos" tiesos.</span>
-            </p>
-            <p class="manifesto-philosophy">
-                Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
-            </p>
+        <h2 class="manifesto-title-sm">Manifestas</h2>
+        <p class="manifesto-main-text">
+            Dauguma vizualizacijų specialistų siekia sterilaus idealumo. <br>
+            <span style="color: #fff; font-weight: 400; border-bottom: 2px solid var(--accent);">Aš siekiu "purvinos" tiesos.</span>
+        </p>
+        <p class="manifesto-philosophy">
+            Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
+        </p>
 
-            <div class="pillars-grid">
-                <div class="pillar">
-                    <h3>Chaoso priėmimas</h3>
-                    <p>Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas“ apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
-                </div>
-                <div class="pillar">
-                    <h3>10 metų juostos</h3>
-                    <p>Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake“ užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
-                </div>
-                <div class="pillar">
-                    <h3>Tekstūrinis gylis</h3>
-                    <p>4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas“: mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
-                </div>
-                <div class="pillar">
-                    <h3>Dizainerio partneris</h3>
-                    <p>Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru, kurį pamatęs klientas pasąmoningai pajunta ramybę.</p>
-                </div>
+        <div class="pillars-grid">
+            <div class="pillar">
+                <h3>Chaoso priėmimas</h3>
+                <p>Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas“ apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
+            </div>
+            <div class="pillar">
+                <h3>10 metų juostos</h3>
+                <p>Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake“ užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
+            </div>
+            <div class="pillar">
+                <h3>Tekstūrinis gylis</h3>
+                <p>4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas“: mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
+            </div>
+            <div class="pillar">
+                <h3>Dizainerio partneris</h3>
+                <p>Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru.</p>
             </div>
         </div>
     </section>
@@ -329,23 +280,17 @@
         <div class="gallery-item"><img src="portfolio/interior/z4.webp" loading="lazy"></div>
     </main>
 
-    <section style="padding: 160px 56px; text-align: center; background: linear-gradient(to bottom, var(--bg), #0a0a0a);">
-        <div style="max-width: 1000px; margin: 0 auto;">
-            <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 3rem); letter-spacing: 15px; text-transform: uppercase; margin-bottom: 40px; color: var(--text);">
-                Kuriame atmosferą kartu?
-            </h2>
-            <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-style: italic; color: var(--text); margin-bottom: 60px; line-height: 1.6;">
-                Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.
-            </p>
-            <a href="contact.html" style="display: inline-block; padding: 22px 55px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); font-weight: 400;" 
-               onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
-               onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';" class="cta-button">
-                Pradėti projektą
-            </a>
-        </div>
+    <section class="cta-section">
+        <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.8rem, 5vw, 3.5rem); letter-spacing: 12px; text-transform: uppercase; margin-bottom: 2rem;">Kuriame atmosferą kartu?</h2>
+        <p style="font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2vw, 1.8rem); font-style: italic; color: var(--text-dim); margin-bottom: 3.5rem;">Jei jūsų projektui reikia vaizdo su charakteriu – aptarkime jūsų viziją.</p>
+        <a href="contact.html" style="display: inline-block; padding: 22px 55px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 6px; text-transform: uppercase; transition: 0.5s;" 
+           onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
+           onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';" class="cta-button">
+            Pradėti projektą
+        </a>
     </section>
 
-    <section style="padding: 60px 56px; text-align: center; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.03);">
+    <section style="padding: 60px 5vw; text-align: center; border-top: 1px solid rgba(255,255,255,0.03);">
         <p style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 900px; margin: 0 auto; line-height: 1.8;">
             Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. <br>
             MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.
@@ -354,18 +299,9 @@
 
     <footer>
         <div class="contact-grid">
-            <div class="contact-box">
-                <h3>Kontaktai</h3>
-                <p><a href="contact.html">Susisiekti</a></p>
-            </div>
-            <div class="contact-box">
-                <h3>Specializacija</h3>
-                <p>Interjero vizualizacija<br>Meninis išpildymas</p>
-            </div>
-            <div class="contact-box">
-                <h3>Vieta</h3>
-                <p>Lietuva / Visas pasaulis</p>
-            </div>
+            <div class="contact-box"><h3 style="font-family:'Cinzel'; font-size:0.6rem; letter-spacing:5px; color:var(--accent); text-transform:uppercase; margin-bottom:1.5rem;">Kontaktai</h3><p><a href="contact.html" style="color:inherit; text-decoration:none;">Susisiekti</a></p></div>
+            <div class="contact-box"><h3 style="font-family:'Cinzel'; font-size:0.6rem; letter-spacing:5px; color:var(--accent); text-transform:uppercase; margin-bottom:1.5rem;">Specializacija</h3><p>Interjero vizualizacija<br>Meninis išpildymas</p></div>
+            <div class="contact-box"><h3 style="font-family:'Cinzel'; font-size:0.6rem; letter-spacing:5px; color:var(--accent); text-transform:uppercase; margin-bottom:1.5rem;">Vieta</h3><p>Lietuva / Visas pasaulis</p></div>
         </div>
     </footer>
 
@@ -384,8 +320,8 @@
         animateCursor();
 
         const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
-        }, { threshold: 0.1 });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.05 });
         document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
     </script>
 </body>
