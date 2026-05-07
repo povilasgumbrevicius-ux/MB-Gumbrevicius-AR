@@ -1,392 +1,493 @@
 <!DOCTYPE html>
 <html lang="lt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INTERJERO VIZUALIZACIJOS | MB GUMBREVIČIUS</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent: #c8a96e;
-            --bg: #080808;
-            --text: #e8e2d8;
-            --text-dim: rgba(232, 226, 216, 0.5);
-            --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERJERO VIZUALIZACIJOS | MB GUMBREVIČIUS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #c8a96e;
+            --bg: #080808;
+            --text: #e8e2d8;
+            --text-dim: rgba(232, 226, 216, 0.5);
+            --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+            /* Fluid spacing — prisitaiko prie bet kokio ekrano */
+            --pad-x: clamp(24px, 4vw, 80px);
+        }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            cursor: none;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
-        /* ── CUSTOM CURSOR ── */
-        .cursor {
-            position: fixed;
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease;
-        }
-        .cursor-ring {
-            position: fixed;
-            width: 36px; height: 36px;
-            border: 1px solid rgba(200, 169, 110, 0.4);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: all 0.45s var(--ease-luxury);
-        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
+        }
 
-        /* ── HEADER ── */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 32px 56px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .back-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text);
-            gap: 20px;
-        }
-        .logo-wow { height: 52px; width: auto; transition: transform 0.6s var(--ease-luxury); }
-        .back-link:hover .logo-wow { transform: scale(1.05); }
-        
-        .company-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            font-weight: 400;
-        }
+        /* ── CUSTOM CURSOR ── */
+        .cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 36px; height: 36px;
+            border: 1px solid rgba(200, 169, 110, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: all 0.45s var(--ease-luxury);
+        }
 
-        /* ── HERO ── */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 56px;
-        }
-        .hero h1 {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2.2rem, 6.5vw, 5.2rem); 
-            font-weight: 400;
-            letter-spacing: clamp(8px, 2vw, 25px);
-            text-transform: uppercase;
-            line-height: 1.1;
-            margin-bottom: 30px;
-        }
-        .hero-sub {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 1.6rem;
-            letter-spacing: 4px;
-            color: var(--text-dim);
-        }
+        /* ── HEADER ── */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: clamp(16px, 2.5vw, 32px) var(--pad-x);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .back-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text);
+            gap: clamp(12px, 1.5vw, 20px);
+        }
+        .logo-wow {
+            height: clamp(36px, 4vw, 52px);
+            width: auto;
+            transition: transform 0.6s var(--ease-luxury);
+        }
+        .back-link:hover .logo-wow { transform: scale(1.05); }
+        .company-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            letter-spacing: clamp(4px, 0.8vw, 8px);
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+        .header-cta {
+            display: flex;
+            align-items: center;
+            gap: clamp(16px, 2vw, 30px);
+        }
+        .header-label {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 5px;
+            font-size: clamp(0.5rem, 0.7vw, 0.6rem);
+            color: var(--text-dim);
+        }
+        .cta-btn {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 3px;
+            font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+            color: var(--accent);
+            text-decoration: none;
+            border: 1px solid rgba(200, 169, 110, 0.3);
+            padding: clamp(6px, 0.6vw, 10px) clamp(12px, 1.2vw, 18px);
+            transition: border-color 0.4s ease, background 0.4s ease, color 0.4s ease;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+        .cta-btn:hover { border-color: var(--accent); background: var(--accent); color: #000; }
 
-        /* ── MANIFESTO ── */
-        .manifesto-wrap {
-            padding: 160px 56px;
-            max-width: 1500px;
-            margin: 0 auto;
-            text-align: center;
-        }
+        /* ── HERO ── */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 var(--pad-x);
+        }
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 5.5vw, 5.2rem);
+            font-weight: 400;
+            letter-spacing: clamp(6px, 1.8vw, 25px);
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: clamp(16px, 2vw, 30px);
+        }
+        .hero-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2vw, 1.6rem);
+            letter-spacing: clamp(2px, 0.5vw, 4px);
+            color: var(--text-dim);
+        }
 
-        .manifesto-title-sm {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem); 
-            letter-spacing: clamp(10px, 1.5vw, 20px);
-            color: var(--accent);
-            margin-bottom: 80px;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
+        /* ── MANIFESTO ── */
+        .manifesto-wrap {
+            padding: clamp(80px, 12vw, 160px) var(--pad-x);
+            max-width: 1600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .manifesto-title-sm {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1rem, 2vw, 1.8rem);
+            letter-spacing: clamp(8px, 1.5vw, 20px);
+            color: var(--accent);
+            margin-bottom: clamp(40px, 6vw, 80px);
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+        .manifesto-main-text {
+            font-size: clamp(1.1rem, 2.5vw, 2.2rem);
+            line-height: 1.5;
+            font-weight: 300;
+            max-width: 1100px;
+            margin: 0 auto clamp(50px, 7vw, 100px);
+        }
+        .manifesto-philosophy {
+            max-width: 1000px;
+            margin: 0 auto clamp(60px, 9vw, 120px);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 2vw, 1.9rem);
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.6;
+        }
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: clamp(40px, 6vw, 100px);
+            text-align: left;
+            margin-top: clamp(40px, 5vw, 80px);
+        }
+        .pillar h3 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 0.8vw, 0.8rem);
+            letter-spacing: 6px;
+            color: var(--accent);
+            margin-bottom: clamp(16px, 2vw, 28px);
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+        .pillar p {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: clamp(0.85rem, 1vw, 1.1rem);
+            line-height: 1.8;
+            color: var(--text-dim);
+        }
 
-        .manifesto-main-text {
-            margin-bottom: 100px;
-            font-size: clamp(1.5rem, 3.5vw, 2.2rem); 
-            line-height: 1.5;
-            font-weight: 300;
-            max-width: 1100px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        /* ── GALLERY ──
+         *
+         * width: 100% — nuotrauka visada užpildo ekrano plotį.
+         * Veikia ant 13" nešiojamo, 27", 32", 4K ultrawide — visur.
+         * Alternating indent sukuria vizualų ritmą be fiksuotų px.
+         */
+        .gallery-wrap {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(16px, 3vw, 60px);
+            padding-bottom: clamp(60px, 8vw, 120px);
+        }
+        .gallery-item {
+            width: 100%;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
+            line-height: 0;
+        }
+        .gallery-item.visible { opacity: 1; transform: translateY(0); }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 6s var(--ease-luxury);
+        }
+        .gallery-item:hover img { transform: scale(1.03); }
 
-        .manifesto-philosophy {
-            max-width: 1000px;
-            margin: 0 auto 120px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.9rem;
-            color: var(--text);
-            font-style: italic;
-            line-height: 1.6;
-        }
+        /* Kas antras — subtilus indent, fluid, ne fiksuotas */
+        .gallery-item:nth-child(even) {
+            width: calc(100% - clamp(32px, 6vw, 120px));
+            margin-left: clamp(32px, 6vw, 120px);
+        }
 
-        .pillars-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 100px;
-            text-align: left;
-            margin-top: 80px;
-        }
+        /* ── CTA SECTION ── */
+        .cta-section {
+            padding: clamp(80px, 12vw, 160px) var(--pad-x);
+            text-align: center;
+            background: linear-gradient(to bottom, var(--bg), #0a0a0a);
+        }
+        .cta-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.2rem, 3.5vw, 3rem);
+            letter-spacing: clamp(8px, 1.5vw, 15px);
+            text-transform: uppercase;
+            margin-bottom: clamp(24px, 3vw, 40px);
+            color: var(--text);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-section p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 2vw, 1.7rem);
+            font-style: italic;
+            color: var(--text);
+            margin-bottom: clamp(32px, 4vw, 60px);
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-section a {
+            display: inline-block;
+            padding: clamp(14px, 1.5vw, 22px) clamp(30px, 4vw, 55px);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            transition: all 0.5s var(--ease-luxury);
+            font-weight: 400;
+        }
+        .cta-section a:hover { background: var(--accent); color: #000; }
 
-        .pillar h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            letter-spacing: 6px;
-            color: var(--accent);
-            margin-bottom: 28px;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
+        /* ── DISCLAIMER ── */
+        .disclaimer {
+            padding: clamp(32px, 4vw, 60px) var(--pad-x);
+            text-align: center;
+            background: #0a0a0a;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+        .disclaimer p {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
 
-        .pillar p {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-dim);
-        }
+        /* ── FOOTER ── */
+        footer {
+            padding: clamp(60px, 8vw, 120px) var(--pad-x) clamp(40px, 5vw, 80px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: #050505;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: clamp(32px, 4vw, 60px);
+        }
+        .contact-box h3 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.5rem, 0.65vw, 0.6rem);
+            color: var(--accent);
+            margin-bottom: clamp(12px, 1.5vw, 20px);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+        }
+        .contact-box p { font-size: clamp(0.75rem, 0.9vw, 0.95rem); letter-spacing: 2px; color: var(--text-dim); line-height: 1.8; }
+        .contact-box a { color: var(--text-dim); text-decoration: none; transition: color 0.3s ease; }
+        .contact-box a:hover { color: var(--accent); }
 
-        /* ── GALLERY ── */
-        .gallery-wrap {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 80px;
-            padding-bottom: 100px;
-        }
-
-        .gallery-item {
-            width: 90vw;
-            max-width: 1600px;
-            margin: 0 auto;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
-        }
-        
-        .gallery-item.visible { opacity: 1; transform: translateY(0); }
-        .gallery-item img { width: 100%; height: auto; display: block; transition: transform 1.5s var(--ease-luxury); }
-        .gallery-item:hover img { transform: scale(1.05); }
-
-        /* ── FOOTER ── */
-        footer {
-            padding: 120px 56px 80px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            background: #050505;
-        }
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 60px;
-        }
-        .contact-box h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-        }
-        .contact-box p { font-size: 0.95rem; letter-spacing: 2px; color: var(--text-dim); }
-        .contact-box a { color: var(--text-dim); text-decoration: none; transition: 0.3s; }
-        .contact-box a:hover { color: var(--accent); }
-
-        @media (max-width: 768px) {
-            header { padding: 24px; }
-            .company-name, .desktop-only { display: none; }
-            .hero h1 { letter-spacing: 5px; font-size: 2.2rem; }
-            .gallery-item { width: 95vw; }
-            .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-            .pillars-grid { gap: 60px; }
-        }
-    </style>
+        /* ── MOBILE ── */
+        @media (max-width: 640px) {
+            .company-name, .header-label { display: none; }
+            /* Telefone — pilnas plotis, be indent */
+            .gallery-item:nth-child(even) { width: 100%; margin-left: 0; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-ring" id="cursor-ring"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
 
-    <header id="site-header">
-        <a href="index.html" class="back-link">
-            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
-            <div class="company-name">MB Gumbrevičius</div>
-        </a>
-        <div style="display: flex; align-items: center; gap: 30px;">
-            <div style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 0.6rem; color: var(--text-dim);" class="desktop-only">CGI ARTISTAS</div>
-            <a href="contact.html" style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.65rem; color: var(--accent); text-decoration: none; border: 1px solid rgba(200, 169, 110, 0.3); padding: 8px 15px; transition: 0.4s; font-weight: 400;" 
-               onmouseover="this.style.borderColor='var(--accent)';" 
-               onmouseout="this.style.borderColor='rgba(200, 169, 110, 0.3)';" class="cta-button">
-                Pradėti projektą
-            </a>
-        </div>
-    </header>
+    <header>
+        <a href="index.html" class="back-link">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+            <div class="company-name">MB Gumbrevičius</div>
+        </a>
+        <div class="header-cta">
+            <div class="header-label">CGI Artistas</div>
+            <a href="contact.html" class="cta-btn">Pradėti projektą</a>
+        </div>
+    </header>
 
-    <section class="hero">
-        <h1>Interjero vizualizacijos</h1>
-        <p class="hero-sub">Fotometrinis tikslumas ir Wabi-sabi estetika</p>
-    </section>
+    <section class="hero">
+        <h1>Interjero vizualizacijos</h1>
+        <p class="hero-sub">Fotometrinis tikslumas ir Wabi-sabi estetika</p>
+    </section>
 
-    <section class="manifesto-wrap">
-        <div class="manifesto-text">
-            <h2 class="manifesto-title-sm">Manifestas</h2>
-            <p class="manifesto-main-text">
-                Dauguma vizualizacijų specialistų siekia sterilaus idealumo. <br>
-                <span style="color: #fff; font-weight: 400; border-bottom: 2px solid var(--accent);">Aš siekiu "purvinos" tiesos.</span>
-            </p>
-            <p class="manifesto-philosophy">
-                Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
-            </p>
+    <section class="manifesto-wrap">
+        <h2 class="manifesto-title-sm">Manifestas</h2>
+        <p class="manifesto-main-text">
+            Dauguma vizualizacijų specialistų siekia sterilaus idealumo.<br>
+            <span style="color:#fff; font-weight:400; border-bottom: 2px solid var(--accent);">Aš siekiu „purvinos" tiesos.</span>
+        </p>
+        <p class="manifesto-philosophy">
+            Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
+        </p>
+        <div class="pillars-grid">
+            <div class="pillar">
+                <h3>Chaoso priėmimas</h3>
+                <p>Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas" apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
+            </div>
+            <div class="pillar">
+                <h3>10 metų juostos</h3>
+                <p>Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake" užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
+            </div>
+            <div class="pillar">
+                <h3>Tekstūrinis gylis</h3>
+                <p>4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas": mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
+            </div>
+            <div class="pillar">
+                <h3>Dizainerio partneris</h3>
+                <p>Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru, kurį pamatęs klientas pasąmoningai pajunta ramybę.</p>
+            </div>
+        </div>
+    </section>
 
-            <div class="pillars-grid">
-                <div class="pillar">
-                    <h3>Chaoso priėmimas</h3>
-                    <p>Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas“ apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
-                </div>
-                <div class="pillar">
-                    <h3>10 metų juostos</h3>
-                    <p>Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake“ užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
-                </div>
-                <div class="pillar">
-                    <h3>Tekstūrinis gylis</h3>
-                    <p>4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas“: mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
-                </div>
-                <div class="pillar">
-                    <h3>Dizainerio partneris</h3>
-                    <p>Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru, kurį pamatęs klientas pasąmoningai pajunta ramybę.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- ═══════════════════════════════════════════════════
+         GALERIJA  ·  kelias: portfolio/interior/
+         Norėdamas pridėti nuotrauką — tiesiog pridėk eilutę:
+         <div class="gallery-item"><img src="portfolio/interior/PAVADINIMAS.webp" loading="lazy" alt="Interior CGI"></div>
+    ════════════════════════════════════════════════════ -->
+    <main class="gallery-wrap">
+        <div class="gallery-item"><img src="portfolio/interior/1.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/2.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/3.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/4.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/5.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/6.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/7.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/8.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/9.webp"           loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Ajeru1.webp"      loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Ajeru2.webp"      loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas1.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas2.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas3.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas4.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas5.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas6.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas7.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas9.webp"     loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas11.webp"    loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas12.webp"    loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas13.webp"    loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas14.webp"    loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis1.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis2.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis3.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v1.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v2.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v3.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v4.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v5.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/v6.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z1.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z2.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z3.webp"          loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z4.webp"          loading="lazy" alt="Interior CGI"></div>
+    </main>
 
-    <main class="gallery-wrap">
-        <div class="gallery-item"><img src="portfolio/interior/1.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/2.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/3.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/4.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/5.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/6.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/7.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/8.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/9.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Ajeru1.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Ajeru2.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas1.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas2.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas3.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas4.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas5.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas6.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas7.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas9.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas11.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas12.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas13.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Justas14.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Miegamasis1.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Miegamasis2.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/Miegamasis3.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/v1.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/v2.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/v3.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/v4.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/v5.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/v6.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/z1.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/z2.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/z3.webp" loading="lazy"></div>
-        <div class="gallery-item"><img src="portfolio/interior/z4.webp" loading="lazy"></div>
-    </main>
+    <section class="cta-section">
+        <h2>Kuriame atmosferą kartu?</h2>
+        <p>Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.</p>
+        <a href="contact.html">Pradėti projektą</a>
+    </section>
 
-    <section style="padding: 160px 56px; text-align: center; background: linear-gradient(to bottom, var(--bg), #0a0a0a);">
-        <div style="max-width: 1000px; margin: 0 auto;">
-            <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 3rem); letter-spacing: 15px; text-transform: uppercase; margin-bottom: 40px; color: var(--text);">
-                Kuriame atmosferą kartu?
-            </h2>
-            <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-style: italic; color: var(--text); margin-bottom: 60px; line-height: 1.6;">
-                Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.
-            </p>
-            <a href="contact.html" style="display: inline-block; padding: 22px 55px; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); font-weight: 400;" 
-               onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" 
-               onmouseout="this.style.background='transparent'; this.style.color='var(--accent)';" class="cta-button">
-                Pradėti projektą
-            </a>
-        </div>
-    </section>
+    <div class="disclaimer">
+        <p>Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams.<br>
+        MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.</p>
+    </div>
 
-    <section style="padding: 60px 56px; text-align: center; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.03);">
-        <p style="font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.8rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-            Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. <br>
-            MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.
-        </p>
-    </section>
+    <footer>
+        <div class="contact-grid">
+            <div class="contact-box">
+                <h3>Kontaktai</h3>
+                <p><a href="contact.html">Susisiekti</a></p>
+            </div>
+            <div class="contact-box">
+                <h3>Specializacija</h3>
+                <p>Interjero vizualizacija<br>Meninis išpildymas</p>
+            </div>
+            <div class="contact-box">
+                <h3>Vieta</h3>
+                <p>Lietuva / Visas pasaulis</p>
+            </div>
+        </div>
+    </footer>
 
-    <footer>
-        <div class="contact-grid">
-            <div class="contact-box">
-                <h3>Kontaktai</h3>
-                <p><a href="contact.html">Susisiekti</a></p>
-            </div>
-            <div class="contact-box">
-                <h3>Specializacija</h3>
-                <p>Interjero vizualizacija<br>Meninis išpildymas</p>
-            </div>
-            <div class="contact-box">
-                <h3>Vieta</h3>
-                <p>Lietuva / Visas pasaulis</p>
-            </div>
-        </div>
-    </footer>
+    <script>
+        // ── CURSOR ──
+        const cursor     = document.getElementById('cursor');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mx = -100, my = -100, rx = -100, ry = -100;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-    <script>
-        const cursor = document.getElementById('cursor');
-        const cursorRing = document.getElementById('cursor-ring');
-        let mx = -100, my = -100, rx = -100, ry = -100;
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function animateCursor() {
+            cursor.style.left     = mx + 'px';
+            cursor.style.top      = my + 'px';
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            cursorRing.style.left = rx + 'px';
+            cursorRing.style.top  = ry + 'px';
+            requestAnimationFrame(animateCursor);
+        })();
 
-        function animateCursor() {
-            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-            cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
+        document.querySelectorAll('a, .gallery-item').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform     = 'translate(-50%,-50%) scale(2.5)';
+                cursorRing.style.transform = 'translate(-50%,-50%) scale(1.4)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform     = 'translate(-50%,-50%) scale(1)';
+                cursorRing.style.transform = 'translate(-50%,-50%) scale(1)';
+            });
+        });
 
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
-    </script>
+        // ── SCROLL REVEAL ──
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
+    </script>
 </body>
 </html>
