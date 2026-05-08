@@ -13,8 +13,6 @@
             --text: #e8e2d8;
             --text-dim: rgba(232, 226, 216, 0.5);
             --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
-
-            /* Fluid spacing — prisitaiko prie bet kokio ekrano */
             --pad-x: clamp(24px, 4vw, 80px);
         }
 
@@ -31,7 +29,7 @@
             cursor: none;
         }
 
-        /* ── CUSTOM CURSOR ── */
+        /* ── CURSOR ── */
         .cursor {
             position: fixed;
             width: 8px; height: 8px;
@@ -40,75 +38,61 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s ease;
+            transition: transform 0.15s ease;
         }
         .cursor-ring {
             position: fixed;
             width: 36px; height: 36px;
-            border: 1px solid rgba(200, 169, 110, 0.4);
+            border: 1px solid rgba(200, 169, 110, 0.35);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9998;
             transform: translate(-50%, -50%);
-            transition: all 0.45s var(--ease-luxury);
+            transition: all 0.5s var(--ease-luxury);
         }
 
         /* ── HEADER ── */
         header {
             position: fixed;
-            top: 0;
-            width: 100%;
+            top: 0; width: 100%;
             padding: clamp(16px, 2.5vw, 32px) var(--pad-x);
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            /* Švarus gradient — ne blur, nes blur keičia spalvas ant nuotraukų */
+            background: linear-gradient(to bottom, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.0) 100%);
         }
         .back-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text);
-            gap: clamp(12px, 1.5vw, 20px);
+            display: flex; align-items: center; gap: clamp(12px, 1.5vw, 20px);
+            text-decoration: none; color: var(--text);
         }
         .logo-wow {
-            height: clamp(36px, 4vw, 52px);
-            width: auto;
+            height: clamp(34px, 3.5vw, 48px); width: auto;
             transition: transform 0.6s var(--ease-luxury);
         }
         .back-link:hover .logo-wow { transform: scale(1.05); }
         .company-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            font-size: clamp(0.55rem, 0.75vw, 0.7rem);
             letter-spacing: clamp(4px, 0.8vw, 8px);
             text-transform: uppercase;
             color: var(--text-dim);
             font-weight: 400;
         }
-        .header-cta {
-            display: flex;
-            align-items: center;
-            gap: clamp(16px, 2vw, 30px);
-        }
+        .header-cta { display: flex; align-items: center; gap: clamp(16px, 2vw, 30px); }
         .header-label {
             font-family: 'Cinzel', serif;
-            letter-spacing: 5px;
-            font-size: clamp(0.5rem, 0.7vw, 0.6rem);
-            color: var(--text-dim);
+            font-size: clamp(0.5rem, 0.65vw, 0.6rem);
+            letter-spacing: 5px; color: var(--text-dim);
         }
         .cta-btn {
             font-family: 'Cinzel', serif;
-            letter-spacing: 3px;
-            font-size: clamp(0.55rem, 0.7vw, 0.65rem);
-            color: var(--accent);
+            font-size: clamp(0.5rem, 0.65vw, 0.62rem);
+            letter-spacing: 3px; color: var(--accent);
             text-decoration: none;
-            border: 1px solid rgba(200, 169, 110, 0.3);
-            padding: clamp(6px, 0.6vw, 10px) clamp(12px, 1.2vw, 18px);
-            transition: border-color 0.4s ease, background 0.4s ease, color 0.4s ease;
-            font-weight: 400;
+            border: 1px solid rgba(200,169,110,0.3);
+            padding: clamp(6px,0.6vw,10px) clamp(12px,1.2vw,20px);
+            transition: all 0.4s ease;
             white-space: nowrap;
         }
         .cta-btn:hover { border-color: var(--accent); background: var(--accent); color: #000; }
@@ -116,220 +100,206 @@
         /* ── HERO ── */
         .hero {
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
             text-align: center;
             padding: 0 var(--pad-x);
         }
         .hero h1 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1.8rem, 5.5vw, 5.2rem);
+            font-size: clamp(2rem, 6vw, 5.5rem);
             font-weight: 400;
-            letter-spacing: clamp(6px, 1.8vw, 25px);
+            letter-spacing: clamp(8px, 2vw, 28px);
             text-transform: uppercase;
             line-height: 1.1;
-            margin-bottom: clamp(16px, 2vw, 30px);
+            margin-bottom: clamp(16px, 2vw, 28px);
         }
         .hero-sub {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: clamp(1rem, 2vw, 1.6rem);
+            font-size: clamp(1rem, 1.8vw, 1.55rem);
             letter-spacing: clamp(2px, 0.5vw, 4px);
             color: var(--text-dim);
         }
 
         /* ── MANIFESTO ── */
         .manifesto-wrap {
-            padding: clamp(80px, 12vw, 160px) var(--pad-x);
-            max-width: 1600px;
+            padding: clamp(80px, 11vw, 150px) var(--pad-x);
+            max-width: 1500px;
             margin: 0 auto;
             text-align: center;
         }
         .manifesto-title-sm {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1rem, 2vw, 1.8rem);
+            font-size: clamp(0.9rem, 1.8vw, 1.6rem);
             letter-spacing: clamp(8px, 1.5vw, 20px);
             color: var(--accent);
-            margin-bottom: clamp(40px, 6vw, 80px);
-            text-transform: uppercase;
-            font-weight: 400;
+            margin-bottom: clamp(36px, 5vw, 72px);
+            text-transform: uppercase; font-weight: 400;
         }
         .manifesto-main-text {
-            font-size: clamp(1.1rem, 2.5vw, 2.2rem);
-            line-height: 1.5;
-            font-weight: 300;
-            max-width: 1100px;
-            margin: 0 auto clamp(50px, 7vw, 100px);
+            font-size: clamp(1.1rem, 2.4vw, 2.1rem);
+            line-height: 1.55; font-weight: 300;
+            max-width: 1050px;
+            margin: 0 auto clamp(48px, 7vw, 96px);
         }
         .manifesto-philosophy {
-            max-width: 1000px;
-            margin: 0 auto clamp(60px, 9vw, 120px);
+            max-width: 950px; margin: 0 auto clamp(56px, 8vw, 112px);
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.2rem, 2vw, 1.9rem);
-            color: var(--text);
-            font-style: italic;
-            line-height: 1.6;
+            font-size: clamp(1.15rem, 1.9vw, 1.85rem);
+            font-style: italic; line-height: 1.65;
         }
         .pillars-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-            gap: clamp(40px, 6vw, 100px);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: clamp(36px, 5vw, 90px);
             text-align: left;
-            margin-top: clamp(40px, 5vw, 80px);
+            margin-top: clamp(36px, 4vw, 72px);
         }
         .pillar h3 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.65rem, 0.8vw, 0.8rem);
-            letter-spacing: 6px;
-            color: var(--accent);
-            margin-bottom: clamp(16px, 2vw, 28px);
-            text-transform: uppercase;
-            font-weight: 400;
+            font-size: clamp(0.6rem, 0.75vw, 0.75rem);
+            letter-spacing: 6px; color: var(--accent);
+            margin-bottom: clamp(14px, 1.8vw, 24px);
+            text-transform: uppercase; font-weight: 400;
         }
         .pillar p {
-            font-family: 'Montserrat', sans-serif;
             font-weight: 300;
-            font-size: clamp(0.85rem, 1vw, 1.1rem);
-            line-height: 1.8;
-            color: var(--text-dim);
+            font-size: clamp(0.82rem, 0.95vw, 1.05rem);
+            line-height: 1.85; color: var(--text-dim);
         }
 
-        /* ── GALLERY ──
-         *
-         * width: 100% — nuotrauka visada užpildo ekrano plotį.
-         * Veikia ant 13" nešiojamo, 27", 32", 4K ultrawide — visur.
-         * Alternating indent sukuria vizualų ritmą be fiksuotų px.
-         */
+        /* ══════════════════════════════════════════
+           EDITORIAL STACK GALERIJA
+           ──────────────────────────────────────────
+           Principas: kiekviena nuotrauka yra 100vw.
+           Nulis offsetų, nulis margin-left.
+           Tarpas tarp nuotraukų: mažas, elegantiškas.
+           Nuotrauka pati "pasako" savo formatą —
+           horizontali, vertikali, panorama — viskas.
+           Veikia ant bet kokio monitoriaus pločio.
+        ════════════════════════════════════════════ */
         .gallery-wrap {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: clamp(16px, 3vw, 60px);
+            /* Tarpas tarp nuotraukų — ne per didelis, ne per mažas */
+            gap: clamp(4px, 0.5vw, 10px);
             padding-bottom: clamp(60px, 8vw, 120px);
         }
+
         .gallery-item {
+            /* Pilnas plotis — absoliučiai visada */
             width: 100%;
             overflow: hidden;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1.8s var(--ease-luxury), transform 1.8s var(--ease-luxury);
             line-height: 0;
+
+            /* Reveal animacija */
+            opacity: 0;
+            transform: translateY(32px);
+            transition:
+                opacity 1.6s var(--ease-luxury),
+                transform 1.6s var(--ease-luxury);
         }
-        .gallery-item.visible { opacity: 1; transform: translateY(0); }
+
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .gallery-item img {
+            /* width: 100% — nuotrauka užpildo visą plotį */
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 6s var(--ease-luxury);
-        }
-        .gallery-item:hover img { transform: scale(1.03); }
-
-        /* Kas antras — subtilus indent, fluid, ne fiksuotas */
-        .gallery-item:nth-child(even) {
-            width: calc(100% - clamp(32px, 6vw, 120px));
-            margin-left: clamp(32px, 6vw, 120px);
+            /* Subtilus zoom hover — nepersistengia */
+            transition: transform 7s var(--ease-luxury);
         }
 
-        /* ── CTA SECTION ── */
+        .gallery-item:hover img {
+            transform: scale(1.02);
+        }
+
+        /* ── CTA ── */
         .cta-section {
-            padding: clamp(80px, 12vw, 160px) var(--pad-x);
+            padding: clamp(80px, 11vw, 150px) var(--pad-x);
             text-align: center;
             background: linear-gradient(to bottom, var(--bg), #0a0a0a);
         }
         .cta-section h2 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1.2rem, 3.5vw, 3rem);
-            letter-spacing: clamp(8px, 1.5vw, 15px);
+            font-size: clamp(1.2rem, 3.2vw, 2.8rem);
+            letter-spacing: clamp(8px, 1.4vw, 14px);
             text-transform: uppercase;
-            margin-bottom: clamp(24px, 3vw, 40px);
-            color: var(--text);
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: clamp(20px, 2.5vw, 36px);
+            max-width: 860px; margin-left: auto; margin-right: auto;
         }
         .cta-section p {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.1rem, 2vw, 1.7rem);
-            font-style: italic;
+            font-size: clamp(1.05rem, 1.8vw, 1.6rem);
+            font-style: italic; line-height: 1.65;
             color: var(--text);
-            margin-bottom: clamp(32px, 4vw, 60px);
-            line-height: 1.6;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-bottom: clamp(28px, 3.5vw, 55px);
+            max-width: 780px; margin-left: auto; margin-right: auto;
         }
         .cta-section a {
             display: inline-block;
-            padding: clamp(14px, 1.5vw, 22px) clamp(30px, 4vw, 55px);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: clamp(0.6rem, 0.8vw, 0.8rem);
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            transition: all 0.5s var(--ease-luxury);
-            font-weight: 400;
+            padding: clamp(12px, 1.4vw, 20px) clamp(28px, 3.5vw, 52px);
+            border: 1px solid var(--accent); color: var(--accent);
+            text-decoration: none; font-family: 'Cinzel', serif;
+            font-size: clamp(0.58rem, 0.75vw, 0.78rem);
+            letter-spacing: 5px; text-transform: uppercase;
+            transition: all 0.5s var(--ease-luxury); font-weight: 400;
         }
         .cta-section a:hover { background: var(--accent); color: #000; }
 
         /* ── DISCLAIMER ── */
         .disclaimer {
-            padding: clamp(32px, 4vw, 60px) var(--pad-x);
-            text-align: center;
-            background: #0a0a0a;
+            padding: clamp(28px, 3.5vw, 52px) var(--pad-x);
+            text-align: center; background: #0a0a0a;
             border-top: 1px solid rgba(255,255,255,0.03);
         }
         .disclaimer p {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: clamp(0.6rem, 0.8vw, 0.8rem);
-            letter-spacing: 2px;
-            color: var(--text-dim);
+            font-size: clamp(0.58rem, 0.75vw, 0.78rem);
+            letter-spacing: 2px; color: var(--text-dim);
             text-transform: uppercase;
-            max-width: 900px;
-            margin: 0 auto;
-            line-height: 1.8;
+            max-width: 860px; margin: 0 auto; line-height: 1.9;
         }
 
         /* ── FOOTER ── */
         footer {
-            padding: clamp(60px, 8vw, 120px) var(--pad-x) clamp(40px, 5vw, 80px);
+            padding: clamp(56px, 7vw, 110px) var(--pad-x) clamp(36px, 4.5vw, 72px);
             border-top: 1px solid rgba(255,255,255,0.05);
             background: #050505;
         }
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: clamp(32px, 4vw, 60px);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+            max-width: 1300px; margin: 0 auto;
+            gap: clamp(28px, 3.5vw, 56px);
         }
         .contact-box h3 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.5rem, 0.65vw, 0.6rem);
-            color: var(--accent);
-            margin-bottom: clamp(12px, 1.5vw, 20px);
-            letter-spacing: 6px;
+            font-size: clamp(0.48rem, 0.62vw, 0.58rem);
+            color: var(--accent); letter-spacing: 6px;
+            margin-bottom: clamp(10px, 1.2vw, 18px);
             text-transform: uppercase;
         }
-        .contact-box p { font-size: clamp(0.75rem, 0.9vw, 0.95rem); letter-spacing: 2px; color: var(--text-dim); line-height: 1.8; }
-        .contact-box a { color: var(--text-dim); text-decoration: none; transition: color 0.3s ease; }
+        .contact-box p { font-size: clamp(0.72rem, 0.88vw, 0.92rem); letter-spacing: 2px; color: var(--text-dim); line-height: 1.85; }
+        .contact-box a { color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
         .contact-box a:hover { color: var(--accent); }
 
         /* ── MOBILE ── */
-        @media (max-width: 640px) {
+        @media (max-width: 600px) {
             .company-name, .header-label { display: none; }
-            /* Telefone — pilnas plotis, be indent */
-            .gallery-item:nth-child(even) { width: 100%; margin-left: 0; }
+            /* Tarpas tarp nuotraukų dar mažesnis mobiliame */
+            .gallery-wrap { gap: 3px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="cursor" id="cursor"></div>
+    <div class="cursor"     id="cursor"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
 
     <header>
@@ -377,11 +347,13 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════
-         GALERIJA  ·  kelias: portfolio/interior/
-         Norėdamas pridėti nuotrauką — tiesiog pridėk eilutę:
-         <div class="gallery-item"><img src="portfolio/interior/PAVADINIMAS.webp" loading="lazy" alt="Interior CGI"></div>
-    ════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════
+         GALERIJA · portfolio/interior/
+         Norint pridėti nuotrauką — tik pridėk eilutę:
+         <div class="gallery-item">
+           <img src="portfolio/interior/FAILAS.webp" loading="lazy" alt="Interior CGI">
+         </div>
+    ════════════════════════════════════════════════════════ -->
     <main class="gallery-wrap">
         <div class="gallery-item"><img src="portfolio/interior/1.webp"           loading="lazy" alt="Interior CGI"></div>
         <div class="gallery-item"><img src="portfolio/interior/2.webp"           loading="lazy" alt="Interior CGI"></div>
@@ -456,20 +428,17 @@
         let mx = -100, my = -100, rx = -100, ry = -100;
         document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-        (function animateCursor() {
-            cursor.style.left     = mx + 'px';
-            cursor.style.top      = my + 'px';
-            rx += (mx - rx) * 0.12;
-            ry += (my - ry) * 0.12;
-            cursorRing.style.left = rx + 'px';
-            cursorRing.style.top  = ry + 'px';
-            requestAnimationFrame(animateCursor);
+        (function tick() {
+            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
+            requestAnimationFrame(tick);
         })();
 
         document.querySelectorAll('a, .gallery-item').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 cursor.style.transform     = 'translate(-50%,-50%) scale(2.5)';
-                cursorRing.style.transform = 'translate(-50%,-50%) scale(1.4)';
+                cursorRing.style.transform = 'translate(-50%,-50%) scale(1.5)';
             });
             el.addEventListener('mouseleave', () => {
                 cursor.style.transform     = 'translate(-50%,-50%) scale(1)';
@@ -478,16 +447,16 @@
         });
 
         // ── SCROLL REVEAL ──
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    obs.unobserve(e.target);
                 }
             });
-        }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
 
-        document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
+        document.querySelectorAll('.gallery-item').forEach(el => obs.observe(el));
     </script>
 </body>
 </html>
