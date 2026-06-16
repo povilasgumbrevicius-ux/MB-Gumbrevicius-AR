@@ -65,7 +65,7 @@
         .pillar p { font-weight: 300; font-size: clamp(0.82rem, 0.95vw, 1.05rem); line-height: 1.85; color: var(--text-dim); }
 
         .gallery-wrap { width: 100%; display: flex; flex-direction: column; gap: clamp(4px, 0.5vw, 10px); padding-bottom: clamp(60px, 8vw, 120px); }
-        .gallery-item { width: 100%; overflow: hidden; line-height: 0; opacity: 0; transform: translateY(32px); transition: opacity 1.6s var(--ease-luxury), transform 1.6s var(--ease-luxury); }
+        .gallery-item { width: 100%; overflow: hidden; line-height: 0; opacity: 1; transform: translateY(0); }
         .gallery-item.visible { opacity: 1; transform: translateY(0); }
         .gallery-item img { width: 100%; height: auto; display: block; transition: transform 7s var(--ease-luxury); }
         .gallery-item:hover img { transform: scale(1.02); }
