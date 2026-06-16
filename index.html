@@ -63,24 +63,25 @@
 
     /* S3 */
     .s3{background:var(--bg2);}
-    .s3-wrap{max-width:960px;width:100%;padding:0 40px;}
-    .s3-list{display:grid;gap:14px;margin-top:24px;}
-    .s3-row{display:grid;grid-template-columns:260px 1fr;gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:#161412;opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s;}
-    .s3-row:nth-child(1){transition-delay:.2s;}
-    .s3-row:nth-child(2){transition-delay:.34s;}
-    .s3-row:nth-child(3){transition-delay:.48s;}
-    .slide.active .s3-row{opacity:1;transform:translateY(0);}
-    .s3-photo{overflow:hidden;}
-    .s3-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s ease;}
-    .s3-row:hover .s3-photo img{transform:scale(1.05);}
-    .s3-text{padding:20px 24px;display:flex;flex-direction:column;justify-content:center;}
-    .s3-num{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--accent);color:var(--bg);font-size:.72rem;font-weight:850;margin-bottom:10px;flex-shrink:0;}
-    .s3-text strong{display:block;margin-bottom:7px;color:var(--white);font-size:.9rem;line-height:1.3;}
-    .s3-text p{color:var(--muted);font-size:.82rem;line-height:1.6;}
-
-
-    .slide.active .s4-note{opacity:1;}
-
+    .s3-wrap{max-width:1080px;width:100%;padding:0 48px;display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;}
+    .s3-left{display:flex;flex-direction:column;gap:0;}
+    .s3-left .label{margin-bottom:12px;}
+    .s3-left .slide-title{margin-bottom:36px;}
+    .s3-item{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start;}
+    .s3-item:first-of-type{border-top:1px solid var(--line);}
+    .s3-num{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--accent);color:var(--bg);font-size:.72rem;font-weight:850;flex-shrink:0;margin-top:2px;}
+    .s3-item strong{display:block;margin-bottom:6px;color:var(--white);font-size:.94rem;line-height:1.3;}
+    .s3-item p{color:var(--muted);font-size:.86rem;line-height:1.65;}
+    .s3-photo{overflow:hidden;border-radius:4px;height:520px;}
+    .s3-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+    .s3-item{opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
+    .s3-item:nth-child(1){transition-delay:.2s;}
+    .s3-item:nth-child(2){transition-delay:.34s;}
+    .s3-item:nth-child(3){transition-delay:.48s;}
+    .slide.active .s3-item{opacity:1;transform:translateY(0);}
+    .s3-photo{opacity:0;transform:translateX(24px);transition:opacity .8s .2s,transform .8s .2s;}
+    .slide.active .s3-photo{opacity:1;transform:translateX(0);}
+    @media(max-width:780px){.s3-wrap{grid-template-columns:1fr;}.s3-photo{height:260px;}}
     /* S4 BOOKING */
     .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
     .s4-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
@@ -168,33 +169,33 @@
   <!-- S3 ARGUMENTAI -->
   <div class="slide s3" data-i="2">
     <div class="s3-wrap">
-      <span class="label">Kodėl tai veikia</span>
-      <h2 class="slide-title">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
-      <div class="s3-list">
-        <div class="s3-row">
-          <div class="s3-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/2.webp" alt=""></div>
-          <div class="s3-text">
-            <span class="s3-num">1</span>
+      <div class="s3-left">
+        <span class="label">Kodėl tai veikia</span>
+        <h2 class="slide-title">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
+        <div class="s3-item">
+          <span class="s3-num">1</span>
+          <div>
             <strong>Projektas priimamas empatiškai, o ne techniškai</strong>
             <p>„Aš matau save šioje erdvėje." Kai kadras kuriamas per šviesos kinematografiškumą ir tūrį, užsakovas nustoja vertinti atskirus elementus. Distancija tarp brėžinio ir realybės išnyksta.</p>
           </div>
         </div>
-        <div class="s3-row">
-          <div class="s3-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/4.webp" alt=""></div>
-          <div class="s3-text">
-            <span class="s3-num">2</span>
+        <div class="s3-item">
+          <span class="s3-num">2</span>
+          <div>
             <strong>Saugumo jausmas eliminuoja nepasitikėjimą</strong>
             <p>„Sprendimas priimtas teisingai." Sąmoningas netobulumas ir reali fizika pašalina kompiuterinio vaizdo sterilumą. Nebereikia „apsidrausti" prašant papildomų variantų.</p>
           </div>
         </div>
-        <div class="s3-row">
-          <div class="s3-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/6.webp" alt=""></div>
-          <div class="s3-text">
-            <span class="s3-num">3</span>
+        <div class="s3-item">
+          <span class="s3-num">3</span>
+          <div>
             <strong>Pasitikėjimas dizainerio autoritetu</strong>
             <p>„Dizaineris mane suprato." Vizualizacija perteikia tikrąją erdvės atmosferą. Čia dingsta noras ginčytis dėl smulkmenų.</p>
           </div>
         </div>
+      </div>
+      <div class="s3-photo">
+        <img src="https://ar.gumbrevicius.lt/portfolio/interior/Justas9.webp" alt="">
       </div>
     </div>
   </div>
