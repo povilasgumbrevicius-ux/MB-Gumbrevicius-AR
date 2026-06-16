@@ -284,8 +284,10 @@
 </head>
 <body>
 
-<div class="topbar">
-  <a class="brand" href="https://ar.gumbrevicius.lt">MB Gumbrevičius</a>
+<div class="topbar" id="topbar">
+  <a class="brand" href="https://ar.gumbrevicius.lt">
+    <img src="https://ar.gumbrevicius.lt/portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:44px;width:auto;display:block;">
+  </a>
 </div>
 
 <div class="deck" id="deck">
@@ -308,11 +310,13 @@
   <!-- 2: PROBLEMA -->
   <div class="slide s2" data-i="1">
     <div class="s2-inner">
-      <div class="s2-img">
-        <img src="portfolio/interior/Ajeru1.webp" style="width:100%;aspect-ratio:1/1;object-fit:cover;">
-          </figure>
-          <figure class="s2-img">
-            <img src="portfolio/interior/Ajeru2.webp" style="width:100%;aspect-ratio:1/1;object-fit:cover;" alt="">
+      <div class="s2-imgs" style="display:grid;grid-template-rows:1fr 1fr;gap:8px;height:100%;">
+        <div style="overflow:hidden;border-radius:3px;border:1px solid rgba(255,255,255,.09);">
+          <img src="portfolio/interior/Ajeru1.webp" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div style="overflow:hidden;border-radius:3px;border:1px solid rgba(255,255,255,.09);">
+          <img src="portfolio/interior/Ajeru2.webp" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
       </div>
       <div>
         <span class="label">Problema</span>
@@ -320,7 +324,6 @@
         <p class="slide-body">Kai užsakovas mato eilinį techninį renderį su fotorealizmo kauke, jo smegenys reaguoja į netikrumą. Kyla pasąmoninis saugumo poreikis: ar nebus per tamsu? ar medžiagos derės realybėje? Tuomet vertinama ne dizaino idėja, o baimė suklysti.<br><br>Vizualizacija, kurioje veikia natūrali šviesos sklaida ir fizinis medžiagų elgesys, šią įtampą panaikina. Ji veikia kaip mediatorius – rodo ne kompiuterinę grafiką, o realią erdvės atmosferą, leidžiant užsakovui ramiai priimti sprendimą.</p>
       </div>
     </div>
-  </div>
 
   <!-- 3: KABLIUKAI -->
   <div class="slide s3" data-i="2">
@@ -330,19 +333,16 @@
       <div class="s3-cards">
         <div class="card">
           <div class="card-num">1</div>
-          <img src="portfolio/interior/2.webp" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px;margin-bottom:14px;">
           <strong>Projektas priimamas empatiškai, o ne techniškai</strong>
           <p>„Aš matau save šioje erdvėje." Kai kadras kuriamas per šviesos kinematografiškumą ir tūrį, užsakovas nustoja vertinti atskirus elementus. Jis pradeda identifikuoti save su būsimu gyvenimu – ryto šviesa, medžiagų taktilika, bendra ramybe. Distancija tarp brėžinio ir realybės išnyksta.</p>
         </div>
         <div class="card">
           <div class="card-num">2</div>
-          <img src="portfolio/interior/4.webp" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px;margin-bottom:14px;">
           <strong>Saugumo jausmas eliminuoja nepasitikėjimą</strong>
           <p>„Sprendimas priimtas teisingai." Sąmoningas netobulumas ir reali fizika pašalina kompiuterinio vaizdo sterilumą. Užsakovas pasąmoningai supranta, kad medžiagos ir šviesa realybėje elgsis būtent taip, todėl jam nebereikia „apsidrausti" prašant papildomų variantų.</p>
         </div>
         <div class="card">
           <div class="card-num">3</div>
-          <img src="portfolio/interior/6.webp" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px;margin-bottom:14px;">
           <strong>Pasitikėjimas dizainerio autoritetu</strong>
           <p>„Dizaineris mane suprato." Vizualizacija, kuri perteikia ne sausą baldų išdėstymą, o tikrąją erdvės atmosferą, apsaugo jūsų idėją. Dizainerio darbas užsakovui pradeda atrodyti ne kaip techninis sprendimas, o kaip asmeniška, jam sukurta patirtis. Čia dingsta noras ginčytis dėl smulkmenų.</p>
         </div>
@@ -351,8 +351,10 @@
   </div>
 
   <!-- 4: BOOKING -->
-  <div class="slide s5" data-i="3">
-    <div class="s5-inner">
+  <div class="slide s5" data-i="3" style="position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:-10% 0 -5%;background:url('portfolio/interior/z4.webp') center/cover no-repeat;filter:brightness(.28);will-change:transform;"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.1) 0%,rgba(8,7,6,.85) 100%);"></div>
+    <div class="s5-inner" style="position:relative;z-index:2;">
       <span class="label">Šį mėnesį — 5 vietos</span>
       <h2 class="slide-title">Atsigerkime kavos —<br>gyvai arba online</h2>
       <p class="slide-body">45 minučių. Be įsipareigojimų. Papasakok apie projektą — pažiūrėsim ar tinkam vienas kitam.</p>
