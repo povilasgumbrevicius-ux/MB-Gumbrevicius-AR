@@ -3,421 +3,427 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kaip tai veikia | MB Gumbrevičius</title>
+  <title>MB Gumbrevičius | Interjero vizualizacijos</title>
   <style>
     :root {
-      --bg:     #0d0c0b;
-      --bg2:    #111009;
-      --white:  #ffffff;
-      --off:    rgba(255,255,255,.82);
-      --muted:  rgba(255,255,255,.44);
-      --accent: #b99658;
-      --line:   rgba(255,255,255,.09);
+      --bg:      #0d0c0b;
+      --bg2:     #111009;
+      --surface: #1c1a17;
+      --white:   #ffffff;
+      --off:     rgba(255,255,255,.84);
+      --muted:   rgba(255,255,255,.42);
+      --accent:  #b99658;
+      --line:    rgba(255,255,255,.09);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--off);
-      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-      line-height: 1.7;
-    }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
 
     /* TOPBAR */
     .topbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      padding: 18px 48px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 32px;
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(13,12,11,.82);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(13,12,11,.7) 0%, transparent 100%);
+      pointer-events: none;
     }
-    .brand { font-size: .74rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--white); }
-    .top-cta {
-      padding: 9px 18px;
-      border: 1px solid rgba(255,255,255,.24); border-radius: 3px;
-      font-size: .72rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase;
-      text-decoration: none; color: var(--white);
-      transition: background .2s;
-    }
-    .top-cta:hover { background: rgba(255,255,255,.07); }
-
-    /* HERO */
-    .page-hero {
-      padding: 140px 48px 80px;
-      max-width: 900px; margin: 0 auto;
-      border-bottom: 1px solid var(--line);
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 10px;
-      margin-bottom: 22px;
-      color: var(--accent);
-      font-size: .7rem; font-weight: 850;
-      letter-spacing: .14em; text-transform: uppercase;
-    }
-    .eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
-    .page-hero h1 {
-      font-family: Georgia, serif;
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      font-weight: 400; line-height: 1.06;
-      color: var(--white); text-wrap: balance;
-      margin-bottom: 18px;
-    }
-    .page-hero p {
-      max-width: 640px;
-      color: var(--muted);
-      font-size: 1rem; line-height: 1.7;
-    }
-
-    /* CONTENT */
-    .content {
-      max-width: 900px; margin: 0 auto;
-      padding: 0 48px 100px;
-    }
-
-    /* STEP BLOCK */
-    .step-block {
-      padding: 56px 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .step-block:last-child { border-bottom: none; }
-
-    .step-header {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 24px;
-      align-items: start;
-      margin-bottom: 32px;
-    }
-    .step-num {
-      color: var(--accent);
-      font-size: .68rem; font-weight: 850;
-      letter-spacing: .14em; text-transform: uppercase;
-      padding-top: 6px;
-    }
-    .step-title {
-      font-family: Georgia, serif;
-      font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-      font-weight: 400; line-height: 1.12;
+    .brand {
       color: var(--white);
-    }
-
-    /* ITEMS inside step */
-    .items { margin-left: 96px; }
-
-    .item {
-      display: grid;
-      grid-template-columns: 8px 1fr;
-      gap: 16px;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .item:last-child { border-bottom: none; }
-    .item-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 8px; flex-shrink: 0;
-    }
-    .item strong {
-      display: block; margin-bottom: 5px;
-      color: var(--white);
-      font-size: .96rem; line-height: 1.3;
-    }
-    .item p {
-      color: var(--muted);
-      font-size: .9rem; line-height: 1.65;
-    }
-
-    /* WARNING BOX */
-    .warn {
-      margin: 24px 0 0 96px;
-      padding: 18px 20px;
-      border-left: 2px solid var(--accent);
-      background: rgba(185,150,88,.07);
-      border-radius: 0 3px 3px 0;
-    }
-    .warn p { color: rgba(255,255,255,.65); font-size: .88rem; line-height: 1.65; }
-    .warn strong { color: var(--white); }
-
-    /* TABLE */
-    .no-need {
-      margin: 24px 0 0 96px;
-    }
-    .no-need-title {
-      color: var(--accent);
-      font-size: .7rem; font-weight: 850;
+      font-size: .74rem; font-weight: 850;
       letter-spacing: .1em; text-transform: uppercase;
-      margin-bottom: 14px;
+      pointer-events: all; text-decoration: none;
     }
-    .no-need-list {
-      display: grid; gap: 8px;
-    }
-    .no-need-row {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 10px 14px;
-      border: 1px solid var(--line); border-radius: 3px;
-      background: #161412;
-      font-size: .88rem; color: var(--muted);
-    }
-    .no-need-row::before { content: "✖"; color: var(--accent); flex-shrink: 0; }
 
-    /* PLAIN TEXT inside step */
-    .step-body {
-      margin-left: 96px;
+    /* DECK */
+    .deck { width: 100%; height: 100vh; position: relative; }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .65s cubic-bezier(.4,0,.2,1);
+    }
+    .slide.active { opacity: 1; pointer-events: all; }
+
+    /* ── S1 HERO ── */
+    .s1 { background: var(--bg); overflow: hidden; }
+    .s1-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: url("https://ar.gumbrevicius.lt/portfolio/interior/1.webp") center/cover no-repeat;
+      transform: scale(1.07);
+      transition: transform 7s ease-out;
+      filter: brightness(.45);
+    }
+    .slide.active .s1-bg { transform: scale(1.0); }
+    .s1-grad {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(180deg, rgba(8,7,6,.25) 0%, rgba(8,7,6,.75) 100%);
+    }
+    .s1-content {
+      position: relative; z-index: 2;
+      text-align: center; color: var(--white);
+      padding: 0 24px; max-width: 860px;
+    }
+    .kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-bottom: 26px;
       color: var(--muted);
-      font-size: .96rem; line-height: 1.72;
+      font-size: .7rem; font-weight: 850;
+      letter-spacing: .14em; text-transform: uppercase;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .5s .2s, transform .5s .2s;
     }
-    .step-body p + p { margin-top: 14px; }
-    .step-body strong { color: var(--off); }
+    .kicker::before, .kicker::after { content: ""; width: 20px; height: 1px; background: var(--accent); }
+    .slide.active .kicker { opacity: 1; transform: translateY(0); }
 
-    /* CTA BLOCK */
-    .cta-block {
-      margin-top: 72px;
-      padding: 56px 48px;
-      text-align: center;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-    .cta-block h2 {
+    .s1-title {
       font-family: Georgia, serif;
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 400; color: var(--white);
-      margin-bottom: 14px;
+      font-size: clamp(2.8rem, 6vw, 5.4rem);
+      font-weight: 400; line-height: .96;
+      letter-spacing: -.01em; text-wrap: balance;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity .7s .35s, transform .7s .35s;
     }
-    .cta-block p { color: var(--muted); font-size: .96rem; margin-bottom: 28px; }
+    .slide.active .s1-title { opacity: 1; transform: translateY(0); }
+
+    .s1-sub {
+      margin: 22px auto 0; max-width: 540px;
+      color: rgba(255,255,255,.65);
+      font-size: 1.06rem; line-height: 1.56;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .6s .52s, transform .6s .52s;
+    }
+    .slide.active .s1-sub { opacity: 1; transform: translateY(0); }
+
+    .s1-btns {
+      margin-top: 36px;
+      display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .6s .68s, transform .6s .68s;
+    }
+    .slide.active .s1-btns { opacity: 1; transform: translateY(0); }
+
     .btn {
       min-height: 50px;
       display: inline-flex; align-items: center; justify-content: center;
-      padding: 13px 28px;
+      padding: 13px 26px;
       border: 1px solid transparent; border-radius: 3px;
       font-size: .8rem; font-weight: 750;
       letter-spacing: .08em; text-transform: uppercase;
-      text-decoration: none; color: inherit;
+      text-decoration: none; cursor: pointer; background: none;
       transition: opacity .2s, transform .2s;
     }
-    .btn:hover { opacity: .82; transform: translateY(-2px); }
+    .btn:hover { opacity: .78; transform: translateY(-2px); }
     .btn-w { color: var(--bg); background: var(--white); }
-    .btn-o { color: var(--white); border-color: rgba(255,255,255,.3); margin-left: 10px; }
+    .btn-o { color: var(--white); border-color: rgba(255,255,255,.32); }
 
-    /* DOC LINK */
-    .doc-link {
-      display: block; text-align: center;
+    /* ── S2 PROBLEMA ── */
+    .s2 { background: var(--bg); }
+    .s2-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+      max-width: 960px; padding: 0 32px; width: 100%;
+    }
+    .s2-img {
+      overflow: hidden; border-radius: 3px;
+      border: 1px solid var(--line);
+      opacity: 0; transform: translateX(-28px);
+      transition: opacity .7s .2s, transform .7s .2s;
+    }
+    .slide.active .s2-img { opacity: 1; transform: translateX(0); }
+    .s2-img img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+
+    .label {
+      display: block; margin-bottom: 14px;
+      color: var(--accent);
+      font-size: .68rem; font-weight: 850;
+      letter-spacing: .14em; text-transform: uppercase;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .5s .28s, transform .5s .28s;
+    }
+    .slide.active .label { opacity: 1; transform: translateY(0); }
+
+    .slide-title {
+      font-family: Georgia, serif;
+      font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+      font-weight: 400; line-height: 1.1;
+      color: var(--white); text-wrap: balance;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .6s .38s, transform .6s .38s;
+    }
+    .slide.active .slide-title { opacity: 1; transform: translateY(0); }
+
+    .slide-body {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .97rem; line-height: 1.78;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity .6s .5s, transform .6s .5s;
+    }
+    .slide.active .slide-body { opacity: 1; transform: translateY(0); }
+
+    /* ── S3 KABLIUKAI ── */
+    .s3 { background: var(--bg2); }
+    .s3-inner { max-width: 960px; padding: 0 32px; width: 100%; }
+    .s3-cards {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
       margin-top: 32px;
-      color: var(--muted); font-size: .84rem;
-      text-decoration: underline; text-underline-offset: 3px;
     }
-    .doc-link:hover { color: var(--off); }
+    .card {
+      padding: 24px 20px;
+      border: 1px solid var(--line); border-radius: 3px;
+      background: var(--surface);
+      opacity: 0; transform: translateY(22px);
+    }
+    .card:nth-child(1) { transition: opacity .6s .32s, transform .6s .32s; }
+    .card:nth-child(2) { transition: opacity .6s .46s, transform .6s .46s; }
+    .card:nth-child(3) { transition: opacity .6s .60s, transform .6s .60s; }
+    .slide.active .card { opacity: 1; transform: translateY(0); }
+    .card-num {
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: var(--accent); color: var(--bg);
+      font-size: .78rem; font-weight: 850; margin-bottom: 14px;
+    }
+    .card strong { display: block; margin-bottom: 8px; color: var(--white); font-size: .92rem; line-height: 1.3; }
+    .card p { color: var(--muted); font-size: .84rem; line-height: 1.62; }
 
-    footer {
-      padding: 24px 48px; border-top: 1px solid var(--line);
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px;
-      color: var(--muted); font-size: .78rem;
+    /* ── S4 PROCESAS ── */
+    .s4 { background: var(--bg); }
+    .s4-inner { max-width: 720px; padding: 0 32px; width: 100%; }
+    .steps { margin-top: 34px; border-top: 1px solid var(--line); }
+    .step {
+      display: grid; grid-template-columns: 68px 1fr;
+      gap: 20px; padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+      opacity: 0; transform: translateX(-18px);
     }
-    .fb { color: var(--white); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .step:nth-child(1) { transition: opacity .6s .3s, transform .6s .3s; }
+    .step:nth-child(2) { transition: opacity .6s .44s, transform .6s .44s; }
+    .step:nth-child(3) { transition: opacity .6s .58s, transform .6s .58s; }
+    .slide.active .step { opacity: 1; transform: translateX(0); }
+    .step-n {
+      color: var(--accent);
+      font-size: .68rem; font-weight: 850;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding-top: 3px;
+    }
+    .step strong { display: block; margin-bottom: 5px; color: var(--white); font-size: .94rem; line-height: 1.3; }
+    .step p { color: var(--muted); font-size: .86rem; line-height: 1.62; }
+
+    /* ── S5 BOOKING ── */
+    .s5 { background: var(--bg2); }
+    .s5-inner { max-width: 600px; padding: 0 32px; text-align: center; }
+    .s5-slots {
+      margin-top: 14px;
+      color: var(--accent);
+      font-size: .72rem; font-weight: 750;
+      letter-spacing: .1em; text-transform: uppercase;
+      opacity: 0; transition: opacity .5s .56s;
+    }
+    .slide.active .s5-slots { opacity: 1; }
+    .s5-btns {
+      margin-top: 32px;
+      display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .6s .66s, transform .6s .66s;
+    }
+    .slide.active .s5-btns { opacity: 1; transform: translateY(0); }
+    .s5-guarantee {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: .78rem; line-height: 1.5;
+      opacity: 0; transition: opacity .5s .8s;
+    }
+    .slide.active .s5-guarantee { opacity: 1; }
+
+    /* NAV DOTS */
+    .dots {
+      position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+      z-index: 100; display: flex; flex-direction: column; gap: 9px;
+    }
+    .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,.2); cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+    .dot.on { background: var(--accent); transform: scale(1.6); }
+
+    /* ARROW */
+    .arrow {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      z-index: 100; cursor: pointer;
+      color: rgba(255,255,255,.28);
+      background: none; border: none;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      font-size: .62rem; font-weight: 750;
+      letter-spacing: .1em; text-transform: uppercase;
+      transition: color .2s, opacity .4s;
+    }
+    .arrow:hover { color: rgba(255,255,255,.65); }
+    .arrow.hide { opacity: 0; pointer-events: none; }
+    .arrow svg { animation: bob 2s ease-in-out infinite; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+
+    /* COUNTER */
+    .ctr {
+      position: fixed; left: 24px; bottom: 28px; z-index: 100;
+      color: var(--muted);
+      font-size: .68rem; font-weight: 750;
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .ctr em { color: var(--accent); font-style: normal; }
 
     @media (max-width: 680px) {
-      .topbar, .page-hero, .content, footer { padding-left: 20px; padding-right: 20px; }
-      .page-hero { padding-top: 100px; }
-      .step-header { grid-template-columns: 1fr; gap: 8px; }
-      .items, .warn, .no-need, .step-body { margin-left: 0; }
-      .cta-block { padding: 40px 20px; }
-      .btn-o { margin-left: 0; margin-top: 10px; }
+      .s2-inner { grid-template-columns: 1fr; }
+      .s2-img { display: none; }
+      .s3-cards { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; gap: 4px; }
+      .s5-btns { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<header class="topbar" id="topbar">
-  <a class="brand" href="https://ar.gumbrevicius.lt">
-    <img src="https://ar.gumbrevicius.lt/portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:48px;width:auto;display:block;">
-  </a>
-  <a class="top-cta" id="topCta" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
-</header>
-
-<div class="page-hero">
-  <div class="eyebrow">Uždaroji sistema interjero dizaineriams</div>
-  <h1>Kaip tai veikia:<br>Nuo pirmo kontakto iki galutinio kadro</h1>
-  <p>Šis puslapis skirtas interjero dizaineriams, norintiems suprasti mūsų bendradarbiavimo eigą ir taisykles uždaroje sistemoje.</p>
+<div class="topbar">
+  <a class="brand" href="https://ar.gumbrevicius.lt">MB Gumbrevičius</a>
 </div>
 
-<div class="content">
+<div class="deck" id="deck">
 
-  <!-- 1 -->
-  <div class="step-block">
-    <div class="step-header">
-      <span class="step-num">01</span>
-      <h2 class="step-title">Atsigerkime kavos ir pasirašykime sutartį</h2>
-    </div>
-    <div class="items">
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Sutartis visam laikui</strong>
-          <p>Jei matome, kad esame viena komanda, pasirašome vieną Bendrąją paslaugų teikimo sutartį visam laikui. Joje kaina nėra fiksuojama – ji tiesiog apibrėžia esmines taisykles, atsakomybę ir abipusį saugumą.</p>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Studijos Raktas</strong>
-          <p>Pasirašius sutartį, jūsų studijai sugeneruojamas unikalus Studijos Raktas. Jis tampa jūsų asmeniniu pasu į užsakymų platformą.</p>
-        </div>
-      </div>
-    </div>
-    <div class="warn">
-      <p><strong>Lojalumo taisyklė:</strong> Mėnesį nepanaudojus Studijos Rakto (neatlikus jokių užsakymų ir nerezervavus dienų), jis automatiškai anuliuojamas, o pasirašyta bendra sutartis nutraukiama. Raktą iš naujo atgauti galima tik vėl individualiai susitarus per online arba gyvą susitikimą.</p>
-    </div>
-  </div>
-
-  <!-- 2 -->
-  <div class="step-block">
-    <div class="step-header">
-      <span class="step-num">02</span>
-      <h2 class="step-title">Greitas valdymas platformoje</h2>
-    </div>
-    <div class="items">
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Rezervuojate dieną</strong>
-          <p>Kalendoriuje matote realų laisvą laiką ir patys užsirezervuojate konkrečią dieną savo projekto derinimui ir atidavimui.</p>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Aktyvuojate projektą</strong>
-          <p>Įvedę savo Studijos Raktą, sistema automatiškai sugeneruoja tos dienos Sutarties Priedą su konkretaus objekto duomenimis ir pateikia unikalią nuorodą į Jūsų studijos aplanką mano „Google Drive" saugykloje. Į šį aplanką Jūs įkeliate savo 3D projektą bei specifikacijas. Jokių papildomų parašų ranka dėti nereikia.</p>
-        </div>
+  <!-- 1: HERO -->
+  <div class="slide active s1" data-i="0">
+    <div class="s1-bg"></div>
+    <div class="s1-grad"></div>
+    <div class="s1-content">
+      <div class="kicker">Interjero vizualizacijos dizaineriams</div>
+      <h1 class="s1-title">Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti.</h1>
+      <p class="s1-sub">Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos.</p>
+      <div class="s1-btns">
+        <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+        <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
       </div>
     </div>
   </div>
 
-  <!-- 3 -->
-  <div class="step-block">
-    <div class="step-header">
-      <span class="step-num">03</span>
-      <h2 class="step-title">Failo paruošimas</h2>
-    </div>
-    <div class="step-body">
-      <p>Siekdamas taupyti jūsų laiką, didžiąją dalį techninio paruošimo prisiimu sau. Iš jūsų reikalauju tik minimalios modelio higienos prieš jį įkeliant į „Google Drive" aplanką.</p>
-    </div>
-    <div class="items" style="margin-top:20px;">
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Atviri objektai</strong>
-          <p>Visi render'yje matomi elementai ir baldai turi būti unhide būsenoje.</p>
-        </div>
+  <!-- 2: PROBLEMA -->
+  <div class="slide s2" data-i="1">
+    <div class="s2-inner">
+      <div class="s2-img">
+        <img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru2.webp" alt="">
       </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Uždaras tūris</strong>
-          <p>Patalpa privalo būti aklinai uždara – be fizinių tarpų tarp sienų, lubų ir grindų, kad teisingai skaičiuotųsi šviesos sklaida.</p>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Tekstūros</strong>
-          <p>Visos modelyje esančios tekstūros turi būti prisegtos prie failo. Nesant tokios galimybės, tekstūras pateikite atskirame aplanke.</p>
-        </div>
-      </div>
-    </div>
-    <div class="no-need">
-      <div class="no-need-title">Ko jums nereikia tvarkyti</div>
-      <div class="no-need-list">
-        <div class="no-need-row">Objektų ir sluoksnių pavadinimų tvarkymui</div>
-        <div class="no-need-row">Išardytų ar nesugrupuotų komponentų perrinkimui</div>
-        <div class="no-need-row">Apverstų normalių (juodų paviršių) taisymui</div>
-        <div class="no-need-row">Geometrijos koordinačių tvarkymui</div>
+      <div>
+        <span class="label">Problema</span>
+        <h2 class="slide-title">Kodėl projektas užstringa ties „dar vienu variantu"?</h2>
+        <p class="slide-body">Kai užsakovas mato eilinį techninį renderį su fotorealizmo kauke, jo smegenys reaguoja į netikrumą. Kyla pasąmoninis saugumo poreikis: ar nebus per tamsu? ar medžiagos derės realybėje? Tuomet vertinama ne dizaino idėja, o baimė suklysti.<br><br>Vizualizacija, kurioje veikia natūrali šviesos sklaida ir fizinis medžiagų elgesys, šią įtampą panaikina. Ji veikia kaip mediatorius – rodo ne kompiuterinę grafiką, o realią erdvės atmosferą, leidžiant užsakovui ramiai priimti sprendimą.</p>
       </div>
     </div>
   </div>
 
-  <!-- 4 -->
-  <div class="step-block">
-    <div class="step-header">
-      <span class="step-num">04</span>
-      <h2 class="step-title">Kūrybinis procesas ir online sesija</h2>
-    </div>
-    <div class="items">
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Interaktyvi online sesija</strong>
-          <p>Kartu, realiu laiku suderiname kameros kompoziciją, kadrų formatus ir pirminius šviesos taškus. Sprendimus priimame čia ir dabar — nelieka vietos interpretacijoms ar akliems variantams. Į paslaugą įskaičiuotos iki 2 valandų sesijos. Viršijus šį laiką, taikomas papildomas 100 Eur/val. mokestis.</p>
+  <!-- 3: KABLIUKAI -->
+  <div class="slide s3" data-i="2">
+    <div class="s3-inner">
+      <span class="label">Kodėl tai veikia</span>
+      <h2 class="slide-title">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
+      <div class="s3-cards">
+        <div class="card">
+          <div class="card-num">1</div>
+          <strong>Projektas priimamas empatiškai, o ne techniškai</strong>
+          <p>„Aš matau save šioje erdvėje." Kai kadras kuriamas per šviesos kinematografiškumą ir tūrį, užsakovas nustoja vertinti atskirus elementus. Jis pradeda identifikuoti save su būsimu gyvenimu – ryto šviesa, medžiagų taktilika, bendra ramybe. Distancija tarp brėžinio ir realybės išnyksta.</p>
         </div>
-      </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Gamyba ir spalvų valdymas</strong>
-          <p>Vaizdas generuojamas remiantis tikrąja šviesos fizika ir sąmoningu netobulumu. Dėl teisingų fizikos dėsnių skaičiavimo spalvos natūraliai tampa sodresnės — online sesijos metu jas kartu suderiname ir suvienodiname.</p>
+        <div class="card">
+          <div class="card-num">2</div>
+          <strong>Saugumo jausmas eliminuoja nepasitikėjimą</strong>
+          <p>„Sprendimas priimtas teisingai." Sąmoningas netobulumas ir reali fizika pašalina kompiuterinio vaizdo sterilumą. Užsakovas pasąmoningai supranta, kad medžiagos ir šviesa realybėje elgsis būtent taip, todėl jam nebereikia „apsidrausti" prašant papildomų variantų.</p>
         </div>
-      </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Atidavimas</strong>
-          <p>Galutiniai kadrai paruošiami po to, kai viskas suderinama online sesijos metu.</p>
+        <div class="card">
+          <div class="card-num">3</div>
+          <strong>Pasitikėjimas dizainerio autoritetu</strong>
+          <p>„Dizaineris mane suprato." Vizualizacija, kuri perteikia ne sausą baldų išdėstymą, o tikrąją erdvės atmosferą, apsaugo jūsų idėją. Dizainerio darbas užsakovui pradeda atrodyti ne kaip techninis sprendimas, o kaip asmeniška, jam sukurta patirtis. Čia dingsta noras ginčytis dėl smulkmenų.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 5 -->
-  <div class="step-block">
-    <div class="step-header">
-      <span class="step-num">05</span>
-      <h2 class="step-title">Finansinė higiena ir garantijos</h2>
-    </div>
-    <div class="items">
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Avansas ir darbo stabdymo taisyklė</strong>
-          <p>50% avansinis pavedimas turi pasiekti banko sąskaitą iki suplanuotos online sesijos pradžios. Jeigu iki sesijos avansas negautas — turiu pilną teisę stabdyti projektą ir pereiti prie kitų užsakymų. Projektas atnaujinamas tik fiziškai gavus avansą.</p>
-        </div>
+  <!-- 4: BOOKING -->
+  <div class="slide s5" data-i="3">
+    <div class="s5-inner">
+      <span class="label">Šį mėnesį — 5 vietos</span>
+      <h2 class="slide-title">Atsigerkime kavos —<br>gyvai arba online</h2>
+      <p class="slide-body">45 minučių. Be įsipareigojimų. Papasakok apie projektą — pažiūrėsim ar tinkam vienas kitam.</p>
+      <p class="s5-slots">· Vilnius · Google Meet ·</p>
+      <div class="s5-btns">
+        <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+        <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html">Žiūrėti darbus</a>
       </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>Viena galutinė sąskaita</strong>
-          <p>Baigus projektą ir pritarus rezultatui, išrašoma viena sąskaita-faktūra pilnai projekto sumai (100%). Likę 50% sumokami per 5 darbo dienas.</p>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-dot"></div>
-        <div>
-          <strong>50% Proceso garantija</strong>
-          <p>Jei dėl mano darbo eigos neatitikimų rezultatas jūsų netenkina ir jo nepavyksta ištaisyti per 2 papildomas online sesijas — mokate tik pusę kainos. Pirminė sąskaita anuliuojama ir perrašoma tik 50% sumai.</p>
-        </div>
-      </div>
+      <p class="s5-guarantee">Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos.</p>
     </div>
-  </div>
-
-  <!-- CTA -->
-  <div class="cta-block">
-    <h2>Pasirengę pradėti?</h2>
-    <p>Atsigerkime kavos — aptarsime ar tinkame vienas kitam.</p>
-    <div>
-      <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
-      <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Peržiūrėti darbus</a>
-    </div>
-    <a class="doc-link" href="#">Skaityti pilną bendrųjų paslaugų teikimo sąlygų teisinį dokumentą</a>
   </div>
 
 </div>
 
-<footer>
-  <span class="fb">MB Gumbrevičius</span>
-  <span>Interjero vizualizacijos · CGI · Meninis išpildymas</span>
-  <a href="mailto:info@gumbrevicius.lt" style="color:var(--muted);text-decoration:none;">info@gumbrevicius.lt</a>
-</footer>
+<!-- NAV -->
+<nav class="dots" id="dots"></nav>
+<button class="arrow" id="arrow" onclick="next()">
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+  </svg>
+</button>
+<div class="ctr" id="ctr"></div>
 
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const arrow  = document.getElementById('arrow');
+  const ctr    = document.getElementById('ctr');
+  const total  = slides.length;
+  let cur = 0, locked = false;
+
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' on':'');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function ui() {
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
+    arrow.classList.toggle('hide', cur===total-1);
+    ctr.innerHTML = '<em>0'+(cur+1)+'</em> / 0'+total;
+  }
+
+  function goTo(n) {
+    if (locked || n===cur || n<0 || n>=total) return;
+    locked = true;
+    slides[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    ui();
+    setTimeout(()=>locked=false, 700);
+  }
+
+  function next() { goTo(cur+1); }
+  function prev() { goTo(cur-1); }
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowDown','ArrowRight',' '].includes(e.key)) { e.preventDefault(); next(); }
+    if (['ArrowUp','ArrowLeft'].includes(e.key))        { e.preventDefault(); prev(); }
+  });
+
+  let wt;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    clearTimeout(wt);
+    wt = setTimeout(() => { e.deltaY>30?next():e.deltaY<-30?prev():0; }, 60);
+  }, {passive:false});
+
+  let ty=0;
+  document.addEventListener('touchstart', e => ty=e.touches[0].clientY, {passive:true});
+  document.addEventListener('touchend', e => {
+    const d = ty - e.changedTouches[0].clientY;
+    if (d>40) next(); if (d<-40) prev();
+  });
+
+  ui();
+</script>
 </body>
 </html>
