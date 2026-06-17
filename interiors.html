@@ -1,153 +1,93 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="lt">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MB Gumbrevičius | Interjero vizualizacijos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:#0d0c0b; --bg2:#111009; --surface:#1c1a17;
-      --white:#ffffff; --off:rgba(255,255,255,.84);
-      --muted:rgba(255,255,255,.44); --accent:#b99658;
-      --line:rgba(255,255,255,.09);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,sans-serif;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lt="INTERJERO VIZUALIZACIJOS | MB GUMBREVIČIUS" data-en="INTERIOR VISUALIZATION | MB GUMBREVICIUS">INTERJERO VIZUALIZACIJOS | MB GUMBREVIČIUS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #c8a96e;
+            --bg: #080808;
+            --text: #e8e2d8;
+            --text-dim: rgba(232, 226, 216, 0.5);
+            --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
+            --pad-x: clamp(24px, 4vw, 80px);
+        }
 
-    /* TOPBAR */
-    :root { --accent:#c8a96e; }
-    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:clamp(16px,2.5vw,32px) clamp(24px,4vw,80px);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,8,8,0.92) 0%,rgba(8,8,8,0.0) 100%);transition:background .4s;}
-    .topbar.solid{background:rgba(8,8,8,0.97);}
-    .topbar-left{display:flex;align-items:center;gap:clamp(12px,1.5vw,20px);text-decoration:none;color:#fff;}
-    .topbar-left img{height:clamp(34px,3.5vw,48px);width:auto;transition:transform .6s cubic-bezier(.19,1,.22,1);}
-    .topbar-left:hover img{transform:scale(1.05);}
-    .topbar-name{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(.75rem,1vw,.95rem);letter-spacing:3px;color:rgba(232,226,216,.85);}
-    .top-cta{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,169,110,.3);padding:clamp(6px,.6vw,10px) clamp(12px,1.2vw,20px);transition:all .4s ease;white-space:nowrap;text-transform:uppercase;}
-    .top-cta:hover{border-color:var(--accent);background:var(--accent);color:#000;}
-    .topbar-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.6rem);letter-spacing:5px;color:rgba(232,226,216,.4);text-transform:uppercase;}
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
-    /* LANG SWITCH */
-    .lang-switch{display:flex;gap:12px;margin-left:20px;}
-    .lang-btn{color:#fff;opacity:.3;cursor:pointer;transition:.3s;background:none;border:none;font-family:'Cinzel',serif;font-size:clamp(.45rem,.6vw,.58rem);letter-spacing:2px;text-transform:uppercase;padding:0;}
-    .lang-btn.active{opacity:1;border-bottom:1px solid var(--accent);}
-    /* DECK */
-    .deck{width:100%;height:100vh;position:relative;}
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    /* SLIDES */
-    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .65s cubic-bezier(.4,0,.2,1);}
-    .slide.active{opacity:1;pointer-events:all;}
+        .cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.15s ease; }
+        .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(200, 169, 110, 0.35); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: all 0.5s var(--ease-luxury); }
 
-    /* S1 HERO */
-    .s1{background:var(--bg);overflow:hidden;}
-    .s1-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/namelis.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;transform:scale(1.07);transition:transform 7s ease-out;}
-    .slide.active .s1-bg{transform:scale(1.0);}
-    .s1-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
-    .s1-content{position:relative;z-index:2;text-align:left;color:var(--white);padding:0 24px;max-width:900px;width:100%;}
-    .kicker{display:inline-flex;align-items:center;gap:12px;margin-bottom:24px;color:rgba(255,255,255,.5);font-size:.7rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(20px);transition:opacity .6s .2s,transform .6s .2s;}
-    .kicker::before{content:"";width:24px;height:1px;background:var(--accent);}
-    .slide.active .kicker{opacity:1;transform:translateY(0);}
-    .s1-title{font-family:"Cinzel",serif;font-size:clamp(2.2rem,4.5vw,4rem);font-weight:400;line-height:1.05;color:var(--white);text-wrap:balance;opacity:0;transform:translateY(28px);transition:opacity .8s .35s,transform .8s .35s;}
-    .slide.active .s1-title{opacity:1;transform:translateY(0);}
-    .s1-sub{font-family:"Cormorant Garamond",serif;font-style:italic;max-width:580px;margin-top:20px;color:rgba(255,255,255,.65);font-size:1rem;line-height:1.6;opacity:0;transform:translateY(20px);transition:opacity .7s .52s,transform .7s .52s;}
-    .slide.active .s1-sub{font-family:"Cormorant Garamond",serif;font-style:italic;opacity:1;transform:translateY(0);}
-    .s1-btns{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:opacity .6s .68s,transform .6s .68s;}
-    .slide.active .s1-btns{opacity:1;transform:translateY(0);}
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: clamp(16px, 2.5vw, 32px) var(--pad-x);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.0) 100%);
+        }
+        .header-left { display: flex; align-items: center; gap: clamp(12px, 1.5vw, 20px); text-decoration: none; color: var(--text); }
+        .logo-wow { height: clamp(34px, 3.5vw, 48px); width: auto; transition: transform 0.6s var(--ease-luxury); }
+        .header-left:hover .logo-wow { transform: scale(1.05); }
+        .lang-switch { display: flex; gap: 15px; margin-left: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 2px; }
+        .lang-btn { color: #fff; opacity: 0.3; cursor: pointer; transition: 0.3s; background: none; border: none; text-transform: uppercase; }
+        .lang-btn.active { opacity: 1; border-bottom: 1px solid var(--accent); }
+        .header-cta { display: flex; align-items: center; gap: clamp(16px, 2vw, 30px); }
+        .header-label { font-family: 'Cinzel', serif; font-size: clamp(0.5rem, 0.65vw, 0.6rem); letter-spacing: 5px; color: var(--text-dim); }
+        .cta-btn { font-family: 'Cinzel', serif; font-size: clamp(0.5rem, 0.65vw, 0.62rem); letter-spacing: 3px; color: var(--accent); text-decoration: none; border: 1px solid rgba(200,169,110,0.3); padding: clamp(6px,0.6vw,10px) clamp(12px,1.2vw,20px); transition: all 0.4s ease; white-space: nowrap; }
+        .cta-btn:hover { border-color: var(--accent); background: var(--accent); color: #000; }
 
-    /* S2 */
-    .s2{background:var(--bg);}
-    .s2-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;width:100%;height:100vh;max-width:1200px;}
-    .s2-photos{display:grid;grid-template-rows:1fr 1fr;gap:4px;padding:72px 0 32px 40px;height:100vh;}
-    .s2-photo{overflow:hidden;border-radius:3px;}
-    .s2-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s ease;}
-    .s2-photo:hover img{transform:scale(1.04);}
-    .s2-text{display:flex;flex-direction:column;justify-content:center;padding:72px 40px 32px 48px;color:var(--white);}
-    .label{display:block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:opacity .5s .25s,transform .5s .25s;}
-    .slide.active .label{opacity:1;transform:translateY(0);}
-    .slide-title{font-family:"Cinzel",serif;font-size:clamp(1.5rem,2.4vw,2.2rem);font-weight:400;line-height:1.1;color:var(--white);text-wrap:balance;opacity:0;transform:translateY(16px);transition:opacity .7s .38s,transform .7s .38s;}
-    .slide.active .slide-title{opacity:1;transform:translateY(0);}
-    .slide-body{margin-top:18px;color:var(--muted);font-size:.94rem;line-height:1.76;opacity:0;transform:translateY(12px);transition:opacity .6s .52s,transform .6s .52s;}
-    .slide.active .slide-body{opacity:1;transform:translateY(0);}
-    .s2-photo{opacity:0;transform:translateX(-24px);transition:opacity .7s,transform .7s;}
-    .s2-photo:nth-child(1){transition-delay:.2s;}
-    .s2-photo:nth-child(2){transition-delay:.34s;}
-    .slide.active .s2-photo{opacity:1;transform:translateX(0);}
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 var(--pad-x); }
+        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2rem, 6vw, 5.5rem); font-weight: 400; letter-spacing: clamp(8px, 2vw, 28px); text-transform: uppercase; line-height: 1.1; margin-bottom: clamp(16px, 2vw, 28px); }
+        .hero-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1rem, 1.8vw, 1.55rem); letter-spacing: clamp(2px, 0.5vw, 4px); color: var(--text-dim); }
 
-    /* S3 */
-    .s3{background:var(--bg2);}
-    .s3-wrap{max-width:1080px;width:100%;padding:0 48px;display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;}
-    .s3-left{display:flex;flex-direction:column;gap:0;}
-    .s3-left .label{margin-bottom:12px;}
-    .s3-left .slide-title{font-family:"Cinzel",serif;margin-bottom:36px;}
-    .s3-item{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start;}
-    .s3-item:first-of-type{border-top:1px solid var(--line);}
-    .s3-num{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--accent);color:var(--bg);font-size:.72rem;font-weight:850;flex-shrink:0;margin-top:2px;}
-    .s3-item strong{display:block;margin-bottom:6px;color:var(--white);font-size:.94rem;line-height:1.3;}
-    .s3-item p{color:var(--muted);font-size:.86rem;line-height:1.65;}
-    .s3-photo{overflow:hidden;border-radius:4px;height:520px;}
-    .s3-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-    .s3-item{opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
-    .s3-item:nth-child(1){transition-delay:.2s;}
-    .s3-item:nth-child(2){transition-delay:.34s;}
-    .s3-item:nth-child(3){transition-delay:.48s;}
-    .slide.active .s3-item{opacity:1;transform:translateY(0);}
-    .s3-photo{opacity:0;transform:translateX(24px);transition:opacity .8s .2s,transform .8s .2s;}
-    .slide.active .s3-photo{opacity:1;transform:translateX(0);}
-    @media(max-width:780px){.s3-wrap{grid-template-columns:1fr;}.s3-photo{height:260px;}}
-    /* S4 BOOKING */
-    .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
-    .s4-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
-    .s4-tag{display:inline-block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .5s .15s;}
-    .slide.active .s4-tag{opacity:1;}
-    .s4-title{font-family:"Cinzel",serif;font-size:clamp(1.9rem,3.4vw,3rem);font-weight:400;line-height:1.06;text-wrap:balance;opacity:0;transform:translateY(20px);transition:opacity .7s .28s,transform .7s .28s;}
-    .slide.active .s4-title{opacity:1;transform:translateY(0);}
-    .s4-sub{margin-top:16px;color:rgba(255,255,255,.62);font-size:.98rem;line-height:1.64;opacity:0;transition:opacity .6s .42s;}
-    .slide.active .s4-sub{opacity:1;}
-    .s4-slots{margin:12px 0 28px;color:var(--accent);font-size:.7rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .5s .54s;}
-    .slide.active .s4-slots{opacity:1;}
-    .s4-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(14px);transition:opacity .6s .64s,transform .6s .64s;}
-    .slide.active .s4-btns{opacity:1;transform:translateY(0);}
-    .s4-note{margin-top:18px;color:var(--muted);font-size:.76rem;opacity:0;transition:opacity .5s .78s;}
-    .slide.active .s4-note{opacity:1;}
-    /* BUTTONS */
-    .btn{min-height:50px;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;border:1px solid transparent;border-radius:3px;font-size:.8rem;font-weight:750;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;background:none;color:inherit;transition:opacity .2s,transform .2s;}
-    .btn:hover{opacity:.82;transform:translateY(-2px);}
-    .btn-w{color:var(--bg);background:var(--white);border-color:var(--white);}
-    .btn-o{color:var(--white);border-color:rgba(255,255,255,.35);}
-    .btn-o:hover{background:rgba(255,255,255,.07);}
+        .manifesto-wrap { padding: clamp(80px, 11vw, 150px) var(--pad-x); max-width: 1500px; margin: 0 auto; text-align: center; }
+        .manifesto-title-sm { font-family: 'Cinzel', serif; font-size: clamp(0.9rem, 1.8vw, 1.6rem); letter-spacing: clamp(8px, 1.5vw, 20px); color: var(--accent); margin-bottom: clamp(36px, 5vw, 72px); text-transform: uppercase; font-weight: 400; }
+        .manifesto-main-text { font-size: clamp(1.1rem, 2.4vw, 2.1rem); line-height: 1.55; font-weight: 300; max-width: 1050px; margin: 0 auto clamp(48px, 7vw, 96px); }
+        .manifesto-philosophy { max-width: 950px; margin: 0 auto clamp(56px, 8vw, 112px); font-family: 'Cormorant Garamond', serif; font-size: clamp(1.15rem, 1.9vw, 1.85rem); font-style: italic; line-height: 1.65; }
+        .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(36px, 5vw, 90px); text-align: left; margin-top: clamp(36px, 4vw, 72px); }
+        .pillar h3 { font-family: 'Cinzel', serif; font-size: clamp(0.6rem, 0.75vw, 0.75rem); letter-spacing: 6px; color: var(--accent); margin-bottom: clamp(14px, 1.8vw, 24px); text-transform: uppercase; font-weight: 400; }
+        .pillar p { font-weight: 300; font-size: clamp(0.82rem, 0.95vw, 1.05rem); line-height: 1.85; color: var(--text-dim); }
 
-    /* NAV */
-    .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:9px;}
-    .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .3s,transform .3s;}
-    .dot.on{background:var(--accent);transform:scale(1.6);}
-    .arrow{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:100;cursor:pointer;color:rgba(255,255,255,.28);background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.6rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;transition:color .2s,opacity .4s;}
-    .arrow:hover{color:rgba(255,255,255,.65);}
-    .arrow.hide{opacity:0;pointer-events:none;}
-    .arrow svg{animation:bob 2.2s ease-in-out infinite;}
-    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
-    .ctr{position:fixed;left:24px;bottom:26px;z-index:100;color:var(--muted);font-size:.68rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;}
-    .ctr em{color:var(--accent);font-style:normal;}
+        .gallery-wrap { width: 100%; display: flex; flex-direction: column; gap: clamp(4px, 0.5vw, 10px); padding-bottom: clamp(60px, 8vw, 120px); }
+        .gallery-item { width: 100%; overflow: hidden; line-height: 0; opacity: 1; transform: translateY(0); }
+        .gallery-item.visible { opacity: 1; transform: translateY(0); }
+        .gallery-item img { width: 100%; height: auto; display: block; transition: transform 7s var(--ease-luxury); }
+        .gallery-item:hover img { transform: scale(1.02); }
 
+        .cta-section { padding: clamp(80px, 11vw, 150px) var(--pad-x); text-align: center; background: linear-gradient(to bottom, var(--bg), #0a0a0a); }
+        .cta-section h2 { font-family: 'Cinzel', serif; font-size: clamp(1.2rem, 3.2vw, 2.8rem); letter-spacing: clamp(8px, 1.4vw, 14px); text-transform: uppercase; margin-bottom: clamp(20px, 2.5vw, 36px); max-width: 860px; margin-left: auto; margin-right: auto; }
+        .cta-section p { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.05rem, 1.8vw, 1.6rem); font-style: italic; line-height: 1.65; color: var(--text); margin-bottom: clamp(28px, 3.5vw, 55px); max-width: 780px; margin-left: auto; margin-right: auto; }
+        .cta-section a { display: inline-block; padding: clamp(12px, 1.4vw, 20px) clamp(28px, 3.5vw, 52px); border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-family: 'Cinzel', serif; font-size: clamp(0.58rem, 0.75vw, 0.78rem); letter-spacing: 5px; text-transform: uppercase; transition: all 0.5s var(--ease-luxury); font-weight: 400; }
+        .cta-section a:hover { background: var(--accent); color: #000; }
 
-      .s2-photos{display:none;}
-      .s3-row{grid-template-columns:1fr;}
-      .s3-photo{height:160px;}
-      .s1-content{padding:0 20px;}
-    }
-  
-    @media(max-width:680px){
-      .s2{background:url("https://ar.gumbrevicius.lt/portfolio/interior/Ajeru1.webp") center/cover no-repeat;}
-      .s2::before{content:"";position:absolute;inset:0;background:rgba(8,7,6,.75);}
-      .s2-photos{display:none;}
-      .s2-text{position:relative;z-index:2;padding:80px 24px 40px;justify-content:center;}
-      .s3{background:url("https://ar.gumbrevicius.lt/portfolio/interior/2.webp") center/cover no-repeat;}
-      .s3::before{content:"";position:absolute;inset:0;background:rgba(8,7,6,.78);}
-      .s3-wrap{position:relative;z-index:2;padding:80px 24px 40px;}
-      .s3-photo{display:none;}
-      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
-    }
-  </style>
+        .disclaimer { padding: clamp(28px, 3.5vw, 52px) var(--pad-x); text-align: center; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.03); }
+        .disclaimer p { font-size: clamp(0.58rem, 0.75vw, 0.78rem); letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; max-width: 860px; margin: 0 auto; line-height: 1.9; }
+
+        footer { padding: clamp(56px, 7vw, 110px) var(--pad-x) clamp(36px, 4.5vw, 72px); border-top: 1px solid rgba(255,255,255,0.05); background: #050505; }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); max-width: 1300px; margin: 0 auto; gap: clamp(28px, 3.5vw, 56px); }
+        .contact-box h3 { font-family: 'Cinzel', serif; font-size: clamp(0.48rem, 0.62vw, 0.58rem); color: var(--accent); letter-spacing: 6px; margin-bottom: clamp(10px, 1.2vw, 18px); text-transform: uppercase; }
+        .contact-box p { font-size: clamp(0.72rem, 0.88vw, 0.92rem); letter-spacing: 2px; color: var(--text-dim); line-height: 1.85; }
+        .contact-box a { color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+        .contact-box a:hover { color: var(--accent); }
+
+        @media (max-width: 600px) { .company-name, .header-label { display: none; } .gallery-wrap { gap: 3px; } }
+    </style>
 <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VPWTKVR3"></script>
     <script>
@@ -159,179 +99,138 @@
   </head>
 <body>
 
-<div class="topbar">
-  <a href="https://ar.gumbrevicius.lt">
-    <img src="https://ar.gumbrevicius.lt/portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:44px;width:auto;display:block;">
-  </a>
-  <a class="top-cta" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
-</div>
-
-<div class="deck" id="deck">
-
-  <!-- S1 HERO -->
-  <div class="slide active s1" data-i="0">
-    <div class="s1-bg"></div>
-    <div class="s1-grad"></div>
-    <div class="s1-content">
-      <div class="kicker" data-lt="Interjero vizualizacijos dizaineriams" data-en="Interior visualizations for designers">Interjero vizualizacijos dizaineriams</div>
-      <h1 class="s1-title" data-lt="Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti." data-en="Interior visualizations that eliminate the client's fear of making the wrong choice.">Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti.</h1>
-      <p class="s1-sub" data-lt="Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos." data-en="Real light physics, cinematic depth and conscious material imperfection eliminate doubt — so your design decisions get approved without endless revisions.">Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos.</p>
-      <div class="s1-btns">
-        <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
-        <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- S2 PROBLEMA -->
-  <div class="slide s2" data-i="1">
-    <div class="s2-inner">
-      <div class="s2-photos">
-        <div class="s2-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru1.webp" alt=""></div>
-        <div class="s2-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru2.webp" alt=""></div>
-      </div>
-      <div class="s2-text">
-        <span class="label" data-lt="Problema" data-en="The problem">Problema</span>
-        <h2 class="slide-title" data-lt="Kodėl projektas užstringa ties „dar vienu variantu"?" data-en="Why does the project stall at &quot;one more option&quot;?">Kodėl projektas užstringa ties „dar vienu variantu"?</h2>
-        <p class="slide-body">Kai užsakovas mato eilinį techninį renderį su fotorealizmo kauke, jo smegenys reaguoja į netikrumą. Kyla pasąmoninis saugumo poreikis: ar nebus per tamsu? ar medžiagos derės realybėje? Tuomet vertinama ne dizaino idėja, o baimė suklysti.<br><br>Vizualizacija, kurioje veikia natūrali šviesos sklaida ir fizinis medžiagų elgesys, šią įtampą panaikina. Ji veikia kaip mediatorius – rodo ne kompiuterinę grafiką, o realią erdvės atmosferą, leidžiant užsakovui ramiai priimti sprendimą.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- S3 ARGUMENTAI -->
-  <div class="slide s3" data-i="2">
-    <div class="s3-wrap">
-      <div class="s3-left">
-        <span class="label" data-lt="Kodėl tai veikia" data-en="Why it works">Kodėl tai veikia</span>
-        <h2 class="slide-title" data-lt="Trys argumentai, kurie užbaigia diskusijas dėl projekto" data-en="Three arguments that end project debates">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
-        <div class="s3-item">
-          <span class="s3-num">1</span>
-          <div>
-            <strong>Projektas priimamas empatiškai, o ne techniškai</strong>
-            <p>„Aš matau save šioje erdvėje." Kai kadras kuriamas per šviesos kinematografiškumą ir tūrį, užsakovas nustoja vertinti atskirus elementus. Distancija tarp brėžinio ir realybės išnyksta.</p>
-          </div>
+    <header>
+        <div style="display:flex; align-items:center;">
+            <a href="index.html" class="header-left">
+                <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+                <div class="company-name">MB Gumbrevičius</div>
+            </a>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="changeLang('lt')" id="btn-lt">LT</button>
+                <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
+            </div>
         </div>
-        <div class="s3-item">
-          <span class="s3-num">2</span>
-          <div>
-            <strong>Saugumo jausmas eliminuoja nepasitikėjimą</strong>
-            <p>„Sprendimas priimtas teisingai." Sąmoningas netobulumas ir reali fizika pašalina kompiuterinio vaizdo sterilumą. Nebereikia „apsidrausti" prašant papildomų variantų.</p>
-          </div>
+        <div class="header-cta">
+            <div class="header-label" data-lt="CGI Artistas" data-en="CGI Artist">CGI Artistas</div>
+            <a href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank" class="cta-btn">Atsigerkime kavos</a>
         </div>
-        <div class="s3-item">
-          <span class="s3-num">3</span>
-          <div>
-            <strong>Pasitikėjimas dizainerio autoritetu</strong>
-            <p>„Dizaineris mane suprato." Vizualizacija perteikia tikrąją erdvės atmosferą. Čia dingsta noras ginčytis dėl smulkmenų.</p>
-          </div>
+    </header>
+
+    <section class="hero">
+        <h1 data-lt="Interjero vizualizacijos" data-en="Interior Visualization">Interjero vizualizacijos</h1>
+        <p class="hero-sub" data-lt="Fotometrinis tikslumas ir Wabi-sabi estetika" data-en="Photometric accuracy & Wabi-sabi aesthetics">Fotometrinis tikslumas ir Wabi-sabi estetika</p>
+    </section>
+
+    <section class="manifesto-wrap">
+        <h2 class="manifesto-title-sm" data-lt="Manifestas" data-en="Manifesto">Manifestas</h2>
+        <p class="manifesto-main-text">
+            <span data-lt="Dauguma vizualizacijų specialistų siekia sterilaus idealumo." data-en="Most visualization specialists strive for sterile perfection.">Dauguma vizualizacijų specialistų sieka sterilaus idealumo.</span><br>
+            <span style="color:#fff; font-weight:400; border-bottom: 2px solid var(--accent);" data-lt="Aš siekiu netobulos tiesos." data-en="I strive for imperfect truth.">Aš siekiu netobulos tiesos.</span>
+        </p>
+        <p class="manifesto-philosophy">
+            Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
+        </p>
+        <div class="pillars-grid">
+            <div class="pillar">
+                <h3>Chaoso priėmimas</h3>
+                <p>Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas" apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
+            </div>
+            <div class="pillar">
+                <h3>10 metų juostos</h3>
+                <p>Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake" užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
+            </div>
+            <div class="pillar">
+                <h3>Tekstūrinis gylis</h3>
+                <p>4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas": mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
+            </div>
+            <div class="pillar">
+                <h3>Dizainerio partneris</h3>
+                <p>Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru.</p>
+            </div>
         </div>
-      </div>
-      <div class="s3-photo">
-        <img src="https://ar.gumbrevicius.lt/portfolio/interior/2.webp" alt="">
-      </div>
+    </section>
+
+    <main class="gallery-wrap">
+        <div class="gallery-item"><img src="portfolio/interior/1.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/2.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/4.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/6.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/8.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/9.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Ajeru1.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Ajeru2.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas3.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Justas9.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis1.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis2.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/Miegamasis3.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z1.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z2.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z3.webp" loading="lazy" alt="Interior CGI"></div>
+        <div class="gallery-item"><img src="portfolio/interior/z4.webp" loading="lazy" alt="Interior CGI"></div>
+    </main>
+
+    <section class="cta-section">
+        <h2>Kuriame atmosferą kartu?</h2>
+        <p>Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.</p>
+        <a href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+    </section>
+
+    <div class="disclaimer">
+        <p>Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams.<br>
+        MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.</p>
     </div>
-  </div>
 
-  <!-- S4 BOOKING -->
-  <div class="slide s4" data-i="3" style="position:absolute;inset:0;overflow:hidden;">
-    <div class="s4-bg"></div>
-    <div class="s4-grad"></div>
-    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
-      <div style="max-width:640px;width:100%;padding:0 32px;text-align:center;color:#fff;">
-        <span class="s4-tag" data-lt="Šį mėnesį — 5 vietos" data-en="This month — 5 spots">Šį mėnesį — 5 vietos</span>
-        <h2 class="s4-title" data-lt="Atsigerkime kavos — gyvai arba online" data-en="Let's have coffee — in person or online">Atsigerkime kavos —<br>gyvai arba online</h2>
-        <p class="s4-sub">45 minučių. Be įsipareigojimų. Papasakok apie projektą — pažiūrėsim ar tinkam vienas kitam.</p>
-        <p class="s4-slots" data-lt="· Vilnius · Google Meet ·" data-en="· Vilnius · Google Meet ·">· Vilnius · Google Meet ·</p>
-        <div class="s4-btns">
-          <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
-          <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
+    <footer>
+        <div class="contact-grid">
+            <div class="contact-box">
+                <h3>Kontaktai</h3>
+                <p><a href="contact.html">Susisiekti</a></p>
+            </div>
+            <div class="contact-box">
+                <h3>Specializacija</h3>
+                <p>Interjero vizualizacija<br>Meninis išpildymas</p>
+            </div>
+            <div class="contact-box">
+                <h3>Vieta</h3>
+                <p>Lietuva / Visas pasaulis</p>
+            </div>
         </div>
-        <p class="s4-note" data-lt="Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos." data-en="If my workflow doesn't meet expectations — you pay only 50% of the agreed price.">Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos.</p>
-      </div>
-    </div>
-  </div>
+    </footer>
 
-</div>
+    <script>
+        function changeLang(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+            document.querySelectorAll('[data-lt]').forEach(el => {
+                el.innerText = el.getAttribute('data-' + lang);
+            });
+            document.title = document.querySelector('title').getAttribute('data-' + lang);
+            document.documentElement.lang = lang;
+            localStorage.setItem('prefLang', lang);
+        }
+        const savedLang = localStorage.getItem('prefLang');
+        if (savedLang && savedLang !== 'lt') changeLang(savedLang);
 
-<nav class="dots" id="dots"></nav>
-<button class="arrow" id="arrow" onclick="next()">
-  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-  </svg>
-</button>
-<div class="ctr" id="ctr"></div>
+        const cursor = document.getElementById('cursor');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mx = -100, my = -100, rx = -100, ry = -100;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function tick() {
+            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
+            requestAnimationFrame(tick);
+        })();
+        document.querySelectorAll('a, .gallery-item, button').forEach(el => {
+            el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2.5)'; cursorRing.style.transform = 'translate(-50%,-50%) scale(1.5)'; });
+            el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; cursorRing.style.transform = 'translate(-50%,-50%) scale(1)'; });
+        });
 
-<script>
-  const slides = document.querySelectorAll('.slide');
-  const dotsEl = document.getElementById('dots');
-  const arrow  = document.getElementById('arrow');
-  const ctr    = document.getElementById('ctr');
-  const total  = slides.length;
-  let cur = 0, locked = false;
-
-  slides.forEach((_,i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i===0?' on':'');
-    d.onclick = () => goTo(i);
-    dotsEl.appendChild(d);
-  });
-
-  function ui() {
-    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
-    arrow.classList.toggle('hide', cur===total-1);
-    ctr.innerHTML = '<em>0'+(cur+1)+'</em> / 0'+total;
-  }
-
-  function goTo(n) {
-    if (locked || n===cur || n<0 || n>=total) return;
-    locked = true;
-    slides[cur].classList.remove('active');
-    cur = n;
-    slides[cur].classList.add('active');
-    ui();
-    setTimeout(()=>locked=false, 700);
-  }
-
-  function next() { goTo(cur+1); }
-  function prev() { goTo(cur-1); }
-
-  document.addEventListener('keydown', e => {
-    if (['ArrowDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next();}
-    if (['ArrowUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev();}
-  });
-
-  let wt;
-  document.addEventListener('wheel', e => {
-    e.preventDefault();
-    clearTimeout(wt);
-    wt = setTimeout(()=>{e.deltaY>30?next():e.deltaY<-30?prev():0;},60);
-  },{passive:false});
-
-  let ty=0;
-  document.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
-  document.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(d>40)next();if(d<-40)prev();});
-
-  ui();
-</script>
-
-<script>
-function changeLang(lang) {
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn-' + lang).classList.add('active');
-  document.querySelectorAll('[data-lt]').forEach(el => {
-    const val = el.getAttribute('data-' + lang);
-    if (val) el.innerText = val;
-  });
-  // buttons
-  document.querySelectorAll('[data-lt-btn]').forEach(el => {
-    const val = el.getAttribute('data-' + lang + '-btn');
-    if (val) el.innerText = val;
-  });
-  localStorage.setItem('lang', lang);
-}
-const sl = localStorage.getItem('lang');
-if (sl && sl !== 'lt') changeLang(sl);
-</script>
-
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+        document.querySelectorAll('.gallery-item').forEach(el => obs.observe(el));
+    </script>
 </body>
 </html>
