@@ -27,6 +27,11 @@
     .top-cta{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,169,110,.3);padding:clamp(6px,.6vw,10px) clamp(12px,1.2vw,20px);transition:all .4s ease;white-space:nowrap;text-transform:uppercase;}
     .top-cta:hover{border-color:var(--accent);background:var(--accent);color:#000;}
     .topbar-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.6rem);letter-spacing:5px;color:rgba(232,226,216,.4);text-transform:uppercase;}
+
+    /* LANG SWITCH */
+    .lang-switch{display:flex;gap:12px;margin-left:20px;}
+    .lang-btn{color:#fff;opacity:.3;cursor:pointer;transition:.3s;background:none;border:none;font-family:'Cinzel',serif;font-size:clamp(.45rem,.6vw,.58rem);letter-spacing:2px;text-transform:uppercase;padding:0;}
+    .lang-btn.active{opacity:1;border-bottom:1px solid var(--accent);}
     /* DECK */
     .deck{width:100%;height:100vh;position:relative;}
 
@@ -36,7 +41,7 @@
 
     /* S1 HERO */
     .s1{background:var(--bg);overflow:hidden;}
-    .s1-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/namelis.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;transform:scale(1.07);transition:transform 7s ease-out;}
+    .s1-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/namelis.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;transform:scale(1.07);transition:transform 7s ease-out;}
     .slide.active .s1-bg{transform:scale(1.0);}
     .s1-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
     .s1-content{position:relative;z-index:2;text-align:left;color:var(--white);padding:0 24px;max-width:900px;width:100%;}
@@ -51,7 +56,9 @@
     .slide.active .s1-btns{opacity:1;transform:translateY(0);}
 
     /* S2 */
-    .s2{background:var(--bg);}
+    .s2{background:var(--bg);overflow:hidden;}
+    .s2-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/Ajeru2.webp") center/cover no-repeat;filter:brightness(.32);will-change:transform;}
+    .s2-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.88) 100%);}
     .s2-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;width:100%;height:100vh;max-width:1200px;}
     .s2-photos{display:grid;grid-template-rows:1fr 1fr;gap:4px;padding:72px 0 32px 40px;height:100vh;}
     .s2-photo{overflow:hidden;border-radius:3px;}
@@ -70,7 +77,9 @@
     .slide.active .s2-photo{opacity:1;transform:translateX(0);}
 
     /* S3 */
-    .s3{background:var(--bg2);}
+    .s3{background:var(--bg2);overflow:hidden;}
+    .s3-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/2.webp") center/cover no-repeat;filter:brightness(.28);will-change:transform;}
+    .s3-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.92) 100%);}
     .s3-wrap{max-width:1080px;width:100%;padding:0 48px;display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;}
     .s3-left{display:flex;flex-direction:column;gap:0;}
     .s3-left .label{margin-bottom:12px;}
@@ -91,7 +100,7 @@
     .slide.active .s3-photo{opacity:1;transform:translateX(0);}
     @media(max-width:780px){.s3-wrap{grid-template-columns:1fr;}.s3-photo{height:260px;}}
     /* S4 BOOKING */
-    .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
+    .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
     .s4-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
     .s4-tag{display:inline-block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .5s .15s;}
     .slide.active .s4-tag{opacity:1;}
@@ -124,20 +133,67 @@
     .ctr{position:fixed;left:24px;bottom:26px;z-index:100;color:var(--muted);font-size:.68rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;}
     .ctr em{color:var(--accent);font-style:normal;}
 
-    @media(max-width:680px){
-      .s2-inner{grid-template-columns:1fr;}
+
       .s2-photos{display:none;}
       .s3-row{grid-template-columns:1fr;}
       .s3-photo{height:160px;}
       .s1-content{padding:0 20px;}
     }
+  
+
+      .s2-text{position:relative;z-index:2;padding:80px 24px 40px;justify-content:center;}
+      .s3-wrap{position:relative;z-index:2;padding:80px 24px 40px;}
+      .s3-photo{display:none;}
+      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
+    }
+  
+
+      .s1-title{font-size:1.7rem;letter-spacing:.02em;line-height:1.1;}
+      .s4-title{font-size:1.7rem;letter-spacing:.02em;line-height:1.1;}
+      .kicker{font-size:.6rem;letter-spacing:.08em;}
+      .label{font-size:.6rem;letter-spacing:.08em;}
+      .s1-content{padding:0 20px;}
+      .s2-inner{grid-template-columns:1fr;}
+      .s2-photos{display:none;}
+      .s2-text{padding:80px 20px 40px;justify-content:center;}
+      .s3-wrap{padding:80px 20px 40px;}
+      .s3-photo{display:none;}
+      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
+      .s4-content{padding:0 20px;}
+      .s1-btns,.s4-btns{flex-direction:column;}
+      .btn{width:100%;justify-content:center;}
+    }
+  
+    @media(max-width:680px){
+      .slide-title{font-size:1.45rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.2;}
+      .s1-title{font-size:1.5rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.15;}
+      .s4-title{font-size:1.5rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.15;}
+      .kicker{font-size:.58rem;letter-spacing:.06em;}
+      .label{font-size:.58rem;letter-spacing:.06em;}
+      .s1-content,.s4-content{padding:0 20px;}
+      .s2-photos{display:none;}
+      .s2-inner{grid-template-columns:1fr;}
+      .s2-text{padding:80px 20px 32px;justify-content:center;}
+      .s3-wrap{padding:80px 20px 32px;}
+      .s3-photo{display:none;}
+      .s1-btns,.s4-btns{flex-direction:column;}
+      .btn{width:100%;}
+    }
   </style>
-</head>
+<!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VPWTKVR3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-F0VPWTKVR3');
+    </script>
+  </head>
 <body>
 
 <div class="topbar">
   <a href="https://ar.gumbrevicius.lt">
-    <img src="https://ar.gumbrevicius.lt/portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:44px;width:auto;display:block;">
+    <img src="portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:44px;width:auto;display:block;">
   </a>
   <a class="top-cta" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
 </div>
@@ -149,9 +205,9 @@
     <div class="s1-bg"></div>
     <div class="s1-grad"></div>
     <div class="s1-content">
-      <div class="kicker">Interjero vizualizacijos dizaineriams</div>
-      <h1 class="s1-title">Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti.</h1>
-      <p class="s1-sub">Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos.</p>
+      <div class="kicker" data-lt="Interjero vizualizacijos dizaineriams" data-en="Interior visualizations for designers">Interjero vizualizacijos dizaineriams</div>
+      <h1 class="s1-title" data-lt="Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti." data-en="Interior visualizations that eliminate the client's fear of making the wrong choice.">Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti.</h1>
+      <p class="s1-sub" data-lt="Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos." data-en="Real light physics, cinematic depth and conscious material imperfection eliminate doubt — so your design decisions get approved without endless revisions.">Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos.</p>
       <div class="s1-btns">
         <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
         <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
@@ -161,25 +217,30 @@
 
   <!-- S2 PROBLEMA -->
   <div class="slide s2" data-i="1">
-    <div class="s2-inner">
+    <div class="s2-bg" id="s2Bg"></div>
+    <div class="s2-grad"></div>
+    <div class="s2-inner" style="position:relative;z-index:2;">
       <div class="s2-photos">
-        <div class="s2-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru1.webp" alt=""></div>
-        <div class="s2-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru2.webp" alt=""></div>
+        <div class="s2-photo"><img src="portfolio/interior/Ajeru1.webp" alt=""></div>
+        <div class="s2-photo"><img src="portfolio/interior/Ajeru2.webp" alt=""></div>
       </div>
       <div class="s2-text">
-        <span class="label">Problema</span>
-        <h2 class="slide-title">Kodėl projektas užstringa ties „dar vienu variantu"?</h2>
+        <span class="label" data-lt="Problema" data-en="The problem">Problema</span>
+        <h2 class="slide-title" data-lt="Kodėl projektas užstringa ties „dar vienu variantu"?" data-en="Why does the project stall at &quot;one more option&quot;?">Kodėl projektas užstringa ties „dar vienu variantu"?</h2>
         <p class="slide-body">Kai užsakovas mato eilinį techninį renderį su fotorealizmo kauke, jo smegenys reaguoja į netikrumą. Kyla pasąmoninis saugumo poreikis: ar nebus per tamsu? ar medžiagos derės realybėje? Tuomet vertinama ne dizaino idėja, o baimė suklysti.<br><br>Vizualizacija, kurioje veikia natūrali šviesos sklaida ir fizinis medžiagų elgesys, šią įtampą panaikina. Ji veikia kaip mediatorius – rodo ne kompiuterinę grafiką, o realią erdvės atmosferą, leidžiant užsakovui ramiai priimti sprendimą.</p>
       </div>
+    </div>
     </div>
   </div>
 
   <!-- S3 ARGUMENTAI -->
   <div class="slide s3" data-i="2">
-    <div class="s3-wrap">
+    <div class="s3-bg" id="s3Bg"></div>
+    <div class="s3-grad"></div>
+    <div class="s3-wrap" style="position:relative;z-index:2;">
       <div class="s3-left">
-        <span class="label">Kodėl tai veikia</span>
-        <h2 class="slide-title">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
+        <span class="label" data-lt="Kodėl tai veikia" data-en="Why it works">Kodėl tai veikia</span>
+        <h2 class="slide-title" data-lt="Trys argumentai, kurie užbaigia diskusijas dėl projekto" data-en="Three arguments that end project debates">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
         <div class="s3-item">
           <span class="s3-num">1</span>
           <div>
@@ -203,8 +264,9 @@
         </div>
       </div>
       <div class="s3-photo">
-        <img src="https://ar.gumbrevicius.lt/portfolio/interior/2.webp" alt="">
+        <img src="portfolio/interior/2.webp" alt="">
       </div>
+    </div>
     </div>
   </div>
 
@@ -214,15 +276,15 @@
     <div class="s4-grad"></div>
     <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
       <div style="max-width:640px;width:100%;padding:0 32px;text-align:center;color:#fff;">
-        <span class="s4-tag">Šį mėnesį — 5 vietos</span>
-        <h2 class="s4-title">Atsigerkime kavos —<br>gyvai arba online</h2>
+        <span class="s4-tag" data-lt="Šį mėnesį — 5 vietos" data-en="This month — 5 spots">Šį mėnesį — 5 vietos</span>
+        <h2 class="s4-title" data-lt="Atsigerkime kavos — gyvai arba online" data-en="Let's have coffee — in person or online">Atsigerkime kavos —<br>gyvai arba online</h2>
         <p class="s4-sub">45 minučių. Be įsipareigojimų. Papasakok apie projektą — pažiūrėsim ar tinkam vienas kitam.</p>
-        <p class="s4-slots">· Vilnius · Google Meet ·</p>
+        <p class="s4-slots" data-lt="· Vilnius · Google Meet ·" data-en="· Vilnius · Google Meet ·">· Vilnius · Google Meet ·</p>
         <div class="s4-btns">
           <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
           <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
         </div>
-        <p class="s4-note">Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos.</p>
+        <p class="s4-note" data-lt="Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos." data-en="If my workflow doesn't meet expectations — you pay only 50% of the agreed price.">Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos.</p>
       </div>
     </div>
   </div>
@@ -289,5 +351,25 @@
 
   ui();
 </script>
+
+<script>
+function changeLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + lang).classList.add('active');
+  document.querySelectorAll('[data-lt]').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (val) el.innerText = val;
+  });
+  // buttons
+  document.querySelectorAll('[data-lt-btn]').forEach(el => {
+    const val = el.getAttribute('data-' + lang + '-btn');
+    if (val) el.innerText = val;
+  });
+  localStorage.setItem('lang', lang);
+}
+const sl = localStorage.getItem('lang');
+if (sl && sl !== 'lt') changeLang(sl);
+</script>
+
 </body>
 </html>
