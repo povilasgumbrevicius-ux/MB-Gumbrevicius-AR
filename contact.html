@@ -1,196 +1,360 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="lt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KONTAKTAI | MB GUMBREVIČIUS</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent: #c8a96e;
-            --bg: #080808;
-            --text: #e8e2d8;
-            --text-dim: rgba(232, 226, 216, 0.5);
-            --ease-luxury: cubic-bezier(0.19, 1, 0.22, 1);
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MB Gumbrevičius | Interjero vizualizacijos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0d0c0b; --bg2:#111009; --surface:#1c1a17;
+      --white:#ffffff; --off:rgba(255,255,255,.84);
+      --muted:rgba(255,255,255,.44); --accent:#b99658;
+      --line:rgba(255,255,255,.09);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,sans-serif;}
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            cursor: none;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    /* TOPBAR */
+    :root { --accent:#c8a96e; }
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:clamp(16px,2.5vw,32px) clamp(24px,4vw,80px);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,8,8,0.92) 0%,rgba(8,8,8,0.0) 100%);transition:background .4s;}
+    .topbar.solid{background:rgba(8,8,8,0.97);}
+    .topbar-left{display:flex;align-items:center;gap:clamp(12px,1.5vw,20px);text-decoration:none;color:#fff;}
+    .topbar-left img{height:clamp(34px,3.5vw,48px);width:auto;transition:transform .6s cubic-bezier(.19,1,.22,1);}
+    .topbar-left:hover img{transform:scale(1.05);}
+    .topbar-name{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(.75rem,1vw,.95rem);letter-spacing:3px;color:rgba(232,226,216,.85);}
+    .top-cta{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,169,110,.3);padding:clamp(6px,.6vw,10px) clamp(12px,1.2vw,20px);transition:all .4s ease;white-space:nowrap;text-transform:uppercase;}
+    .top-cta:hover{border-color:var(--accent);background:var(--accent);color:#000;}
+    .topbar-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.6rem);letter-spacing:5px;color:rgba(232,226,216,.4);text-transform:uppercase;}
 
-        /* ── CURSOR ── */
-        .cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease; }
-        .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(200, 169, 110, 0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: all 0.45s var(--ease-luxury); }
+    /* LANG SWITCH */
+    .lang-switch{display:flex;gap:12px;margin-left:20px;}
+    .lang-btn{color:#fff;opacity:.3;cursor:pointer;transition:.3s;background:none;border:none;font-family:'Cinzel',serif;font-size:clamp(.45rem,.6vw,.58rem);letter-spacing:2px;text-transform:uppercase;padding:0;}
+    .lang-btn.active{opacity:1;border-bottom:1px solid var(--accent);}
+    /* DECK */
+    .deck{width:100%;height:100vh;position:relative;}
 
-        /* ── HEADER ── */
-        header { padding: 32px 56px; display: flex; justify-content: space-between; align-items: center; }
-        .back-link { display: flex; align-items: center; text-decoration: none; color: var(--text); gap: 20px; }
-        .logo-wow { height: 52px; width: auto; transition: transform 0.6s var(--ease-luxury); }
-        .company-name { font-family: 'Montserrat'; font-size: 0.7rem; letter-spacing: 8px; text-transform: uppercase; color: var(--text-dim); }
+    /* SLIDES */
+    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .65s cubic-bezier(.4,0,.2,1);}
+    .slide.active{opacity:1;pointer-events:all;}
 
-        /* ── FORM SECTION ── */
-        .contact-wrap {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 100px 56px;
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-        }
+    /* S1 HERO */
+    .s1{background:var(--bg);overflow:hidden;}
+    .s1-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/namelis.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;transform:scale(1.07);transition:transform 7s ease-out;}
+    .slide.active .s1-bg{transform:scale(1.0);}
+    .s1-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
+    .s1-content{position:relative;z-index:2;text-align:left;color:var(--white);padding:0 24px;max-width:900px;width:100%;}
+    .kicker{display:inline-flex;align-items:center;gap:12px;margin-bottom:24px;color:rgba(255,255,255,.5);font-size:.7rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(20px);transition:opacity .6s .2s,transform .6s .2s;}
+    .kicker::before{content:"";width:24px;height:1px;background:var(--accent);}
+    .slide.active .kicker{opacity:1;transform:translateY(0);}
+    .s1-title{font-family:"Cinzel",serif;font-size:clamp(2.2rem,4.5vw,4rem);font-weight:400;line-height:1.05;color:var(--white);text-wrap:balance;opacity:0;transform:translateY(28px);transition:opacity .8s .35s,transform .8s .35s;}
+    .slide.active .s1-title{opacity:1;transform:translateY(0);}
+    .s1-sub{font-family:"Cormorant Garamond",serif;font-style:italic;max-width:580px;margin-top:20px;color:rgba(255,255,255,.65);font-size:1rem;line-height:1.6;opacity:0;transform:translateY(20px);transition:opacity .7s .52s,transform .7s .52s;}
+    .slide.active .s1-sub{font-family:"Cormorant Garamond",serif;font-style:italic;opacity:1;transform:translateY(0);}
+    .s1-btns{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:opacity .6s .68s,transform .6s .68s;}
+    .slide.active .s1-btns{opacity:1;transform:translateY(0);}
 
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            letter-spacing: 15px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+    /* S2 */
+    .s2{background:var(--bg);overflow:hidden;}
+    .s2-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/Ajeru2.webp") center/cover no-repeat;filter:brightness(.32);will-change:transform;}
+    .s2-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.88) 100%);}
+    .s2-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;width:100%;height:100vh;max-width:1200px;}
+    .s2-photos{display:grid;grid-template-rows:1fr 1fr;gap:4px;padding:72px 0 32px 40px;height:100vh;}
+    .s2-photo{overflow:hidden;border-radius:3px;}
+    .s2-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s ease;}
+    .s2-photo:hover img{transform:scale(1.04);}
+    .s2-text{display:flex;flex-direction:column;justify-content:center;padding:72px 40px 32px 48px;color:var(--white);}
+    .label{display:block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:opacity .5s .25s,transform .5s .25s;}
+    .slide.active .label{opacity:1;transform:translateY(0);}
+    .slide-title{font-family:"Cinzel",serif;font-size:clamp(1.5rem,2.4vw,2.2rem);font-weight:400;line-height:1.1;color:var(--white);text-wrap:balance;opacity:0;transform:translateY(16px);transition:opacity .7s .38s,transform .7s .38s;}
+    .slide.active .slide-title{opacity:1;transform:translateY(0);}
+    .slide-body{margin-top:18px;color:var(--muted);font-size:.94rem;line-height:1.76;opacity:0;transform:translateY(12px);transition:opacity .6s .52s,transform .6s .52s;}
+    .slide.active .slide-body{opacity:1;transform:translateY(0);}
+    .s2-photo{opacity:0;transform:translateX(-24px);transition:opacity .7s,transform .7s;}
+    .s2-photo:nth-child(1){transition-delay:.2s;}
+    .s2-photo:nth-child(2){transition-delay:.34s;}
+    .slide.active .s2-photo{opacity:1;transform:translateX(0);}
 
-        .sub-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 1.4rem;
-            color: var(--text-dim);
-            margin-bottom: 80px;
-            text-align: center;
-        }
+    /* S3 */
+    .s3{background:var(--bg2);overflow:hidden;}
+    .s3-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/2.webp") center/cover no-repeat;filter:brightness(.28);will-change:transform;}
+    .s3-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.92) 100%);}
+    .s3-wrap{max-width:1080px;width:100%;padding:0 48px;display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;}
+    .s3-left{display:flex;flex-direction:column;gap:0;}
+    .s3-left .label{margin-bottom:12px;}
+    .s3-left .slide-title{font-family:"Cinzel",serif;margin-bottom:36px;}
+    .s3-item{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start;}
+    .s3-item:first-of-type{border-top:1px solid var(--line);}
+    .s3-num{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--accent);color:var(--bg);font-size:.72rem;font-weight:850;flex-shrink:0;margin-top:2px;}
+    .s3-item strong{display:block;margin-bottom:6px;color:var(--white);font-size:.94rem;line-height:1.3;}
+    .s3-item p{color:var(--muted);font-size:.86rem;line-height:1.65;}
+    .s3-photo{overflow:hidden;border-radius:4px;height:520px;}
+    .s3-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+    .s3-item{opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
+    .s3-item:nth-child(1){transition-delay:.2s;}
+    .s3-item:nth-child(2){transition-delay:.34s;}
+    .s3-item:nth-child(3){transition-delay:.48s;}
+    .slide.active .s3-item{opacity:1;transform:translateY(0);}
+    .s3-photo{opacity:0;transform:translateX(24px);transition:opacity .8s .2s,transform .8s .2s;}
+    .slide.active .s3-photo{opacity:1;transform:translateX(0);}
+    @media(max-width:780px){.s3-wrap{grid-template-columns:1fr;}.s3-photo{height:260px;}}
+    /* S4 BOOKING */
+    .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("https://ar.gumbrevicius.lt/portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
+    .s4-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
+    .s4-tag{display:inline-block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .5s .15s;}
+    .slide.active .s4-tag{opacity:1;}
+    .s4-title{font-family:"Cinzel",serif;font-size:clamp(1.9rem,3.4vw,3rem);font-weight:400;line-height:1.06;text-wrap:balance;opacity:0;transform:translateY(20px);transition:opacity .7s .28s,transform .7s .28s;}
+    .slide.active .s4-title{opacity:1;transform:translateY(0);}
+    .s4-sub{margin-top:16px;color:rgba(255,255,255,.62);font-size:.98rem;line-height:1.64;opacity:0;transition:opacity .6s .42s;}
+    .slide.active .s4-sub{opacity:1;}
+    .s4-slots{margin:12px 0 28px;color:var(--accent);font-size:.7rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .5s .54s;}
+    .slide.active .s4-slots{opacity:1;}
+    .s4-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(14px);transition:opacity .6s .64s,transform .6s .64s;}
+    .slide.active .s4-btns{opacity:1;transform:translateY(0);}
+    .s4-note{margin-top:18px;color:var(--muted);font-size:.76rem;opacity:0;transition:opacity .5s .78s;}
+    .slide.active .s4-note{opacity:1;}
+    /* BUTTONS */
+    .btn{min-height:50px;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;border:1px solid transparent;border-radius:3px;font-size:.8rem;font-weight:750;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;background:none;color:inherit;transition:opacity .2s,transform .2s;}
+    .btn:hover{opacity:.82;transform:translateY(-2px);}
+    .btn-w{color:var(--bg);background:var(--white);border-color:var(--white);}
+    .btn-o{color:var(--white);border-color:rgba(255,255,255,.35);}
+    .btn-o:hover{background:rgba(255,255,255,.07);}
 
-        form { width: 100%; display: grid; gap: 40px; }
+    /* NAV */
+    .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:9px;}
+    .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .3s,transform .3s;}
+    .dot.on{background:var(--accent);transform:scale(1.6);}
+    .arrow{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:100;cursor:pointer;color:rgba(255,255,255,.28);background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.6rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;transition:color .2s,opacity .4s;}
+    .arrow:hover{color:rgba(255,255,255,.65);}
+    .arrow.hide{opacity:0;pointer-events:none;}
+    .arrow svg{animation:bob 2.2s ease-in-out infinite;}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+    .ctr{position:fixed;left:24px;bottom:26px;z-index:100;color:var(--muted);font-size:.68rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;}
+    .ctr em{color:var(--accent);font-style:normal;}
 
-        .field { position: relative; }
 
-        label {
-            font-family: 'Cinzel';
-            font-size: 0.65rem;
-            letter-spacing: 4px;
-            color: var(--accent);
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 12px;
-        }
+      .s2-photos{display:none;}
+      .s3-row{grid-template-columns:1fr;}
+      .s3-photo{height:160px;}
+      .s1-content{padding:0 20px;}
+    }
+  
 
-        input, textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 15px 0;
-            color: #fff;
-            font-family: 'Montserrat';
-            font-weight: 300;
-            font-size: 1.1rem;
-            transition: border-color 0.5s var(--ease-luxury);
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        button {
-            justify-self: center;
-            margin-top: 60px;
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 22px 60px;
-            font-family: 'Cinzel';
-            font-size: 0.8rem;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            transition: all 0.5s var(--ease-luxury);
-            cursor: none;
-        }
-
-        button:hover {
-            background: var(--accent);
-            color: #000;
-        }
-
-        footer { padding: 60px 56px; text-align: center; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 4px; text-transform: uppercase; }
-
-        @media (max-width: 768px) {
-            header { padding: 24px; }
-            .company-name { display: none; }
-            .contact-wrap { padding: 60px 24px; }
-        }
-    </style>
-</head>
+      .s2-text{position:relative;z-index:2;padding:80px 24px 40px;justify-content:center;}
+      .s3-wrap{position:relative;z-index:2;padding:80px 24px 40px;}
+      .s3-photo{display:none;}
+      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
+    }
+  
+    @media(max-width:680px){
+      .slide-title{font-size:1.6rem;letter-spacing:.02em;line-height:1.15;}
+      .s1-title{font-size:1.7rem;letter-spacing:.02em;line-height:1.1;}
+      .s4-title{font-size:1.7rem;letter-spacing:.02em;line-height:1.1;}
+      .kicker{font-size:.6rem;letter-spacing:.08em;}
+      .label{font-size:.6rem;letter-spacing:.08em;}
+      .s1-content{padding:0 20px;}
+      .s2-inner{grid-template-columns:1fr;}
+      .s2-photos{display:none;}
+      .s2-text{padding:80px 20px 40px;justify-content:center;}
+      .s3-wrap{padding:80px 20px 40px;}
+      .s3-photo{display:none;}
+      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
+      .s4-content{padding:0 20px;}
+      .s1-btns,.s4-btns{flex-direction:column;}
+      .btn{width:100%;justify-content:center;}
+    }
+  </style>
+<!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VPWTKVR3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-F0VPWTKVR3');
+    </script>
+  </head>
 <body>
 
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-ring" id="cursor-ring"></div>
+<div class="topbar">
+  <a href="https://ar.gumbrevicius.lt">
+    <img src="https://ar.gumbrevicius.lt/portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:44px;width:auto;display:block;">
+  </a>
+  <a class="top-cta" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+</div>
 
-    <header>
-        <a href="interiors.html" class="back-link">
-            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
-            <div class="company-name">Grįžti į galeriją</div>
-        </a>
-    </header>
+<div class="deck" id="deck">
 
-    <main class="contact-wrap">
-        <h1>Pradėkime</h1>
-        <p class="sub-title">Aptarkime jūsų viziją.</p>
+  <!-- S1 HERO -->
+  <div class="slide active s1" data-i="0">
+    <div class="s1-bg"></div>
+    <div class="s1-grad"></div>
+    <div class="s1-content">
+      <div class="kicker" data-lt="Interjero vizualizacijos dizaineriams" data-en="Interior visualizations for designers">Interjero vizualizacijos dizaineriams</div>
+      <h1 class="s1-title" data-lt="Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti." data-en="Interior visualizations that eliminate the client's fear of making the wrong choice.">Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti.</h1>
+      <p class="s1-sub" data-lt="Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos." data-en="Real light physics, cinematic depth and conscious material imperfection eliminate doubt — so your design decisions get approved without endless revisions.">Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos.</p>
+      <div class="s1-btns">
+        <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+        <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
+      </div>
+    </div>
+  </div>
 
-        <form action="https://formsubmit.co/povilas@gumbrevicius.lt" method="POST">
-            <input type="hidden" name="_subject" value="Nauja projekto užklausa!">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
+  <!-- S2 PROBLEMA -->
+  <div class="slide s2" data-i="1">
+    <div class="s2-bg" id="s2Bg"></div>
+    <div class="s2-grad"></div>
+    <div class="s2-inner" style="position:relative;z-index:2;">
+      <div class="s2-photos">
+        <div class="s2-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru1.webp" alt=""></div>
+        <div class="s2-photo"><img src="https://ar.gumbrevicius.lt/portfolio/interior/Ajeru2.webp" alt=""></div>
+      </div>
+      <div class="s2-text">
+        <span class="label" data-lt="Problema" data-en="The problem">Problema</span>
+        <h2 class="slide-title" data-lt="Kodėl projektas užstringa ties „dar vienu variantu"?" data-en="Why does the project stall at &quot;one more option&quot;?">Kodėl projektas užstringa ties „dar vienu variantu"?</h2>
+        <p class="slide-body">Kai užsakovas mato eilinį techninį renderį su fotorealizmo kauke, jo smegenys reaguoja į netikrumą. Kyla pasąmoninis saugumo poreikis: ar nebus per tamsu? ar medžiagos derės realybėje? Tuomet vertinama ne dizaino idėja, o baimė suklysti.<br><br>Vizualizacija, kurioje veikia natūrali šviesos sklaida ir fizinis medžiagų elgesys, šią įtampą panaikina. Ji veikia kaip mediatorius – rodo ne kompiuterinę grafiką, o realią erdvės atmosferą, leidžiant užsakovui ramiai priimti sprendimą.</p>
+      </div>
+    </div>
+    </div>
+  </div>
 
-            <div class="field">
-                <label>Vardas / Įmonė</label>
-                <input type="text" name="name" required placeholder="Kas kreipiasi?">
-            </div>
+  <!-- S3 ARGUMENTAI -->
+  <div class="slide s3" data-i="2">
+    <div class="s3-bg" id="s3Bg"></div>
+    <div class="s3-grad"></div>
+    <div class="s3-wrap" style="position:relative;z-index:2;">
+      <div class="s3-left">
+        <span class="label" data-lt="Kodėl tai veikia" data-en="Why it works">Kodėl tai veikia</span>
+        <h2 class="slide-title" data-lt="Trys argumentai, kurie užbaigia diskusijas dėl projekto" data-en="Three arguments that end project debates">Trys argumentai, kurie užbaigia diskusijas dėl projekto</h2>
+        <div class="s3-item">
+          <span class="s3-num">1</span>
+          <div>
+            <strong>Projektas priimamas empatiškai, o ne techniškai</strong>
+            <p>„Aš matau save šioje erdvėje." Kai kadras kuriamas per šviesos kinematografiškumą ir tūrį, užsakovas nustoja vertinti atskirus elementus. Distancija tarp brėžinio ir realybės išnyksta.</p>
+          </div>
+        </div>
+        <div class="s3-item">
+          <span class="s3-num">2</span>
+          <div>
+            <strong>Saugumo jausmas eliminuoja nepasitikėjimą</strong>
+            <p>„Sprendimas priimtas teisingai." Sąmoningas netobulumas ir reali fizika pašalina kompiuterinio vaizdo sterilumą. Nebereikia „apsidrausti" prašant papildomų variantų.</p>
+          </div>
+        </div>
+        <div class="s3-item">
+          <span class="s3-num">3</span>
+          <div>
+            <strong>Pasitikėjimas dizainerio autoritetu</strong>
+            <p>„Dizaineris mane suprato." Vizualizacija perteikia tikrąją erdvės atmosferą. Čia dingsta noras ginčytis dėl smulkmenų.</p>
+          </div>
+        </div>
+      </div>
+      <div class="s3-photo">
+        <img src="https://ar.gumbrevicius.lt/portfolio/interior/2.webp" alt="">
+      </div>
+    </div>
+    </div>
+  </div>
 
-            <div class="field">
-                <label>El. paštas</label>
-                <input type="email" name="email" required placeholder="Kur atsiųsti atsakymą?">
-            </div>
+  <!-- S4 BOOKING -->
+  <div class="slide s4" data-i="3" style="position:absolute;inset:0;overflow:hidden;">
+    <div class="s4-bg"></div>
+    <div class="s4-grad"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
+      <div style="max-width:640px;width:100%;padding:0 32px;text-align:center;color:#fff;">
+        <span class="s4-tag" data-lt="Šį mėnesį — 5 vietos" data-en="This month — 5 spots">Šį mėnesį — 5 vietos</span>
+        <h2 class="s4-title" data-lt="Atsigerkime kavos — gyvai arba online" data-en="Let's have coffee — in person or online">Atsigerkime kavos —<br>gyvai arba online</h2>
+        <p class="s4-sub">45 minučių. Be įsipareigojimų. Papasakok apie projektą — pažiūrėsim ar tinkam vienas kitam.</p>
+        <p class="s4-slots" data-lt="· Vilnius · Google Meet ·" data-en="· Vilnius · Google Meet ·">· Vilnius · Google Meet ·</p>
+        <div class="s4-btns">
+          <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+          <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
+        </div>
+        <p class="s4-note" data-lt="Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos." data-en="If my workflow doesn't meet expectations — you pay only 50% of the agreed price.">Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos.</p>
+      </div>
+    </div>
+  </div>
 
-            <div class="field">
-                <label>Žinutė</label>
-                <textarea name="message" rows="4" required placeholder="Trumpai apie jūsų projektą..."></textarea>
-            </div>
+</div>
 
-            <button type="submit">Siųsti užklausą</button>
-        </form>
-    </main>
+<nav class="dots" id="dots"></nav>
+<button class="arrow" id="arrow" onclick="next()">
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+  </svg>
+</button>
+<div class="ctr" id="ctr"></div>
 
-    <footer>
-        MB GUMBREVIČIUS © 2026 | Purvina tiesa
-    </footer>
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const arrow  = document.getElementById('arrow');
+  const ctr    = document.getElementById('ctr');
+  const total  = slides.length;
+  let cur = 0, locked = false;
 
-    <script>
-        const cursor = document.getElementById('cursor');
-        const cursorRing = document.getElementById('cursor-ring');
-        let mx = -100, my = -100, rx = -100, ry = -100;
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' on':'');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
 
-        function animateCursor() {
-            cursor.style.left = mx + 'px';
-            cursor.style.top = my + 'px';
-            rx += (mx - rx) * 0.12;
-            ry += (my - ry) * 0.12;
-            cursorRing.style.left = rx + 'px';
-            cursorRing.style.top = ry + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-    </script>
+  function ui() {
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
+    arrow.classList.toggle('hide', cur===total-1);
+    ctr.innerHTML = '<em>0'+(cur+1)+'</em> / 0'+total;
+  }
+
+  function goTo(n) {
+    if (locked || n===cur || n<0 || n>=total) return;
+    locked = true;
+    slides[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    ui();
+    setTimeout(()=>locked=false, 700);
+  }
+
+  function next() { goTo(cur+1); }
+  function prev() { goTo(cur-1); }
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next();}
+    if (['ArrowUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev();}
+  });
+
+  let wt;
+  document.addEventListener('wheel', e => {
+    e.preventDefault();
+    clearTimeout(wt);
+    wt = setTimeout(()=>{e.deltaY>30?next():e.deltaY<-30?prev():0;},60);
+  },{passive:false});
+
+  let ty=0;
+  document.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
+  document.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(d>40)next();if(d<-40)prev();});
+
+  ui();
+</script>
+
+<script>
+function changeLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + lang).classList.add('active');
+  document.querySelectorAll('[data-lt]').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (val) el.innerText = val;
+  });
+  // buttons
+  document.querySelectorAll('[data-lt-btn]').forEach(el => {
+    const val = el.getAttribute('data-' + lang + '-btn');
+    if (val) el.innerText = val;
+  });
+  localStorage.setItem('lang', lang);
+}
+const sl = localStorage.getItem('lang');
+if (sl && sl !== 'lt') changeLang(sl);
+</script>
+
 </body>
 </html>
