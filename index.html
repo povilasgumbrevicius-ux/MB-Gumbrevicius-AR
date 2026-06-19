@@ -191,11 +191,21 @@
   </head>
 <body>
 
-<div class="topbar">
-  <a href="https://ar.gumbrevicius.lt">
-    <img src="portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius" style="height:44px;width:auto;display:block;">
-  </a>
-  <a class="top-cta" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+<div class="topbar" id="topbar">
+  <div style="display:flex;align-items:center;">
+    <a href="https://ar.gumbrevicius.lt" class="topbar-left">
+      <img src="portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius">
+      <span class="topbar-name">MB Gumbrevičius</span>
+    </a>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="changeLang('lt')" id="btn-lt">LT</button>
+      <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:clamp(16px,2vw,30px);">
+    <span class="topbar-label" data-lt="CGI Artistas" data-en="CGI Artist">CGI Artistas</span>
+    <a class="top-cta" id="topCta" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank">Atsigerkime kavos</a>
+  </div>
 </div>
 
 <div class="deck" id="deck">
@@ -209,7 +219,7 @@
       <h1 class="s1-title" data-lt="Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti." data-en="Interior visualizations that eliminate the client's fear of making the wrong choice.">Interjero vizualizacijos, kurios suvaldo užsakovo baimę suklysti.</h1>
       <p class="s1-sub" data-lt="Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos." data-en="Real light physics, cinematic depth and conscious material imperfection eliminate doubt — so your design decisions get approved without endless revisions.">Tikroji šviesos fizika, kinematografinis tūris ir sąmoningas medžiagų netobulumas pašalina nepasitikėjimą, kad parinkti dizaino sprendimai būtų patvirtinti be ilgų abejonių ir papildomų variantų paieškos.</p>
       <div class="s1-btns">
-        <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+        <a class="btn btn-w" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank">Atsigerkime kavos</a>
         <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
       </div>
     </div>
@@ -281,7 +291,7 @@
         <p class="s4-sub">45 minučių. Be įsipareigojimų. Papasakok apie projektą — pažiūrėsim ar tinkam vienas kitam.</p>
         <p class="s4-slots" data-lt="· Vilnius · Google Meet ·" data-en="· Vilnius · Google Meet ·">· Vilnius · Google Meet ·</p>
         <div class="s4-btns">
-          <a class="btn btn-w" href="https://calendar.app.google/Cg7bQe1MTFus4txx7" target="_blank">Atsigerkime kavos</a>
+          <a class="btn btn-w" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank">Atsigerkime kavos</a>
           <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank">Žiūrėti darbus</a>
         </div>
         <p class="s4-note" data-lt="Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos." data-en="If my workflow doesn't meet expectations — you pay only 50% of the agreed price.">Jei nepatiks mano darbo eiga — moki tik 50% sutartos kainos.</p>
