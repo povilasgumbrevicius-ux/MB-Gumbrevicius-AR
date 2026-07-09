@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lt="APIE MANE | MB GUMBREVIČIUS" data-en="ABOUT | MB GUMBREVICIUS">APIE MANE | MB GUMBREVIČIUS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VPWTKVR3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-F0VPWTKVR3');
+    </script>
+    <style>
+        :root {
+            --accent: #c8a96e;
+            --bg: #080808;
+            --text: #e8e2d8;
+            --text-dim: rgba(232,226,216,0.5);
+            --ease: cubic-bezier(0.19,1,0.22,1);
+            --pad: clamp(24px,4vw,80px);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+        /* HEADER */
+        header{position:fixed;top:0;width:100%;padding:clamp(16px,2.5vw,32px) var(--pad);display:flex;justify-content:space-between;align-items:center;z-index:100;background:linear-gradient(to bottom,rgba(8,8,8,.97) 0%,rgba(8,8,8,0) 100%);transition:background .4s;}
+        header.solid{background:rgba(8,8,8,.97);}
+        .header-left{display:flex;align-items:center;gap:clamp(12px,1.5vw,20px);text-decoration:none;color:var(--text);}
+        .logo-wow{height:clamp(34px,3.5vw,48px);width:auto;transition:transform .6s var(--ease);}
+        .header-left:hover .logo-wow{transform:scale(1.05);}
+        .company-name{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(.75rem,1vw,.95rem);letter-spacing:3px;}
+        .lang-switch{display:flex;gap:15px;margin-left:30px;font-size:.65rem;letter-spacing:2px;}
+        .lang-btn{color:#fff;opacity:.3;cursor:pointer;transition:.3s;background:none;border:none;text-transform:uppercase;font-family:'Montserrat',sans-serif;}
+        .lang-btn.active{opacity:1;border-bottom:1px solid var(--accent);}
+        .header-cta{display:flex;align-items:center;gap:clamp(16px,2vw,30px);}
+        .header-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.6rem);letter-spacing:5px;color:var(--text-dim);}
+        .nav-link{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--text-dim);text-decoration:none;transition:color .3s;text-transform:uppercase;}
+        .nav-link:hover{color:var(--accent);}
+        .cta-btn{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,169,110,.3);padding:clamp(6px,.6vw,10px) clamp(12px,1.2vw,20px);transition:all .4s ease;white-space:nowrap;}
+        .cta-btn:hover{border-color:var(--accent);background:var(--accent);color:#000;}
+
+        /* CONTENT */
+        .page-content{max-width:1200px;margin:0 auto;padding:clamp(120px,14vw,180px) var(--pad) clamp(80px,10vw,140px);text-align:center;}
+
+        .manifesto-title{font-family:'Cinzel',serif;font-size:clamp(.9rem,1.8vw,1.6rem);letter-spacing:clamp(8px,1.5vw,20px);color:var(--accent);margin-bottom:clamp(36px,5vw,72px);text-transform:uppercase;font-weight:400;}
+        .manifesto-main{font-size:clamp(1.1rem,2.4vw,2.1rem);line-height:1.55;font-weight:300;max-width:1050px;margin:0 auto clamp(48px,7vw,96px);}
+        .manifesto-philosophy{max-width:950px;margin:0 auto clamp(56px,8vw,112px);font-family:'Cormorant Garamond',serif;font-size:clamp(1.15rem,1.9vw,1.85rem);font-style:italic;line-height:1.65;}
+
+        .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:clamp(36px,5vw,90px);text-align:left;margin-top:clamp(36px,4vw,72px);}
+        .pillar h3{font-family:'Cinzel',serif;font-size:clamp(.6rem,.75vw,.75rem);letter-spacing:6px;color:var(--accent);margin-bottom:clamp(14px,1.8vw,24px);text-transform:uppercase;font-weight:400;}
+        .pillar p{font-size:clamp(.82rem,.95vw,1.05rem);line-height:1.85;color:var(--text-dim);}
+
+        /* CTA */
+        .cta-section{padding:clamp(80px,11vw,150px) var(--pad);text-align:center;border-top:1px solid rgba(255,255,255,.05);}
+        .cta-section h2{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.2vw,2.8rem);letter-spacing:clamp(8px,1.4vw,14px);text-transform:uppercase;margin-bottom:clamp(20px,2.5vw,36px);max-width:860px;margin-left:auto;margin-right:auto;}
+        .cta-section p{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,1.8vw,1.6rem);font-style:italic;line-height:1.65;color:var(--text);margin-bottom:clamp(28px,3.5vw,55px);max-width:780px;margin-left:auto;margin-right:auto;}
+        .cta-section a{display:inline-block;padding:clamp(12px,1.4vw,20px) clamp(28px,3.5vw,52px);border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-family:'Cinzel',serif;font-size:clamp(.58rem,.75vw,.78rem);letter-spacing:5px;text-transform:uppercase;transition:all .5s var(--ease);}
+        .cta-section a:hover{background:var(--accent);color:#000;}
+
+        footer{padding:clamp(28px,3.5vw,52px) var(--pad);text-align:center;background:#050505;border-top:1px solid rgba(255,255,255,.05);}
+        footer p{font-size:clamp(.58rem,.75vw,.78rem);letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;line-height:1.9;}
+
+        @media(max-width:600px){.company-name,.header-label{display:none;}.lang-switch{margin-left:12px;}}
+    </style>
+</head>
+<body>
+
+<header id="hdr">
+    <div style="display:flex;align-items:center;">
+        <a href="index.html" class="header-left">
+            <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
+            <div class="company-name">MB Gumbrevičius</div>
+        </a>
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="changeLang('lt')" id="btn-lt">LT</button>
+            <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
+        </div>
+    </div>
+    <div class="header-cta">
+        <div class="header-label" data-lt="CGI Artistas" data-en="CGI Artist">CGI Artistas</div>
+        <a href="interiors.html" class="nav-link" data-lt="Portfolio" data-en="Portfolio">Portfolio</a>
+        <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" class="cta-btn" data-lt="Atsigerkime kavos" data-en="Let's have coffee">Atsigerkime kavos</a>
+    </div>
+</header>
+
+<div class="page-content">
+    <h2 class="manifesto-title" data-lt="Apie mane" data-en="About">Apie mane</h2>
+    <p class="manifesto-main">
+        <span data-lt="Dauguma vizualizacijų specialistų siekia sterilaus idealumo." data-en="Most visualization specialists strive for sterile perfection.">Dauguma vizualizacijų specialistų siekia sterilaus idealumo.</span><br>
+        <span style="color:#fff;font-weight:400;border-bottom:2px solid var(--accent);" data-lt="Aš siekiu netobulos tiesos." data-en="I strive for imperfect truth.">Aš siekiu netobulos tiesos.</span>
+    </p>
+    <p class="manifesto-philosophy" data-lt="Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais." data-en="In the digital space, everything is clean and dead by default. Reality is different – chaotic, imperfect, full of randomness. It is this chaos I embrace and translate into my work, because only within it does a house become a home.">
+        Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
+    </p>
+    <div class="pillars">
+        <div class="pillar">
+            <h3 data-lt="Chaoso priėmimas" data-en="Acceptance of Chaos">Chaoso priėmimas</h3>
+            <p data-lt="Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas" apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę." data-en="In reality, we don't place chairs with millimeter precision. In my renders a chair might stand slightly off, a pillow have a random indent. This randomness fools the brain – it stops looking for pixels and starts feeling the space.">Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas" apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
+        </div>
+        <div class="pillar">
+            <h3 data-lt="10 metų juostos" data-en="10 Years of Film">10 metų juostos</h3>
+            <p data-lt="Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake" užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą." data-en="My eye is calibrated not by a monitor, but by analog film cameras. No room for fake fillers – only the physical weight of light and shadow. I use this analog discipline to create digital images.">Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake" užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
+        </div>
+        <div class="pillar">
+            <h3 data-lt="Tekstūrinis gylis" data-en="Textural Depth">Tekstūrinis gylis</h3>
+            <p data-lt="4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas": mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio." data-en="4K resolution itself is nothing. Real value comes from dirt: a micro-scratch on a table, dust in a beam of light, an uneven surface reflection. I don't seek sterile beauty – I seek character.">4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas": mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
+        </div>
+        <div class="pillar">
+            <h3 data-lt="Dizainerio partneris" data-en="Designer's Partner">Dizainerio partneris</h3>
+            <p data-lt="Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru." data-en="You create the home concept – I give it a sense of time and space. I work with natural lighting so the visualization becomes not a technical file, but a cinematic frame.">Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru.</p>
+        </div>
+    </div>
+</div>
+
+<section class="cta-section">
+    <h2 data-lt="Kuriame atmosferą kartu?" data-en="Let's create the atmosphere together?">Kuriame atmosferą kartu?</h2>
+    <p data-lt="Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją." data-en="If your project needs more than a sterile technical file – let's discuss your vision.">Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.</p>
+    <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt="Atsigerkime kavos" data-en="Let's have coffee">Atsigerkime kavos</a>
+</section>
+
+<footer>
+    <p data-lt="MB Gumbrevičius · CGI Artistas · Vilnius" data-en="MB Gumbrevicius · CGI Artist · Vilnius">MB Gumbrevičius · CGI Artistas · Vilnius</p>
+</footer>
+
+<script>
+    window.addEventListener('scroll', () => {
+        document.getElementById('hdr').classList.toggle('solid', window.scrollY > 60);
+    });
+
+    function changeLang(lang) {
+        document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('btn-'+lang).classList.add('active');
+        document.querySelectorAll('[data-lt]').forEach(el=>{
+            const v=el.getAttribute('data-'+lang);
+            if(v) el.innerText=v;
+        });
+        document.title=document.querySelector('title').getAttribute('data-'+lang);
+        document.documentElement.lang=lang;
+        localStorage.setItem('prefLang',lang);
+    }
+    const sl=localStorage.getItem('prefLang');
+    if(sl&&sl!=='lt') changeLang(sl);
+</script>
+</body>
+</html>
