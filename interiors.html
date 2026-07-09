@@ -24,10 +24,12 @@
             --pad: clamp(24px,4vw,80px);
         }
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;}
+        html{scroll-behavior:smooth;}
+        body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 
         /* HEADER */
-        header{position:fixed;top:0;width:100%;padding:clamp(16px,2.5vw,32px) var(--pad);display:flex;justify-content:space-between;align-items:center;z-index:100;background:linear-gradient(to bottom,rgba(8,8,8,.97) 0%,rgba(8,8,8,0) 100%);}
+        header{position:fixed;top:0;width:100%;padding:clamp(16px,2.5vw,32px) var(--pad);display:flex;justify-content:space-between;align-items:center;z-index:100;background:linear-gradient(to bottom,rgba(8,8,8,.97) 0%,rgba(8,8,8,0) 100%);transition:background .4s;}
+        header.solid{background:rgba(8,8,8,.97);}
         .header-left{display:flex;align-items:center;gap:clamp(12px,1.5vw,20px);text-decoration:none;color:var(--text);}
         .logo-wow{height:clamp(34px,3.5vw,48px);width:auto;transition:transform .6s var(--ease);}
         .header-left:hover .logo-wow{transform:scale(1.05);}
@@ -37,78 +39,40 @@
         .lang-btn.active{opacity:1;border-bottom:1px solid var(--accent);}
         .header-cta{display:flex;align-items:center;gap:clamp(16px,2vw,30px);}
         .header-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.6rem);letter-spacing:5px;color:var(--text-dim);}
+        .nav-link{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--text-dim);text-decoration:none;transition:color .3s;text-transform:uppercase;}
+        .nav-link:hover{color:var(--accent);}
         .cta-btn{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,169,110,.3);padding:clamp(6px,.6vw,10px) clamp(12px,1.2vw,20px);transition:all .4s ease;white-space:nowrap;}
         .cta-btn:hover{border-color:var(--accent);background:var(--accent);color:#000;}
 
-        /* DECK */
-        .deck{width:100%;height:100vh;position:relative;}
-        .slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .7s var(--ease);display:flex;align-items:center;justify-content:center;}
-        .slide.active{opacity:1;pointer-events:all;}
+        /* GALLERY */
+        .gallery-wrap{width:100%;display:flex;flex-direction:column;gap:clamp(4px,.5vw,10px);padding-top:clamp(80px,10vw,120px);padding-bottom:clamp(60px,8vw,120px);}
+        .gallery-item{width:100%;overflow:hidden;line-height:0;cursor:zoom-in;}
+        .gallery-item img{width:100%;height:auto;display:block;max-height:90vh;object-fit:contain;background:#000;transition:transform .6s var(--ease);}
+        .gallery-item:hover img{transform:scale(1.01);}
 
-        /* S1 MANIFESTAS */
-        .s-manifesto{background:var(--bg);overflow-y:auto;}
-        .manifesto-inner{max-width:1200px;width:100%;padding:clamp(100px,12vw,160px) var(--pad) clamp(60px,8vw,100px);margin:0 auto;text-align:center;}
-        .manifesto-title{font-family:'Cinzel',serif;font-size:clamp(.9rem,1.8vw,1.6rem);letter-spacing:clamp(8px,1.5vw,20px);color:var(--accent);margin-bottom:clamp(36px,5vw,72px);text-transform:uppercase;font-weight:400;}
-        .manifesto-main{font-size:clamp(1.1rem,2.4vw,2.1rem);line-height:1.55;font-weight:300;max-width:1050px;margin:0 auto clamp(48px,7vw,96px);}
-        .manifesto-philosophy{max-width:950px;margin:0 auto clamp(56px,8vw,112px);font-family:'Cormorant Garamond',serif;font-size:clamp(1.15rem,1.9vw,1.85rem);font-style:italic;line-height:1.65;}
-        .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:clamp(36px,5vw,90px);text-align:left;margin-top:clamp(36px,4vw,72px);}
-        .pillar h3{font-family:'Cinzel',serif;font-size:clamp(.6rem,.75vw,.75rem);letter-spacing:6px;color:var(--accent);margin-bottom:clamp(14px,1.8vw,24px);text-transform:uppercase;font-weight:400;}
-        .pillar p{font-size:clamp(.82rem,.95vw,1.05rem);line-height:1.85;color:var(--text-dim);}
+        /* LIGHTBOX */
+        .lb{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.96);align-items:center;justify-content:center;cursor:zoom-out;}
+        .lb.open{display:flex;}
+        .lb img{max-width:96vw;max-height:96vh;object-fit:contain;display:block;}
+        .lb-close{position:absolute;top:20px;right:28px;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.5;transition:opacity .2s;background:none;border:none;line-height:1;}
+        .lb-close:hover{opacity:1;}
 
-        /* PHOTO SLIDES */
-        .s-photo{background:#000;overflow:hidden;}
-        .s-photo-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 8s var(--ease);}
-        .slide.active .s-photo-bg{transform:scale(1.04);}
+        /* CTA */
+        .cta-section{padding:clamp(80px,11vw,150px) var(--pad);text-align:center;background:linear-gradient(to bottom,var(--bg),#0a0a0a);}
+        .cta-section h2{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.2vw,2.8rem);letter-spacing:clamp(8px,1.4vw,14px);text-transform:uppercase;margin-bottom:clamp(20px,2.5vw,36px);max-width:860px;margin-left:auto;margin-right:auto;}
+        .cta-section p{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,1.8vw,1.6rem);font-style:italic;line-height:1.65;color:var(--text);margin-bottom:clamp(28px,3.5vw,55px);max-width:780px;margin-left:auto;margin-right:auto;}
+        .cta-section a{display:inline-block;padding:clamp(12px,1.4vw,20px) clamp(28px,3.5vw,52px);border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-family:'Cinzel',serif;font-size:clamp(.58rem,.75vw,.78rem);letter-spacing:5px;text-transform:uppercase;transition:all .5s var(--ease);}
+        .cta-section a:hover{background:var(--accent);color:#000;}
 
-        /* COLLAGE — 3 foto */
-        .s-collage3{background:#000;overflow:hidden;}
-        .collage3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;width:100%;height:100%;}
-        .collage3 div{overflow:hidden;}
-        .collage3 div img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 7s var(--ease);}
-        .collage3 div:hover img{transform:scale(1.04);}
+        .disclaimer{padding:clamp(28px,3.5vw,52px) var(--pad);text-align:center;background:#0a0a0a;border-top:1px solid rgba(255,255,255,.03);}
+        .disclaimer p{font-size:clamp(.58rem,.75vw,.78rem);letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;max-width:860px;margin:0 auto;line-height:1.9;}
 
-        /* COLLAGE — 2 foto side by side */
-        .s-collage2{background:#000;overflow:hidden;}
-        .collage2{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:100%;height:100%;}
-        .collage2 div{overflow:hidden;}
-        .collage2 div img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 7s var(--ease);}
-        .collage2 div:hover img{transform:scale(1.04);}
-
-        /* CTA SLIDE */
-        .s-cta{background:linear-gradient(to bottom,var(--bg),#0a0a0a);text-align:center;flex-direction:column;gap:clamp(20px,3vw,36px);}
-        .cta-inner{padding:0 var(--pad);}
-        .cta-inner h2{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.2vw,2.8rem);letter-spacing:clamp(8px,1.4vw,14px);text-transform:uppercase;margin-bottom:clamp(16px,2vw,28px);}
-        .cta-inner p{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,1.8vw,1.6rem);font-style:italic;line-height:1.65;color:var(--text);margin-bottom:clamp(24px,3vw,44px);max-width:780px;margin-left:auto;margin-right:auto;}
-        .cta-inner a{display:inline-block;padding:clamp(12px,1.4vw,20px) clamp(28px,3.5vw,52px);border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-family:'Cinzel',serif;font-size:clamp(.58rem,.75vw,.78rem);letter-spacing:5px;text-transform:uppercase;transition:all .5s var(--ease);}
-        .cta-inner a:hover{background:var(--accent);color:#000;}
-        .cta-disclaimer{font-size:clamp(.55rem,.7vw,.72rem);letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;max-width:860px;margin:0 auto;line-height:1.9;padding:0 var(--pad);}
-
-        /* NAV */
-        .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;}
-        .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .3s,transform .3s;}
-        .dot.on{background:var(--accent);transform:scale(1.6);}
-        .arrow{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;cursor:pointer;color:rgba(255,255,255,.3);background:none;border:none;display:flex;flex-direction:column;align-items:center;transition:color .2s,opacity .4s;}
-        .arrow:hover{color:rgba(255,255,255,.7);}
-        .arrow.hide{opacity:0;pointer-events:none;}
-        .arrow svg{animation:bob 2.2s ease-in-out infinite;}
-        @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
-        .ctr{position:fixed;left:24px;bottom:26px;z-index:200;color:rgba(255,255,255,.4);font-size:.68rem;font-weight:300;letter-spacing:.1em;}
-        .ctr em{color:var(--accent);font-style:normal;}
-
-        /* SLIDE LABEL */
-        .slide-label{position:absolute;bottom:clamp(48px,7vw,72px);left:var(--pad);z-index:10;color:rgba(255,255,255,.35);font-family:'Cinzel',serif;font-size:clamp(.42rem,.55vw,.52rem);letter-spacing:4px;text-transform:uppercase;}
-
-        @media(max-width:680px){
-            .company-name,.header-label{display:none;}
-            .collage3{grid-template-columns:1fr;}
-            .collage2{grid-template-columns:1fr;}
-            .lang-switch{margin-left:12px;}
-        }
+        @media(max-width:600px){.company-name,.header-label{display:none;}.lang-switch{margin-left:12px;}}
     </style>
 </head>
 <body>
 
-<header>
+<header id="hdr">
     <div style="display:flex;align-items:center;">
         <a href="index.html" class="header-left">
             <img src="portfolio/logo/Logo_white_SVG.svg" class="logo-wow" alt="Logo">
@@ -121,150 +85,49 @@
     </div>
     <div class="header-cta">
         <div class="header-label" data-lt="CGI Artistas" data-en="CGI Artist">CGI Artistas</div>
+        <a href="apie-mane.html" class="nav-link" data-lt="Apie mane" data-en="About">Apie mane</a>
         <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" class="cta-btn">Atsigerkime kavos</a>
     </div>
 </header>
 
-<div class="deck" id="deck">
+<main class="gallery-wrap">
+    <div class="gallery-item"><img src="portfolio/interior/2.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/4.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/6.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/8.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/9.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/Ajeru1.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/Ajeru2.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/z1.webp" loading="lazy" alt="Interior CGI"></div>
+    <div class="gallery-item"><img src="portfolio/interior/z4.webp" loading="lazy" alt="Interior CGI"></div>
+</main>
 
-    <!-- S1: MANIFESTAS -->
-    <div class="slide s-manifesto active" data-i="0">
-        <div class="manifesto-inner">
-            <h2 class="manifesto-title" data-lt="Manifestas" data-en="Manifesto">Manifestas</h2>
-            <p class="manifesto-main">
-                <span data-lt="Dauguma vizualizacijų specialistų siekia sterilaus idealumo." data-en="Most visualization specialists strive for sterile perfection.">Dauguma vizualizacijų specialistų siekia sterilaus idealumo.</span><br>
-                <span style="color:#fff;font-weight:400;border-bottom:2px solid var(--accent);" data-lt="Aš siekiu netobulos tiesos." data-en="I strive for imperfect truth.">Aš siekiu netobulos tiesos.</span>
-            </p>
-            <p class="manifesto-philosophy" data-lt="Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais." data-en="In the digital space, everything is clean and dead by default. Reality is different – chaotic, imperfect, full of randomness. It is this chaos I embrace and translate into my work, because only within it does a house become a home.">
-                Skaitmeninėje erdvėje viskas pagal nutylėjimą yra lygu, švaru ir mirę. Tikrovė yra kitokia – ji chaotiška, netobula ir pilna atsitiktinumų. Būtent šį chaosą aš priimu ir perkeliu į savo darbus, nes tik jame namai tampa namais.
-            </p>
-            <div class="pillars">
-                <div class="pillar">
-                    <h3 data-lt="Chaoso priėmimas" data-en="Acceptance of Chaos">Chaoso priėmimas</h3>
-                    <p data-lt="Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas" apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę." data-en="In reality, we don't place chairs with millimeter precision. In my renders a chair might stand slightly off, a pillow have a random indent. This 'randomness' fools the brain – it stops looking for pixels and starts feeling the space.">Realybėje mes nestatome kėdžių milimetro tikslumu. Mano renderiuose kėdė gali stovėti kreivai, o pagalvė turėti atsitiktinę įdubą. Šis „atsitiktinumas" apgauna smegenis – jos nustoja ieškoti pikselių ir pradeda jausti erdvę.</p>
-                </div>
-                <div class="pillar">
-                    <h3 data-lt="10 metų juostos" data-en="10 Years of Film">10 metų juostos</h3>
-                    <p data-lt="Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake" užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą." data-en="My eye is calibrated not by a monitor, but by analog film cameras. No room for 'fake' fillers – only the physical weight of light and shadow. I use this analog discipline to create digital images.">Mano akis kalibruota ne monitoriaus, o juostinių mechaninių fotoaparatų. Ten nėra vietos „fake" užpildams – tik fizinis šviesos ir šešėlio svoris. Šią analoginę discipliną naudoju kurdamas skaitmeninį vaizdą.</p>
-                </div>
-                <div class="pillar">
-                    <h3 data-lt="Tekstūrinis gylis" data-en="Textural Depth">Tekstūrinis gylis</h3>
-                    <p data-lt="4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas": mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio." data-en="4K resolution itself is nothing. Real value comes from 'dirt': a micro-scratch on a table, dust in a beam of light, an uneven surface reflection. I don't seek sterile beauty – I seek character.">4K raiška pati savaime yra niekas. Tikrąją vertę vaizdui suteikia „purvas": mikro-įbrėžimas ant stalo, dulkė šviesos spindulyje ar netolygus paviršiaus atspindys. Aš neieškau sterilaus grožio, aš ieškau charakterio.</p>
-                </div>
-                <div class="pillar">
-                    <h3 data-lt="Dizainerio partneris" data-en="Designer's Partner">Dizainerio partneris</h3>
-                    <p data-lt="Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru." data-en="You create the home concept – I give it a sense of time and space. I work with natural lighting so the visualization becomes not a technical file, but a cinematic frame.">Jūs sukuriate namų koncepciją – aš jai suteikiu laiko ir erdvės pojūtį. Dirbu su natūraliu apšvietimu, kad vizualizacija taptų ne techniniu failu, o kinematografišku kadru.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+<section class="cta-section">
+    <h2 data-lt="Kuriame atmosferą kartu?" data-en="Let's create the atmosphere together?">Kuriame atmosferą kartu?</h2>
+    <p data-lt="Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją." data-en="If your project needs more than a sterile technical file – let's discuss your vision.">Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.</p>
+    <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt="Atsigerkime kavos" data-en="Let's have coffee">Atsigerkime kavos</a>
+</section>
 
-    <!-- S2: 2 + 4 + 6 koliažas -->
-    <div class="slide s-collage3" data-i="1">
-        <div class="collage3">
-            <div><img src="portfolio/interior/2.webp" alt="Interior CGI"></div>
-            <div><img src="portfolio/interior/4.webp" alt="Interior CGI"></div>
-            <div><img src="portfolio/interior/6.webp" alt="Interior CGI"></div>
-        </div>
-    </div>
-
-    <!-- S3: 8 + 9 side by side -->
-    <div class="slide s-collage2" data-i="2">
-        <div class="collage2">
-            <div><img src="portfolio/interior/8.webp" alt="Interior CGI"></div>
-            <div><img src="portfolio/interior/9.webp" alt="Interior CGI"></div>
-        </div>
-    </div>
-
-    <!-- S4: Ajeru1 + Ajeru2 side by side -->
-    <div class="slide s-collage2" data-i="3">
-        <div class="collage2">
-            <div><img src="portfolio/interior/Ajeru1.webp" alt="Interior CGI"></div>
-            <div><img src="portfolio/interior/Ajeru2.webp" alt="Interior CGI"></div>
-        </div>
-    </div>
-
-    <!-- S5: z1 fullscreen -->
-    <div class="slide s-photo" data-i="4">
-        <div class="s-photo-bg" style="background-image:url('portfolio/interior/z1.webp');"></div>
-    </div>
-
-    <!-- S6: z4 fullscreen -->
-    <div class="slide s-photo" data-i="5">
-        <div class="s-photo-bg" style="background-image:url('portfolio/interior/z5.webp');"></div>
-    </div>
-
-    <!-- S7: CTA -->
-    <div class="slide s-cta" data-i="6">
-        <div class="cta-inner">
-            <h2 data-lt="Kuriame atmosferą kartu?" data-en="Let's create the atmosphere together?">Kuriame atmosferą kartu?</h2>
-            <p data-lt="Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją." data-en="If your project needs more than a sterile technical file – if it needs weight and character – let's discuss your vision.">Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.</p>
-            <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt="Atsigerkime kavos" data-en="Let's have coffee">Atsigerkime kavos</a>
-        </div>
-        <p class="cta-disclaimer" data-lt="Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas." data-en="The authorship of the interior design for most works belongs to the project architects and designers. MB Gumbrevicius is responsible for CGI visualization, lighting scenarios, and artistic execution.">Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.</p>
-    </div>
-
+<div class="disclaimer">
+    <p data-lt="Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas." data-en="The authorship of the interior design for most works belongs to the project architects and designers. MB Gumbrevicius is responsible for CGI visualization, lighting scenarios, and artistic execution.">Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.</p>
 </div>
 
-<nav class="dots" id="dots"></nav>
-<button class="arrow" id="arrow" onclick="next()">
-    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-    </svg>
-</button>
-<div class="ctr" id="ctr"></div>
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="closeLb()">
+    <button class="lb-close" onclick="closeLb()">×</button>
+    <img id="lb-img" src="" alt="">
+</div>
 
 <script>
-    const slides = document.querySelectorAll('.slide');
-    const dotsEl = document.getElementById('dots');
-    const arrow  = document.getElementById('arrow');
-    const ctr    = document.getElementById('ctr');
-    const total  = slides.length;
-    let cur = 0, locked = false;
-
-    slides.forEach((_,i) => {
-        const d = document.createElement('div');
-        d.className = 'dot' + (i===0?' on':'');
-        d.onclick = () => goTo(i);
-        dotsEl.appendChild(d);
+    window.addEventListener('scroll', () => {
+        document.getElementById('hdr').classList.toggle('solid', window.scrollY > 60);
     });
 
-    function ui() {
-        document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
-        arrow.classList.toggle('hide', cur===total-1);
-        ctr.innerHTML = '<em>0'+(cur+1)+'</em> / 0'+total;
-    }
-
-    function goTo(n) {
-        if (locked||n===cur||n<0||n>=total) return;
-        locked = true;
-        slides[cur].classList.remove('active');
-        cur = n;
-        slides[cur].classList.add('active');
-        ui();
-        setTimeout(()=>locked=false, 750);
-    }
-
-    function next() { goTo(cur+1); }
-    function prev() { goTo(cur-1); }
-
-    document.addEventListener('keydown', e => {
-        if (['ArrowDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next();}
-        if (['ArrowUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev();}
-    });
-
-    let wt;
-    document.addEventListener('wheel', e => {
-        e.preventDefault();
-        clearTimeout(wt);
-        wt = setTimeout(()=>{e.deltaY>30?next():e.deltaY<-30?prev():0;},60);
-    },{passive:false});
-
-    let ty=0;
-    document.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
-    document.addEventListener('touchend',e=>{
-        const d=ty-e.changedTouches[0].clientY;
-        if(d>40)next();if(d<-40)prev();
+    function openLb(src){ document.getElementById('lb-img').src=src; document.getElementById('lb').classList.add('open'); }
+    function closeLb(){ document.getElementById('lb').classList.remove('open'); }
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLb(); });
+    document.querySelectorAll('.gallery-item').forEach(item=>{
+        item.onclick=()=>openLb(item.querySelector('img').src);
     });
 
     function changeLang(lang) {
@@ -280,8 +143,6 @@
     }
     const sl=localStorage.getItem('prefLang');
     if(sl&&sl!=='lt') changeLang(sl);
-
-    ui();
 </script>
 </body>
 </html>
