@@ -100,6 +100,30 @@
     .slide.active .s3-photo{opacity:1;transform:translateX(0);}
     @media(max-width:780px){.s3-wrap{grid-template-columns:1fr;}.s3-photo{height:260px;}}
 
+    /* S-REVIEWS */
+    .s5{background:var(--bg2);overflow:hidden;}
+    .s5-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/namelis.webp") center/cover no-repeat;filter:brightness(.2);will-change:transform;}
+    .s5-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.35) 0%,rgba(8,7,6,.96) 100%);}
+    .s5-wrap{position:relative;z-index:2;max-width:1100px;width:100%;padding:88px 40px 40px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow-y:auto;}
+    .s5-wrap .label,
+    .s5-wrap .slide-title{text-align:center;}
+    .s5-wrap .slide-title{margin-bottom:8px;}
+    .s5-sub{color:var(--muted);font-size:.86rem;margin-bottom:36px;text-align:center;opacity:0;transform:translateY(12px);transition:opacity .6s .46s,transform .6s .46s;}
+    .slide.active .s5-sub{opacity:1;transform:translateY(0);}
+    /* single shared width context so both screenshots always sit at the exact same scale factor relative to each other — never independently stretched or shrunk */
+    .s5-cards{width:100%;max-width:960px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:20px;padding-bottom:24px;}
+    .s5-card{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:10px;}
+    .s5-card:nth-child(1){transition-delay:.2s;width:100%;}
+    /* 42.375% = review-2's true native width (653px) as a share of review-1's true native width (1541px) — locks the real relative scale, responsive at any size */
+    .s5-card:nth-child(2){transition-delay:.34s;width:42.375%;min-width:220px;}
+    .slide.active .s5-card{opacity:1;transform:translateY(0);}
+    .s5-card img{display:block;width:100%;height:auto;border-radius:3px;}
+    @media(max-width:780px){
+      .s5-wrap{padding:80px 20px 24px;}
+      .s5-cards{gap:14px;}
+      .s5-card:nth-child(2){width:100%;min-width:0;}
+    }
+
     /* S4 BOOKING */
     .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
     .s4-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
@@ -134,21 +158,7 @@
     .ctr{position:fixed;left:24px;bottom:26px;z-index:100;color:var(--muted);font-size:.68rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;}
     .ctr em{color:var(--accent);font-style:normal;}
 
-
-      .s2-photos{display:none;}
-      .s3-row{grid-template-columns:1fr;}
-      .s3-photo{height:160px;}
-      .s1-content{padding:0 20px;}
-    }
-  
-
-      .s2-text{position:relative;z-index:2;padding:80px 24px 40px;justify-content:center;}
-      .s3-wrap{position:relative;z-index:2;padding:80px 24px 40px;}
-      .s3-photo{display:none;}
-      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
-    }
-  
-
+    @media(max-width:900px){
       .s1-title{font-size:1.7rem;letter-spacing:.02em;line-height:1.1;}
       .s4-title{font-size:1.7rem;letter-spacing:.02em;line-height:1.1;}
       .kicker{font-size:.6rem;letter-spacing:.08em;}
@@ -164,7 +174,7 @@
       .s1-btns,.s4-btns{flex-direction:column;}
       .btn{width:100%;justify-content:center;}
     }
-  
+
     @media(max-width:680px){
       .slide-title{font-size:1.45rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.2;}
       .s1-title{font-size:1.5rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.15;}
@@ -278,6 +288,25 @@
         <img src="portfolio/interior/2.webp" alt="">
       </div>
     </div>
+    </div>
+  </div>
+
+  <!-- S-REVIEWS -->
+  <div class="slide s5" data-i="3">
+    <div class="s5-bg"></div>
+    <div class="s5-grad"></div>
+    <div class="s5-wrap">
+      <span class="label" data-lt="Atsiliepimai" data-en="Reviews">Atsiliepimai</span>
+      <h2 class="slide-title" data-lt="Ką sako kolegos ir užsakovai" data-en="What colleagues and clients say">Ką sako kolegos ir užsakovai</h2>
+      <p class="s5-sub" data-lt="Realūs pokalbiai, be redagavimo." data-en="Real conversations, unedited.">Realūs pokalbiai, be redagavimo.</p>
+      <div class="s5-cards">
+        <div class="s5-card">
+          <img src="portfolio/interior/review-1.png" alt="Povilo įrašas Facebook grupėje ir Viktorijos Mykolaitytės atsiliepimas">
+        </div>
+        <div class="s5-card">
+          <img src="portfolio/interior/review-2.png" alt="Alinos Paškevič atsiliepimas">
+        </div>
+      </div>
     </div>
   </div>
 
