@@ -57,14 +57,6 @@
         .lb-close{position:absolute;top:20px;right:28px;color:#fff;font-size:2.2rem;cursor:pointer;opacity:.5;transition:opacity .2s;background:none;border:none;line-height:1;}
         .lb-close:hover{opacity:1;}
 
-        .s-cta{background:linear-gradient(to bottom,var(--bg),#0a0a0a);text-align:center;flex-direction:column;gap:clamp(20px,3vw,36px);}
-        .cta-inner{padding:0 var(--pad);}
-        .cta-inner h2{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3.2vw,2.8rem);letter-spacing:clamp(8px,1.4vw,14px);text-transform:uppercase;margin-bottom:clamp(16px,2vw,28px);}
-        .cta-inner p{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,1.8vw,1.6rem);font-style:italic;line-height:1.65;color:var(--text);margin-bottom:clamp(24px,3vw,44px);max-width:780px;margin-left:auto;margin-right:auto;}
-        .cta-inner a{display:inline-block;padding:clamp(12px,1.4vw,20px) clamp(28px,3.5vw,52px);border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-family:'Cinzel',serif;font-size:clamp(.58rem,.75vw,.78rem);letter-spacing:5px;text-transform:uppercase;transition:all .5s var(--ease);}
-        .cta-inner a:hover{background:var(--accent);color:#000;}
-        .cta-disclaimer{font-size:clamp(.68rem,.82vw,.86rem);letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;max-width:860px;margin:0 auto;line-height:1.9;padding:0 var(--pad);}
-
         .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;}
         .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .3s,transform .3s;}
         .dot.on{background:var(--accent);transform:scale(1.6);}
@@ -75,8 +67,6 @@
         @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
         .ctr{position:fixed;left:24px;bottom:26px;z-index:200;color:rgba(255,255,255,.4);font-size:.78rem;letter-spacing:.1em;}
         .ctr em{color:var(--accent);font-style:normal;}
-
-
 
         @media(max-width:680px){
             .company-name,.header-label{display:none;}
@@ -102,12 +92,13 @@
     <div class="header-cta">
         <div class="header-label" data-lt="CGI Artistas" data-en="CGI Artist">CGI Artistas</div>
         <a href="apie-mane.html" class="nav-link" data-lt="Apie mane" data-en="About">Apie mane</a>
-        <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" class="cta-btn">Atsigerkime kavos</a>
+        <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" class="cta-btn" data-lt="Rezervuoti 15 min. pokalbį" data-en="Book a 15-min call">Rezervuoti 15 min. pokalbį</a>
     </div>
 </header>
 
 <div class="deck" id="deck">
 
+    <!-- 1 SKAIDRĖ: 3 renderiai -->
     <div class="slide s-collage3 active" data-i="0">
         <div class="collage3">
             <div><img src="portfolio/interior/2.webp" alt="Interior CGI"></div>
@@ -116,6 +107,7 @@
         </div>
     </div>
 
+    <!-- 2 SKAIDRĖ: 2 renderiai -->
     <div class="slide s-collage2" data-i="1">
         <div class="collage2">
             <div><img src="portfolio/interior/8.webp" alt="Interior CGI"></div>
@@ -123,6 +115,7 @@
         </div>
     </div>
 
+    <!-- 3 SKAIDRĖ: 2 renderiai -->
     <div class="slide s-collage2" data-i="2">
         <div class="collage2">
             <div><img src="portfolio/interior/Ajeru1.webp" alt="Interior CGI"></div>
@@ -130,22 +123,17 @@
         </div>
     </div>
 
-    <div class="slide s-photo-zoom" data-i="3" onclick="openLb('portfolio/interior/z1.webp')">
-        <div class="s-photo-bg" style="background-image:url('portfolio/interior/z1.webp');"></div>
+    <!-- 4 SKAIDRĖ: NAUJAS RENDERIŲ BLOKAS -->
+    <div class="slide s-collage2" data-i="3">
+        <div class="collage2">
+            <div><img src="portfolio/interior/z1.webp" alt="Interior CGI"></div>
+            <div><img src="portfolio/interior/z4.webp" alt="Interior CGI"></div>
+        </div>
     </div>
 
+    <!-- 5 SKAIDRĖ: 1 didelis priartinamas renderis -->
     <div class="slide s-photo-zoom" data-i="4" onclick="openLb('portfolio/interior/z5.webp')">
         <div class="s-photo-bg" style="background-image:url('portfolio/interior/z5.webp');"></div>
-    </div>
-
-
-    <div class="slide s-cta" data-i="5">
-        <div class="cta-inner">
-            <h2 data-lt="Kuriame atmosferą kartu?" data-en="Let's create the atmosphere together?">Kuriame atmosferą kartu?</h2>
-            <p data-lt="Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją." data-en="If your project needs more than a sterile technical file – let's discuss your vision.">Jei jūsų projektui reikia ne sterilaus techninio failo, o vaizdo, kuris turi svorį ir charakterį – aptarkime jūsų viziją.</p>
-            <a href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt="Atsigerkime kavos" data-en="Let's have coffee">Atsigerkime kavos</a>
-        </div>
-        <p class="cta-disclaimer" data-lt="Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas." data-en="The authorship of the interior design for most works belongs to the project architects and designers. MB Gumbrevicius is responsible for CGI visualization, lighting scenarios, and artistic execution.">Daugumos pateiktų darbų interjero dizaino autorystė priklauso projektų architektams bei dizaineriams. MB Gumbrevičius atsakomybė — CGI vizualizacija, apšvietimo scenarijai ir meninis išpildymas.</p>
     </div>
 
 </div>
