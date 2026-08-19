@@ -96,8 +96,8 @@
             background-color: #050505;
             border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
-            opacity: 0.3; 
-            filter: blur(4px);
+            opacity: 1; 
+            filter: none;
             transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
             cursor: pointer;
         }
@@ -110,8 +110,6 @@
         }
 
         .portfolio-item:hover {
-            opacity: 1;
-            filter: blur(0px);
             border-color: var(--wow-blue);
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
             transform: scale(1.02);
@@ -124,7 +122,7 @@
         }
 
         @media (max-width: 768px) {
-            #candlelight { display: none; } /* Išjungiam žvakę telefone */
+            #candlelight { display: none; }
 
             header {
                 top: 20px;
@@ -144,17 +142,13 @@
             }
             
             .portfolio-item {
-                /* AŠTRUMAS: Nuimtas blur ir nustatyta pilna opacity */
-                opacity: 1; 
-                filter: blur(0px);
                 margin-bottom: 25px;
-                /* PULSAVIMAS: Automatinis mėlynas rėmelis telefone */
                 border-color: rgba(0, 210, 255, 0.3);
                 animation: item-pulse 3s infinite alternate ease-in-out;
             }
 
             .portfolio-item:hover {
-                transform: none; /* Telefone nebereikia scale efekto */
+                transform: none;
             }
         }
 
