@@ -1,360 +1,398 @@
 <!doctype html>
 <html lang="lt">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MB Gumbrevičius | Interjero vizualizacijos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300;1,400&family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:#0d0c0b; --bg2:#111009; --surface:#1c1a17;
-      --white:#ffffff; --off:rgba(255,255,255,.84);
-      --muted:rgba(255,255,255,.44); --accent:#b99658;
-      --line:rgba(255,255,255,.09);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,sans-serif;}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MB Gumbrevičius — One Page Preview</title>
+<style>
+:root{
+  --bg:#0d0c0b;--bg2:#13110f;--paper:#e9e1d5;--muted:#a79f94;
+  --gold:#c8a96e;--line:rgba(200,169,110,.23);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--paper);font-family:Arial,Helvetica,sans-serif}
+a{color:inherit}.serif{font-family:Georgia,"Times New Roman",serif}
+.nav{
+ position:fixed;z-index:20;top:0;left:0;right:0;height:78px;padding:0 5vw;
+ display:flex;align-items:center;justify-content:space-between;
+ background:linear-gradient(#0d0c0be8,#0d0c0b00)
+}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;letter-spacing:.2em;font-size:12px;white-space:nowrap}
+.brand img{height:42px;width:auto;display:block}
+.brand-name{color:#d8d0c4}
+.nav-right{display:flex;gap:24px;align-items:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+.nav-link{text-decoration:none;color:#cfc6b9;transition:color .25s ease}
+.nav-link:hover{color:var(--gold)}
+.nav-placeholder{color:#cfc6b9;opacity:.48;cursor:default}
+.lang-switch{display:flex;gap:9px;align-items:center;color:#8f877c}
+.lang-switch .active{color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:2px}
+.nav-cta{border:1px solid rgba(200,169,110,.35);color:var(--gold);padding:11px 17px;text-decoration:none;transition:.25s ease;white-space:nowrap}
+.nav-cta:hover{border-color:var(--gold);background:rgba(200,169,110,.07)}
+.hero{height:100vh;min-height:700px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.hero:before{
+ content:"";position:absolute;inset:0;background:#0d0c0b;
+ filter:brightness(.58);transform:scale(1.015)
+}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,6,5,.78),rgba(7,6,5,.18) 65%),linear-gradient(0deg,#0d0c0b 0%,transparent 38%)}
+.hero-copy{position:relative;z-index:2;width:min(980px,90vw);margin:0 5vw 10vh}
+.eyebrow{color:var(--gold);font-size:11px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:24px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;margin:0;color:var(--gold)}
+h1{font-size:clamp(54px,7vw,106px);line-height:.96;letter-spacing:-.035em;max-width:980px}
+.hero p{font-family:Georgia,"Times New Roman",serif;font-size:clamp(19px,2vw,28px);line-height:1.45;color:#ddd4c8;max-width:720px;margin:28px 0 0}
+.gold{color:var(--gold)}
+.scroll{position:absolute;right:5vw;bottom:7vh;z-index:3;color:#b8ad9e;font-size:9px;letter-spacing:.28em;text-transform:uppercase;writing-mode:vertical-rl}
+.section{padding:150px 7vw;border-top:1px solid rgba(255,255,255,.055)}
+.grid{max-width:1320px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:center}
+.num{color:var(--gold);font-size:10px;letter-spacing:.25em;margin-bottom:24px}
+h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
+.copy p{font-family:Georgia,"Times New Roman",serif;font-size:clamp(18px,1.55vw,24px);line-height:1.6;color:#bbb1a4;margin:28px 0 0;max-width:620px}
+.photo{min-height:680px;background-size:cover;background-position:center}
+.quote{font-family:Georgia,"Times New Roman",serif;color:var(--gold);font-size:clamp(25px,3vw,43px);line-height:1.25;margin-top:40px}
+.full-photo{height:82vh;min-height:620px;background:#0d0c0b;position:relative}
+.full-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0d0c0bd9 0%,transparent 60%)}
+.full-photo .overlay{position:absolute;z-index:2;left:7vw;bottom:9vh;max-width:620px}
+.process{background:#11100e}
+.two-cards{max-width:1320px;margin:80px auto 0;display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.card{min-height:520px;padding:52px;background:#171512;border:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;justify-content:flex-end}
+.card.image{background:#0d0c0b;position:relative}
+.card.image:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0d0c0bd9,transparent 70%)}
+.card.image>*{position:relative;z-index:2}
+.card h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:38px;margin:0 0 18px}
+.card p{color:#b7ada0;line-height:1.7;font-family:Georgia,"Times New Roman",serif;font-size:19px}
+.rule{text-align:center;max-width:980px;margin:auto;padding:190px 5vw}
+.rule .small{color:var(--gold);font-size:10px;letter-spacing:.3em;text-transform:uppercase}
+.rule h2{margin:28px auto}
+.rule p{font-family:Georgia,"Times New Roman",serif;color:#aaa093;font-size:21px;line-height:1.7;max-width:720px;margin:30px auto 0}
+.proof{background:#e7dfd2;color:#171411}
+.proof .num{color:#8c6d37}
+.proof .copy p{color:#554e46}.proof h2{color:#171411}
+.testimonial{font-family:Georgia,"Times New Roman",serif;font-size:clamp(24px,2.5vw,38px);line-height:1.4;margin:0}
+.author{margin-top:28px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#806a46}
+.portfolio{padding:0}
+.port-grid{display:grid;grid-template-columns:1fr 1fr}
+.port-grid div{height:65vh;min-height:520px;background-size:cover;background-position:center}
+.port-grid div:nth-child(1){background-image:none}
+.port-grid div:nth-child(2){background-image:none}
+.port-grid div:nth-child(3){background-image:none}
+.port-grid div:nth-child(4){background-image:none}
+.cta{text-align:center;padding:180px 5vw 140px}
+.cta h2{max-width:900px;margin:auto}
+.cta p{font-family:Georgia,"Times New Roman",serif;color:#aaa093;font-size:22px;line-height:1.6;max-width:650px;margin:30px auto 45px}
+.button{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:17px 28px;text-decoration:none;font-size:10px;letter-spacing:.25em;text-transform:uppercase}
+.footer{border-top:1px solid rgba(255,255,255,.07);padding:30px 5vw 45px;display:flex;justify-content:space-between;color:#746c62;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+@media(max-width:800px){
+ .brand-name{display:none}.brand img{height:36px}.nav{padding:0 4vw}.nav-right{gap:11px;font-size:8px;letter-spacing:.13em}.nav-cta{padding:9px 10px}.lang-switch{display:none}
+ .proof [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:70px!important}
+ .nav-right{gap:14px}.nav-placeholder{display:none}.hero-copy{margin-bottom:12vh}
+ .grid{grid-template-columns:1fr;gap:60px}.section{padding:110px 7vw}.photo{min-height:65vh}
+ .two-cards,.port-grid{grid-template-columns:1fr}.port-grid div{height:60vh}.scroll{display:none}
+ .rule{padding:130px 7vw}.card{min-height:440px;padding:34px}
+}
 
-    /* TOPBAR */
-    :root { --accent:#c8a96e; }
-    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:clamp(16px,2.5vw,32px) clamp(24px,4vw,80px);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,8,8,0.92) 0%,rgba(8,8,8,0.0) 100%);transition:background .4s;}
-    .topbar.solid{background:rgba(8,8,8,0.97);}
-    .topbar-left{display:flex;align-items:center;gap:clamp(12px,1.5vw,20px);text-decoration:none;color:#fff;}
-    .topbar-left img{height:clamp(34px,3.5vw,48px);width:auto;transition:transform .6s cubic-bezier(.19,1,.22,1);}
-    .topbar-left:hover img{transform:scale(1.05);}
-    .topbar-name{font-family:'Montserrat',sans-serif;font-weight:300;font-size:clamp(.75rem,1vw,.95rem);letter-spacing:3px;color:rgba(232,226,216,.85);}
-    .top-cta{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.62rem);letter-spacing:3px;color:var(--accent);text-decoration:none;border:1px solid rgba(200,169,110,.3);padding:clamp(6px,.6vw,10px) clamp(12px,1.2vw,20px);transition:all .4s ease;white-space:nowrap;text-transform:uppercase;}
-    .top-cta:hover{border-color:var(--accent);background:var(--accent);color:#000;}
-    .topbar-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,.65vw,.6rem);letter-spacing:5px;color:rgba(232,226,216,.4);text-transform:uppercase;}
+/* IMAGE PLACEMENT MOCKUP — later each slot receives a GitHub image URL.
+   Images will use width:100%; height:auto; object-fit:contain, so the render decides its own height. */
+.image-slot{
+  position:relative;
+  width:100%;
+  border:3px solid #9cff00;
+  background:rgba(156,255,0,.025);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9cff00;
+  font:600 13px/1.5 Arial,Helvetica,sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  text-align:center;
+  padding:24px;
+}
+.image-slot span{max-width:420px}
+.image-slot.hero-slot{width:min(84vw,1120px);aspect-ratio:16/7;margin:110px 5vw 28px;z-index:3}
+.image-slot.landscape{aspect-ratio:16/10}
+.image-slot.wide{aspect-ratio:16/8}
+.image-slot.portrait{aspect-ratio:4/5}
+.image-slot.proof-shot{aspect-ratio:16/10;border-width:2px}
+.hero{height:auto;min-height:100vh;display:block;padding-top:1px}
+.hero-copy{margin:70px 5vw 10vh}
+.full-photo{height:auto;min-height:0;background:none;padding:150px 7vw}
+.full-photo:after{display:none}
+.full-photo .overlay{position:static;max-width:1320px;margin:auto}
+.visual-pair{max-width:1320px;margin:70px auto 0;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}
+.visual-pair .image-slot:nth-child(2){margin-top:90px}
+.photo{min-height:0;background:none!important}
+@media(max-width:800px){
+ .image-slot.hero-slot{width:86vw;margin:100px 7vw 20px;aspect-ratio:4/3}
+ .hero-copy{margin:55px 7vw 11vh}
+ .visual-pair{grid-template-columns:1fr}
+ .visual-pair .image-slot:nth-child(2){margin-top:0}
+ .full-photo{padding:110px 7vw}
+}
 
-    /* LANG SWITCH */
-    .lang-switch{display:flex;gap:12px;margin-left:20px;}
-    .lang-btn{color:#fff;opacity:.3;cursor:pointer;transition:.3s;background:none;border:none;font-family:'Cinzel',serif;font-size:clamp(.45rem,.6vw,.58rem);letter-spacing:2px;text-transform:uppercase;padding:0;}
-    .lang-btn.active{opacity:1;border-bottom:1px solid var(--accent);}
-    /* DECK */
-    .deck{width:100%;height:100vh;position:relative;}
 
-    /* SLIDES */
-    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .65s cubic-bezier(.4,0,.2,1);}
-    .slide.active{opacity:1;pointer-events:all;}
+.single-image-slot{
+  width:100%;
+  aspect-ratio:16/9;
+  margin-top:70px;
+  border:3px solid #9cff00;
+  background:rgba(156,255,0,.025);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9cff00;
+  font:600 13px/1.5 Arial,Helvetica,sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  text-align:center;
+  padding:24px;
+}
+@media(max-width:800px){
+  .single-image-slot{margin-top:45px;border-width:2px}
+}
 
-    /* S1 HERO */
-    .s1{background:var(--bg);overflow:hidden;}
-    .s1-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/namelis.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;transform:scale(1.07);transition:transform 7s ease-out;}
-    .slide.active .s1-bg{transform:scale(1.0);}
-    .s1-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
-    .s1-content{position:relative;z-index:2;text-align:left;color:var(--white);padding:0 24px;max-width:900px;width:100%;}
-    .kicker{display:inline-flex;align-items:center;gap:12px;margin-bottom:20px;color:rgba(255,255,255,.5);font-size:.7rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(20px);transition:opacity .6s .2s,transform .6s .2s;}
-    .kicker::before{content:"";width:24px;height:1px;background:var(--accent);}
-    .slide.active .kicker{opacity:1;transform:translateY(0);}
-    .s1-title{font-family:"Cinzel",serif;font-size:clamp(1.75rem,2.8vw,2.6rem);font-weight:400;line-height:1.15;letter-spacing:1px;color:var(--white);text-wrap:balance;opacity:0;transform:translateY(28px);transition:opacity .8s .35s,transform .8s .35s;}
-    .slide.active .s1-title{opacity:1;transform:translateY(0);}
-    .s1-sub{font-family:"Cormorant Garamond",serif;font-style:italic;max-width:760px;margin-top:22px;color:rgba(255,255,255,.8);font-size:1.4rem;line-height:1.45;opacity:0;transform:translateY(20px);transition:opacity .7s .52s,transform .7s .52s;}
-    .slide.active .s1-sub{font-family:"Cormorant Garamond",serif;font-style:italic;opacity:1;transform:translateY(0);}
-    .s1-btns{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(16px);transition:opacity .6s .68s,transform .6s .68s;}
-    .slide.active .s1-btns{opacity:1;transform:translateY(0);}
 
-    /* S2 */
-    .s2{background:var(--bg);overflow:hidden;}
-    .s2-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/Ajeru2.webp") center/cover no-repeat;filter:brightness(.32);will-change:transform;}
-    .s2-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.88) 100%);}
-    .s2-inner{display:flex;justify-content:center;align-items:center;width:100%;height:100vh;max-width:1200px;}
-    .s2-text{display:flex;flex-direction:column;justify-content:center;max-width:640px;width:100%;padding:0 40px;color:var(--white);}
-    .label{display:block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transform:translateY(10px);transition:opacity .5s .25s,transform .5s .25s;}
-    .slide.active .label{opacity:1;transform:translateY(0);}
-    .slide-title{font-family:"Cinzel",serif;font-size:clamp(1.5rem,2.4vw,2.2rem);font-weight:400;line-height:1.1;color:var(--white);text-wrap:balance;opacity:0;transform:translateY(16px);transition:opacity .7s .38s,transform .7s .38s;}
-    .slide.active .slide-title{opacity:1;transform:translateY(0);}
-    .slide-body{margin-top:18px;color:var(--muted);font-size:.94rem;line-height:1.76;opacity:0;transform:translateY(12px);transition:opacity .6s .52s,transform .6s .52s;}
-    .slide.active .slide-body{opacity:1;transform:translateY(0);}
-    .s2-photo{opacity:0;transform:translateX(-24px);transition:opacity .7s,transform .7s;}
-    .s2-photo:nth-child(1){transition-delay:.2s;}
-    .s2-photo:nth-child(2){transition-delay:.34s;}
-    .slide.active .s2-photo{opacity:1;transform:translateX(0);}
+/* V7 image slots */
+.click-frame{
+  position:relative;
+  width:100%;
+  border:3px solid #9cff00;
+  background:rgba(156,255,0,.025);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#9cff00;
+  font:600 12px/1.5 Arial,Helvetica,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  text-align:center;
+  padding:22px;
+  cursor:zoom-in;
+}
+.click-frame img{
+  display:block;width:100%;height:100%;object-fit:contain;
+}
+.compare-stack{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+.compare-stack .click-frame{aspect-ratio:16/9}
+.square-frame{aspect-ratio:1/1}
+.mistake-pair{display:grid;grid-template-columns:1fr;gap:34px;align-items:center;width:min(100%,760px);margin-left:auto}
+.mistake-pair .click-frame{width:100%}
+@media(max-width:900px){.mistake-pair{width:100%;margin-left:0;gap:22px}}
+.proof-screens{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:64px;
+}
+.proof-screens .click-frame{aspect-ratio:4/5;border-color:#171411;color:#171411;background:rgba(0,0,0,.025)}
+.lightbox{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.92);padding:4vw;
+  align-items:center;justify-content:center;cursor:zoom-out;
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:94vw;max-height:92vh;object-fit:contain}
+@media(max-width:800px){
+  .proof-screens{grid-template-columns:1fr;gap:18px}
+}
 
-    /* S3 */
-    .s3{background:var(--bg2);overflow:hidden;}
-    .s3-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/2.webp") center/cover no-repeat;filter:brightness(.28);will-change:transform;}
-    .s3-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.92) 100%);}
-    .s3-wrap{max-width:680px;width:100%;padding:0 48px;display:flex;justify-content:center;align-items:center;}
-    .s3-left{display:flex;flex-direction:column;gap:0;width:100%;}
-    .s3-left .label{margin-bottom:12px;}
-    .s3-left .slide-title{font-family:"Cinzel",serif;margin-bottom:36px;}
-    .s3-item{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start;}
-    .s3-item:first-of-type{border-top:1px solid var(--line);}
-    .s3-num{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--accent);color:var(--bg);font-size:.72rem;font-weight:850;flex-shrink:0;margin-top:2px;}
-    .s3-item strong{display:block;margin-bottom:6px;color:var(--white);font-size:.94rem;line-height:1.3;}
-    .s3-item p{color:var(--muted);font-size:.86rem;line-height:1.65;}
-    .s3-photo{overflow:hidden;border-radius:4px;height:520px;}
-    .s3-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-    .s3-item{opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;}
-    .s3-item:nth-child(1){transition-delay:.2s;}
-    .s3-item:nth-child(2){transition-delay:.34s;}
-    .s3-item:nth-child(3){transition-delay:.48s;}
-    .slide.active .s3-item{opacity:1;transform:translateY(0);}
-    .s3-photo{opacity:0;transform:translateX(24px);transition:opacity .8s .2s,transform .8s .2s;}
-    .slide.active .s3-photo{opacity:1;transform:translateX(0);}
-    @media(max-width:780px){.s3-wrap{grid-template-columns:1fr;}.s3-photo{height:260px;}}
-    
-    /* S4 BOOKING */
-    .s4-bg{position:absolute;inset:-15% 0 -5%;background:url("portfolio/interior/z4.webp") center/cover no-repeat;filter:brightness(.36);will-change:transform;}
-    .s4-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.05) 0%,rgba(8,7,6,.9) 100%);}
-    .s4-tag{display:inline-block;margin-bottom:14px;color:var(--accent);font-size:.68rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .5s .15s;}
-    .slide.active .s4-tag{opacity:1;}
-    .s4-title{font-family:"Cinzel",serif;font-size:clamp(1.75rem,2.8vw,2.6rem);font-weight:400;line-height:1.12;text-wrap:balance;opacity:0;transform:translateY(20px);transition:opacity .7s .28s,transform .7s .28s;}
-    .slide.active .s4-title{opacity:1;transform:translateY(0);}
-    .s4-sub{margin-top:16px;color:rgba(255,255,255,.62);font-size:.98rem;line-height:1.64;opacity:0;transition:opacity .6s .42s;}
-    .slide.active .s4-sub{opacity:1;}
-    .s4-slots{margin:12px 0 28px;color:var(--accent);font-size:.7rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .5s .54s;}
-    .slide.active .s4-slots{opacity:1;}
-    .s4-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(14px);transition:opacity .6s .64s,transform .6s .64s;}
-    .slide.active .s4-btns{opacity:1;transform:translateY(0);}
-    
-    /* BUTTONS */
-    .btn{min-height:50px;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;border:1px solid transparent;border-radius:3px;font-size:.8rem;font-weight:750;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;background:none;color:inherit;transition:opacity .2s,transform .2s;}
-    .btn:hover{opacity:.82;transform:translateY(-2px);}
-    .btn-w{color:var(--bg);background:var(--white);border-color:var(--white);}
-    .btn-o{color:var(--white);border-color:rgba(255,255,255,.35);}
-    .btn-o:hover{background:rgba(255,255,255,.07);}
 
-    /* NAV */
-    .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:9px;}
-    .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .3s,transform .3s;}
-    .dot.on{background:var(--accent);transform:scale(1.6);}
-    .arrow{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:100;cursor:pointer;color:rgba(255,255,255,.28);background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.6rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;transition:color .2s,opacity .4s;}
-    .arrow:hover{color:rgba(255,255,255,.65);}
-    .arrow.hide{opacity:0;pointer-events:none;}
-    .arrow svg{animation:bob 2.2s ease-in-out infinite;}
-    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
-    .ctr{position:fixed;left:24px;bottom:26px;z-index:100;color:var(--muted);font-size:.68rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase;}
-    .ctr em{color:var(--accent);font-style:normal;}
+.zoomable-image{cursor:zoom-in}
+.zoomable-image img{display:block;width:100%;height:auto}
 
-    @media(max-width:980px){
-      .s2-photos{display:none;}
-      .s3-row{grid-template-columns:1fr;}
-      .s3-photo{height:160px;}
-      .s1-content{padding:0 20px;}
-    }
 
-    @media(max-width:780px){
-      .s2-text{position:relative;z-index:2;padding:80px 24px 40px;justify-content:center;}
-      .s3-wrap{position:relative;z-index:2;padding:80px 24px 40px;}
-      .s3-photo{display:none;}
-      .s3-item{border-bottom-color:rgba(255,255,255,.15);}
-    }
+/* Compact FB proof screenshots: intentionally small; click to enlarge later. */
+.proof-screens{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  margin-top:46px;
+  align-items:flex-start;
+}
+.proof-screens .click-frame{
+  width:min(100%, 420px);
+  aspect-ratio:auto;
+  min-height:92px;
+  border:2px solid #171411;
+  color:#171411;
+  background:rgba(0,0,0,.02);
+  padding:14px 18px;
+  cursor:zoom-in;
+}
+.proof-screens .click-frame:nth-child(2){
+  width:min(100%, 460px);
+}
+@media(max-width:800px){
+  .proof-screens{display:grid;grid-template-columns:1fr;gap:14px}
+  .proof-screens .click-frame,
+  .proof-screens .click-frame:nth-child(2){width:100%}
+}
 
-    @media(max-width:680px){
-      .slide-title{font-size:1.35rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.2;}
-      .s1-title{font-size:1.35rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.15;}
-      .s1-sub{font-size:1.15rem !important;}
-      .s4-title{font-size:1.35rem !important;letter-spacing:0 !important;text-transform:none !important;line-height:1.15;}
-      .kicker{font-size:.58rem;letter-spacing:.06em;}
-      .label{font-size:.58rem;letter-spacing:.06em;}
-      .s1-content,.s4-content{padding:0 20px;}
-      .s2-photos{display:none;}
-      .s2-inner{grid-template-columns:1fr;}
-      .s2-text{padding:80px 20px 32px;justify-content:center;}
-      .s3-wrap{padding:80px 20px 32px;}
-      .s3-photo{display:none;}
-      .s1-btns,.s4-btns{flex-direction:column;}
-      .btn{width:100%;}
-    }
-  </style>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VPWTKVR3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-F0VPWTKVR3');
-  </script>
+/* Final image treatment */
+.image-slot, .single-image-slot, .click-frame{overflow:hidden}
+.image-slot img, .single-image-slot img, .click-frame img{width:100%;height:100%;display:block;object-fit:cover}
+.hero-slot{border:0;background:none}
+.hero-slot img{object-fit:cover}
+.single-image-slot{border:0;background:none}
+.compare-stack .project-frame{margin:0}
+.project-frame figcaption{margin-top:10px;font-size:11px;line-height:1.55;letter-spacing:.05em;color:rgba(255,255,255,.38)}
+.project-frame figcaption a{color:rgba(200,169,110,.72);text-decoration:none;border-bottom:1px solid rgba(200,169,110,.24);transition:.25s}
+.project-frame figcaption a:hover{color:#c8a96e;border-color:#c8a96e}
+.mistake-pair .click-frame{border:0;background:none}
+.proof-screens .click-frame{border:0;background:none}
+.nav-link{white-space:nowrap}
+
+</style>
 </head>
 <body>
+<nav class="nav">
+  <a class="brand" href="https://ar.gumbrevicius.lt">
+    <img src="portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius">
+    <span class="brand-name">MB GUMBREVIČIUS</span>
+  </a>
+  <div class="nav-right">
+    <a class="nav-link" href="https://ar.gumbrevicius.lt/interiors.html">PORTFOLIO</a>
+    <a class="nav-link" href="https://ar.gumbrevicius.lt/apiemane.html">APIE MANE</a>
+    <span class="lang-switch"><span class="active">LT</span><span>EN</span></span>
+    <a class="nav-cta" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" rel="noopener">SUSISIEKIME</a>
+  </div>
+</nav>
 
-<div class="topbar" id="topbar">
-  <div style="display:flex;align-items:center;">
-    <a href="https://ar.gumbrevicius.lt" class="topbar-left">
-      <img src="portfolio/logo/Logo_white_SVG.svg" alt="MB Gumbrevičius">
-      <span class="topbar-name">MB Gumbrevičius</span>
-    </a>
-    <div class="lang-switch">
-      <button class="lang-btn active" onclick="changeLang('lt')" id="btn-lt">LT</button>
-      <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
+<header class="hero">
+  <div class="image-slot hero-slot click-frame" data-full="portfolio/onepage/hero.webp">
+    <img src="portfolio/onepage/hero.webp" alt="Interjero vizualizacija — hero kadras">
+  </div>
+  <div class="hero-copy">
+    <h1>Jūs kuriate interjerą.<br>Aš padedu jį pamatyti.</h1>
+    <p>Kiek jūsų laiko suvalgo vizualizacijos?<br><br>Ar tampate pačiu brangiausiu savo projektų renderintoju ir vizualizuojate patys, ar šį darbą atiduodate kitiems? Pirmu atveju tai jūsų laikas, kurį galėtumėte skirti kitiems projektams — arba tiesiog poilsiui. Antru atveju tai gali tapti ilga laukimo ir korekcijų grandine.<br><br>Aš dirbu kitaip — susitinkame video skambučio metu prie jūsų projekto, kartu ieškome kadrų, šviesos ir atmosferos, o sprendimus priimame čia pat. Kai atsijungiame, jau žinote, kaip atrodys galutinis rezultatas.</p>
+  </div>
+  <div class="scroll">Slinkti žemyn</div>
+</header>
+
+<section class="full-photo">
+  <div class="overlay">
+    <h2>Vizualizacija<br><span class="gold">nėra katalogas.</span></h2>
+    <div class="copy"><p>Nebūtina parodyti kiekvieno kampo, baldo ar šviesos šaltinio. Kartais erdvę geriau papasakoja šešėlis. Kartais — saulė ant sienos. Kartais — objektas visai arti kameros, kurio net nesimato ryškiai.</p><p>Man svarbu ne parodyti viską. Man svarbu, kad jausmas, kurį sukūrėte, būtų teisingai perteiktas jūsų klientui.</p></div>
+    <div class="single-image-slot click-frame" data-full="portfolio/onepage/japonija.webp">
+      <img src="portfolio/onepage/japonija.webp" alt="Atmosferinis interjero kadras">
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:clamp(16px,2vw,30px);">
-    <span class="topbar-label" data-lt="CGI Artistas" data-en="CGI Artist">CGI Artistas</span>
-    <a class="top-cta" id="topCta" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt-btn="Rezervuoti pokalbį" data-en-btn="Book a call">Rezervuoti pokalbį</a>
-  </div>
+</section>
+
+<section class="section process">
+ <div class="grid">
+   <div class="copy">
+     <h2>Ką matome kartu,<br><span class="gold">tą gaunate finale.</span></h2>
+     <p>Susitinkame online ir dirbame tiesiai su jūsų projektu. Jūs matote erdvę, keičiate sprendimus, renkamės kameras, stebime šviesą ir kartu randame galutinius kadrus.</p>
+     <p>Po susitikimo neperinterpretuoju to, ką jau patvirtinome. Sutvarkau technines smulkmenas ir paruošiu galutinius vaizdus.</p>
+     <div class="quote">Mažiau „gal galėtum dar...“<br>Daugiau sprendimų iš karto.</div>
+   </div>
+   <div class="compare-stack">
+     <figure class="project-frame">
+       <div class="click-frame" data-full="portfolio/onepage/eiga tamsus.webp">
+         <img src="portfolio/onepage/eiga tamsus.webp" alt="Darbo eiga Blender aplinkoje">
+       </div>
+       <figcaption>Kurta kartu su interjero dizainere <a href="https://aurastudija.lt/" target="_blank" rel="noopener">Aurelija Pauliukevičiene · AURA interjero dizaino studija</a></figcaption>
+     </figure>
+     <figure class="project-frame">
+       <div class="click-frame" data-full="portfolio/onepage/rezultatas.webp">
+         <img src="portfolio/onepage/rezultatas.webp" alt="Galutinis interjero vizualizacijos rezultatas">
+       </div>
+       <figcaption>Kurta kartu su interjero dizainere <a href="https://aurastudija.lt/" target="_blank" rel="noopener">Aurelija Pauliukevičiene · AURA interjero dizaino studija</a></figcaption>
+     </figure>
+   </div>
+ </div>
+</section>
+
+
+
+
+
+<section class="section" style="background:#11100e">
+ <div class="grid">
+   <div class="copy">
+    <h2>Klaidas geriausia pamatyti,<br><span class="gold">kol jos dar ekrane.</span></h2>
+    <p>Vizualizacija man nėra tik gražus paveikslėlis prezentacijai.</p>
+    <p>Tai vieta, kur galima sustoti ir pažiūrėti: ar ši medžiaga tikrai veikia? Ar šviesa daro tai, ko norėjome? Ar proporcija gera? Ar klientas supras sprendimą?</p>
+    <div class="quote">Ekrane persigalvoti paprasta. Įgyvendintame interjere — gerokai brangiau.</div>
+   </div>
+   <div class="mistake-pair">
+     <div class="click-frame square-frame" data-full="portfolio/onepage/klaida 1.webp">
+       <img src="portfolio/onepage/klaida 1.webp" alt="Interjero vizualizacija prieš korekciją">
+     </div>
+     <div class="click-frame square-frame" data-full="portfolio/onepage/klaida 2.webp">
+       <img src="portfolio/onepage/klaida 2.webp" alt="Interjero vizualizacija po korekcijos">
+     </div>
+   </div>
+ </div>
+</section>
+
+<section class="section proof">
+ <div style="max-width:1320px;margin:auto">
+   <h2 style="max-width:900px;margin-bottom:72px">Patirtis, kurią galima patikrinti.</h2>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:start">
+     <div>
+       <p class="testimonial">„Labai rekomenduoju, puikiai vizualizuoja ir sutaupo laiko modeliuojant šviesas, tekstūras, o klientai po pirmų vizualizacijų lieka patenkinti su minimaliom korekcijom, kaip rankenų spalva, dušo kabinos tipas ar pan.“</p>
+       <div class="author">Viktorija Mykolaitytė</div>
+     </div>
+     <div>
+       <p class="testimonial">„Iš tikrųjų – tobulas darbas! Teko dirbti kartu ne vieną kartą ir visada lieku patenkinta rezultatais. Povilas tikrai padeda nuimti visą stresą nuo pečių, kai artėja pridavimo terminas, o technika neatlaiko. Be jokios įtampos ir nervų viską tobulina tol, kol esi patenkintas rezultatu, o galiausiai gauni puikią vizualizaciją, kuria belieka tik džiaugtis 🔥“</p>
+       <div class="author">Alina Paškevič</div>
+     </div>
+   </div>
+   <div style="margin-top:100px;max-width:820px">
+     <h2>Kai projektas nėra idealus, nereikia, kad jis būtų idealus.</h2>
+     <div class="copy">
+       <p>Reikia rasti kelią iki rezultato.</p>
+       <p>Projektas, kurio nepavyko normaliai atidaryti septynias valandas. Terminas nesustojo. Mes irgi.</p>
+     </div>
+   </div>
+ </div>
+
+   <div class="proof-screens">
+     <div class="click-frame" data-full="portfolio/onepage/viktorija.webp">
+       <img src="portfolio/onepage/viktorija.webp" alt="Viktorijos atsiliepimo ekrano kopija">
+     </div>
+     <div class="click-frame" data-full="portfolio/onepage/alina.webp">
+       <img src="portfolio/onepage/alina.webp" alt="Alinos atsiliepimo ekrano kopija">
+     </div>
+   </div>
+</section>
+
+
+
+<section class="cta" id="kontaktas">
+ <h2>Turi projektą?<br><span class="gold">Ar tiesiog klausimą?</span></h2>
+ <p>Nebūtina jau būti apsisprendus dirbti kartu. Gali parodyti projektą, renderį, medžiagą ar tiesiog paklausti, kaip aš tai spręsčiau.</p>
+ <a class="button" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" rel="noopener">Susisiekime</a>
+</section>
+
+<footer class="footer"><span>MB Gumbrevičius</span><span>CGI · Vilnius</span></footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <img id="lightbox-image" alt="">
 </div>
-
-<div class="deck" id="deck">
-
-  <!-- S1 HERO -->
-  <div class="slide active s1" data-i="0">
-    <div class="s1-bg"></div>
-    <div class="s1-grad"></div>
-    <div class="s1-content">
-      <div class="kicker" data-lt="Interjero vizualizacijos dizaineriams" data-en="Interior CGI for Designers">Interjero vizualizacijos dizaineriams</div>
-      <h1 class="s1-title" data-lt="Galutinės interjero vizualizacijos iš jūsų „SketchUp“ failo vidutiniskai per 1 dieną." data-en="Final interior visualizations from your SketchUp file in an average of 1 day.">Galutinės interjero vizualizacijos iš jūsų „SketchUp“ failo vidutiniskai per 1 dieną.</h1>
-      <p class="s1-sub" data-lt="Atsiunčiate SketchUp failą, po pirminio pasiruošimo, 1–2 valandų online sesijoje kartu su jumis (ar jūsų klientu) suderiname apšvietimą bei kadrus ekrane, ir tą pačią dieną gaunate galutinį rezultatą. Jokio savaičių laukimo ar korekcijų el. paštu." data-en="Send your SketchUp file, after initial preparation, join a 1–2 hour live online session to adjust lighting and framing with you (or your client), and receive final renders the same day. No endless email revisions.">Atsiunčiate SketchUp failą,po pirminio pasiruošimo, 1–2 valandų online sesijoje kartu su jumis (ar jūsų klientu) suderiname apšvietimą bei kadrus ekrane, ir tą pačią dieną gaunate galutinį rezultatą. Jokio savaičių laukimo ar korekcijų el. paštu.</p>
-      <div class="s1-btns">
-        <a class="btn btn-w" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt-btn="Rezervuoti 15 min. pokalbį" data-en-btn="Book a 15-min call">Rezervuoti 15 min. pokalbį</a>
-        <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank" data-lt-btn="Žiūrėti darbus" data-en-btn="View Portfolio">Žiūrėti darbus</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- S2 PROCESO EIGA -->
-  <div class="slide s2" data-i="1">
-    <div class="s2-bg" id="s2Bg"></div>
-    <div class="s2-grad"></div>
-    <div class="s2-inner" style="position:relative;z-index:2;">
-      <div class="s2-text">
-        <span class="label" data-lt="Darbo eiga" data-en="Workflow">Darbo eiga</span>
-        <h2 class="slide-title" data-lt="Užbaikite vizualizacijų etapą be savaičių laukimo" data-en="Finalize the visualization stage without weeks of waiting">Užbaikite vizualizacijų etapą be savaičių laukimo</h2>
-        <p class="slide-body" data-lt="Tradicinis procesas: 2–3 savaitės laukimo, dešimtys laiškų ir vėluojantys pridavimai.<br><br>Mano modelis: atsiunčiate SketchUp modelį, atlieku pirminį scenos paruošimą, kartu praeiname 1–2 val. online sesiją apšvietimo suderinimui ir tą pačią dieną turite galutinius kadrus. Visi sprendimai patvirtinami gyvai ekrane." data-en="Traditional process: 2–3 weeks of waiting, endless email chains, and delayed delivery.<br><br>My model: send your SketchUp file, I prepare the scene, we do a 1–2 hour live online session to tune lighting, and you get final renders the same day. All decisions approved live on screen.">Tradicinis procesas: 2–3 savaitės laukimo, dešimtys laiškų ir vėluojantys pridavimai.<br><br>Mano modelis: atsiunčiate SketchUp modelį, atlieku pirminį scenos paruošimą, kartu praeiname 1–2 val. online sesiją apšvietimo suderinimui ir tą pačią dieną turite galutinius kadrus. Visi sprendimai patvirtinami gyvai ekrane.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- S3 3 ŽINGSNIAI -->
-  <div class="slide s3" data-i="2">
-    <div class="s3-bg" id="s3Bg"></div>
-    <div class="s3-grad"></div>
-    <div class="s3-wrap" style="position:relative;z-index:2;">
-      <div class="s3-left">
-        <span class="label" data-lt="Procesas" data-en="Process">Procesas</span>
-        <h2 class="slide-title" data-lt="3 aiškūs žingsniai iki galutinio rezultato" data-en="3 simple steps to final renders">3 aiškūs žingsniai iki galutinio rezultato</h2>
-        <div class="s3-item">
-          <span class="s3-num">1</span>
-          <div>
-            <strong data-lt="Failo importas" data-en="File import">Failo importas</strong>
-            <p data-lt="Atsiunčiate SketchUp failą su geometrija ir medžiagomis. Techninis modelio tvarkingumas ar sluoksniai — mano rūpestis." data-en="You send the SketchUp file with geometry and materials. Layers and technical scene cleanup are handled on my end.">Atsiunčiate SketchUp failą su geometrija ir medžiagomis. Techninis modelio tvarkingumas ar sluoksniai — mano rūpestis.</p>
-          </div>
-        </div>
-        <div class="s3-item">
-          <span class="s3-num">2</span>
-          <div>
-            <strong data-lt="Paruošimas ir bendra Online sesija (1–2 val.)" data-en="Preparation & Live Online Session (1–2 hrs)">Paruošimas ir bendra Online sesija (1–2 val.)</strong>
-            <p data-lt="Atlieku pirminį scenos paruošimą, o tada bendroje sesijoje kartu su jumis (ar klientu) suderiname apšvietimą, kameras bei spalvas gyvai ekrane." data-en="I prepare the initial scene setup, then we join a live session with you (or your client) to dial in cameras, lighting scenarios, and atmosphere.">Atlieku pirminį scenos paruošimą, o tada bendroje sesijoje kartu su jumis (ar klientu) suderiname apšvietimą, kameras bei spalvas gyvai ekrane.</p>
-          </div>
-        </div>
-        <div class="s3-item">
-          <span class="s3-num">3</span>
-          <div>
-            <strong data-lt="Galutinis atidavimas tą pačią dieną" data-en="Same-day final delivery">Galutinis atidavimas tą pačią dieną</strong>
-            <p data-lt="Paruošiami galutiniai kadrai ir projektas uždaromas tą pačią dieną — be vėlavimų ir be streso." data-en="Final high-resolution renders are completed and delivered the very same day — on time and without friction.">Paruošiami galutiniai kadrai ir projektas uždaromas tą pačią dieną — be vėlavimų ir be streso.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- S4 BOOKING -->
-  <div class="slide s4" data-i="3" style="position:absolute;inset:0;overflow:hidden;">
-    <div class="s4-bg"></div>
-    <div class="s4-grad"></div>
-    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;">
-      <div style="max-width:640px;width:100%;padding:0 32px;text-align:center;color:#fff;">
-        <span class="s4-tag" data-lt="Fiksuotas laikas · 1 projektas per dieną" data-en="Fixed schedule · 1 project per day">Fiksuotas laikas · 1 projektas per dieną</span>
-        <h2 class="s4-title" data-lt="Užbaikime jūsų projektą per vieną popietę" data-en="Finalize your project in a single afternoon">Užbaikime jūsų projektą<br>per vieną popietę</h2>
-        <p class="s4-sub" data-lt="Rezervuokite artimiausią laisvą dieną kalendoriuje arba parašykite trumpai aptarti projekto apimtį." data-en="Book the nearest available day in the calendar or send a message to briefly discuss project scope.">Rezervuokite artimiausią laisvą dieną kalendoriuje arba parašykite trumpai aptarti projekto apimtį.</p>
-        <p class="s4-slots" data-lt="· SketchUp · Google Meet · Tą pačią dieną ·" data-en="· SketchUp · Google Meet · Same Day ·">· SketchUp · Google Meet · Tą pačią dieną ·</p>
-        <div class="s4-btns">
-          <a class="btn btn-w" href="https://calendly.com/povilas-gumbrevicius/susitikimas-45-min" target="_blank" data-lt-btn="Rezervuoti 15 min. pokalbį" data-en-btn="Book a 15-min call">Rezervuoti 15 min. pokalbį</a>
-          <a class="btn btn-o" href="https://ar.gumbrevicius.lt/interiors.html" target="_blank" data-lt-btn="Žiūrėti darbus" data-en-btn="View Portfolio">Žiūrėti darbus</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<nav class="dots" id="dots"></nav>
-<button class="arrow" id="arrow" onclick="next()">
-  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-  </svg>
-</button>
-<div class="ctr" id="ctr"></div>
-
 <script>
-  const slides = document.querySelectorAll('.slide');
-  const dotsEl = document.getElementById('dots');
-  const arrow  = document.getElementById('arrow');
-  const ctr    = document.getElementById('ctr');
-  const total  = slides.length;
-  let cur = 0, locked = false;
-
-  slides.forEach((_,i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i===0?' on':'');
-    d.onclick = () => goTo(i);
-    dotsEl.appendChild(d);
+document.querySelectorAll('.click-frame, .zoomable-image').forEach(frame => {
+  frame.addEventListener('click', () => {
+    const img = frame.tagName === 'IMG' ? frame : frame.querySelector('img');
+    const src = frame.dataset.full || (img ? img.src : '');
+    if (!src) return;
+    const box = document.getElementById('lightbox');
+    document.getElementById('lightbox-image').src = src;
+    box.classList.add('open');
+    box.setAttribute('aria-hidden','false');
   });
-
-  function ui() {
-    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
-    arrow.classList.toggle('hide', cur===total-1);
-    ctr.innerHTML = '<em>0'+(cur+1)+'</em> / 0'+total;
-  }
-
-  function goTo(n) {
-    if (locked || n===cur || n<0 || n>=total) return;
-    locked = true;
-    slides[cur].classList.remove('active');
-    cur = n;
-    slides[cur].classList.add('active');
-    ui();
-    setTimeout(()=>locked=false, 700);
-  }
-
-  function next() { goTo(cur+1); }
-  function prev() { goTo(cur-1); }
-
-  document.addEventListener('keydown', e => {
-    if (['ArrowDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next();}
-    if (['ArrowUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev();}
-  });
-
-  let wheelAcc=0,wt;
-  document.addEventListener('wheel', e => {
-    e.preventDefault();
-    wheelAcc += e.deltaY;
-    clearTimeout(wt);
-    wt = setTimeout(()=>{
-      if(wheelAcc > 5) next();
-      else if(wheelAcc < -5) prev();
-      wheelAcc = 0;
-    }, 60);
-  },{passive:false});
-
-  let ty=0;
-  document.addEventListener('touchstart',e=>ty=e.touches[0].clientY,{passive:true});
-  document.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(d>40)next();if(d<-40)prev();});
-
-  ui();
+});
+document.getElementById('lightbox').addEventListener('click', e => {
+  e.currentTarget.classList.remove('open');
+  e.currentTarget.setAttribute('aria-hidden','true');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+});
 </script>
 
-<script>
-function changeLang(lang) {
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn-' + lang).classList.add('active');
-  document.querySelectorAll('[data-lt]').forEach(el => {
-    const val = el.getAttribute('data-' + lang);
-    if (val) el.innerHTML = val;
-  });
-  // buttons
-  document.querySelectorAll('[data-lt-btn]').forEach(el => {
-    const val = el.getAttribute('data-' + lang + '-btn');
-    if (val) el.innerText = val;
-  });
-  localStorage.setItem('lang', lang);
-}
-const sl = localStorage.getItem('lang');
-if (sl && sl !== 'lt') changeLang(sl);
-</script>
-
-</body>
-</html>
+</body></html>
