@@ -22,13 +22,13 @@ a{color:inherit}.serif{font-family:Georgia,"Times New Roman",serif}
 .brand img{height:42px;width:auto;display:block}
 .brand-name{color:#d8d0c4}
 .nav-right{display:flex;gap:24px;align-items:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase}
-.nav-link{text-decoration:none;color:#cfc6b9;transition:color .25s ease}
+.nav-link{text-decoration:none;color:#cfc6b9;transition:color .25s ease;font-size:12px}
 .nav-link:hover{color:var(--gold)}
 .nav-placeholder{color:#cfc6b9;opacity:.48;cursor:default}
 .lang-switch{display:flex;gap:9px;align-items:center;color:#8f877c}
 .lang-switch .active{color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:2px}
-.nav-cta{border:1px solid rgba(200,169,110,.35);color:var(--gold);padding:11px 17px;text-decoration:none;transition:.25s ease;white-space:nowrap}
-.nav-cta:hover{border-color:var(--gold);background:rgba(200,169,110,.07)}
+.nav-cta{border:0;color:#0d0c0b;background:var(--gold);padding:11px 17px;text-decoration:none;transition:.25s ease;white-space:nowrap}
+.nav-cta:hover{background:var(--gold);filter:brightness(1.08)}
 .hero{height:100vh;min-height:700px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
 .hero:before{
  content:"";position:absolute;inset:0;background:#0d0c0b;
@@ -81,7 +81,7 @@ h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
 .button{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:17px 28px;text-decoration:none;font-size:10px;letter-spacing:.25em;text-transform:uppercase}
 .footer{border-top:1px solid rgba(255,255,255,.07);padding:30px 5vw 45px;display:flex;justify-content:space-between;color:#746c62;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
 @media(max-width:800px){
- .brand-name{display:none}.brand img{height:36px}.nav{padding:0 4vw}.nav-right{gap:11px;font-size:8px;letter-spacing:.13em}.nav-cta{padding:9px 10px}.lang-switch{display:none}
+ .brand-name{display:none}.brand img{height:36px}.nav{padding:0 4vw}.nav-right{gap:11px;font-size:8px;letter-spacing:.13em}.nav-link{font-size:10px}.nav-cta{padding:9px 10px}.lang-switch{display:none}
  .proof [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:70px!important}
  .nav-right{gap:14px}.nav-placeholder{display:none}.hero-copy{margin-bottom:12vh}
  .grid{grid-template-columns:1fr;gap:60px}.section{padding:110px 7vw}.photo{min-height:65vh}
@@ -271,7 +271,7 @@ h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
 </nav>
 <header class="hero">
 <div class="image-slot hero-slot click-frame" data-full="portfolio/interior/one/hero.webp">
-<img alt="Interjero vizualizacija — hero kadras" src="portfolio/interior/one/hero.webp"/>
+<img alt="" src="portfolio/interior/one/hero.webp"/>
 </div>
 <div class="hero-copy">
 <h1 data-i18n="hero_h1">Jūs kuriate interjerą.<br/>Aš padedu jį pamatyti.</h1>
@@ -283,7 +283,7 @@ h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
 <h2 data-i18n="cat_h2">Vizualizacija<br/><span class="gold">nėra katalogas.</span></h2>
 <div class="copy"><p data-i18n="cat_p1">Nebūtina parodyti kiekvieno kampo, baldo ar šviesos šaltinio. Kartais erdvę geriau papasakoja šešėlis, saulė ant sienos ar visai arti kameros esantis objektas.</p><p data-i18n="cat_p2"><strong>Svarbu, kad jūsų sukurtas jausmas pasiektų klientą.</strong></p></div>
 <div class="single-image-slot click-frame" data-full="portfolio/interior/one/japonija.webp">
-<img alt="Atmosferinis interjero kadras" src="portfolio/interior/one/japonija.webp"/>
+<img alt="" src="portfolio/interior/one/japonija.webp"/>
 </div>
 </div>
 </section>
@@ -298,13 +298,13 @@ h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
 <div class="compare-stack">
 <figure class="project-frame">
 <div class="click-frame" data-full="portfolio/interior/one/eiga tamsus.webp">
-<img alt="Darbo eiga Blender aplinkoje" src="portfolio/interior/one/eiga tamsus.webp"/>
+<img alt="" src="portfolio/interior/one/eiga tamsus.webp"/>
 </div>
 <figcaption data-i18n="credit1">Kurta kartu su interjero dizainere <a href="https://aurastudija.lt/" rel="noopener" target="_blank">Aurelija Pauliukevičiene · AURA interjero dizaino studija</a></figcaption>
 </figure>
 <figure class="project-frame">
 <div class="click-frame" data-full="portfolio/interior/one/rezultatas.webp">
-<img alt="Galutinis interjero vizualizacijos rezultatas" src="portfolio/interior/one/rezultatas.webp"/>
+<img alt="" src="portfolio/interior/one/rezultatas.webp"/>
 </div>
 <figcaption data-i18n="credit2">Kurta kartu su interjero dizainere <a href="https://aurastudija.lt/" rel="noopener" target="_blank">Aurelija Pauliukevičiene · AURA interjero dizaino studija</a></figcaption>
 </figure>
@@ -321,10 +321,10 @@ h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
 </div>
 <div class="mistake-pair">
 <div class="click-frame square-frame" data-full="portfolio/interior/one/klaida 1.webp">
-<img alt="Interjero vizualizacija prieš korekciją" src="portfolio/interior/one/klaida 1.webp"/>
+<img alt="" src="portfolio/interior/one/klaida 1.webp"/>
 </div>
 <div class="click-frame square-frame" data-full="portfolio/interior/one/klaida 2.webp">
-<img alt="Interjero vizualizacija po korekcijos" src="portfolio/interior/one/klaida 2.webp"/>
+<img alt="" src="portfolio/interior/one/klaida 2.webp"/>
 </div>
 </div>
 </div>
@@ -346,10 +346,10 @@ h2{font-size:clamp(42px,5vw,76px);line-height:1.02;letter-spacing:-.025em}
 </div>
 <div class="proof-screens">
 <div class="click-frame" data-full="portfolio/interior/one/viktorija.webp">
-<img alt="Viktorijos atsiliepimo ekrano kopija" src="portfolio/interior/one/viktorija.webp"/>
+<img alt="" src="portfolio/interior/one/viktorija.webp"/>
 </div>
 <div class="click-frame" data-full="portfolio/interior/one/alina.webp">
-<img alt="Alinos atsiliepimo ekrano kopija" src="portfolio/interior/one/alina.webp"/>
+<img alt="" src="portfolio/interior/one/alina.webp"/>
 </div>
 </div>
 </section>
